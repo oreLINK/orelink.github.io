@@ -10,6 +10,7 @@ import App from './App';
 import Test from './pages/Test';
 import Ski from './pages/data/Ski';
 import CaptainPont from './pages/data/captain-pont/CaptainPont';
+import Companion from './pages/data/le-companion-du-tour/Companion';
 
 // Routing du site
 const routing = (
@@ -19,6 +20,7 @@ const routing = (
       <Route path='/test' element={<Test />} />
       <Route path='/ski' element={<Ski />} />
       <Route path='/captain-pont' element={<CaptainPont />} />
+      <Route path='/companion' element={<Companion />} />
     </Routes>
   </Router>
 );
