@@ -1,13 +1,29 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
+// import ReactDOM from 'react-dom';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 
+/** ALL PAGES */
+import App from './App';
+import Test from './pages/Test';
+
+// Routing du site
+const routing = (
+  <Router basename={`${process.env.PUBLIC_URL}/`}>
+    <Routes>
+      <Route path='/' element={<App />} />
+      <Route path='/test' element={<Test />} />
+    </Routes>
+  </Router>
+);
+
+// Rendu des elements dans la page index.html
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    {routing}
   </React.StrictMode>
 );
 
