@@ -8,6 +8,8 @@ import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 /** ALL PAGES */
 import App from './App';
 import Test from './pages/Test';
+import Ski from './pages/data/Ski';
+import CaptainPont from './pages/data/captain-pont/CaptainPont';
 
 // Routing du site
 const routing = (
@@ -15,6 +17,8 @@ const routing = (
     <Routes>
       <Route path='/' element={<App />} />
       <Route path='/test' element={<Test />} />
+      <Route path='/ski' element={<Ski />} />
+      <Route path='/captain-pont' element={<CaptainPont />} />
     </Routes>
   </Router>
 );

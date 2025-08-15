@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { Bar } from 'react-chartjs-2';
 import {
@@ -20,149 +20,16 @@ ChartJS.register(
   Legend
 );
 
-const cities = [
-  { name: 'Paris', latitude: 48.8534, longitude: 2.3488 },
-  { name: 'Marseille', latitude: 43.2965, longitude: 5.3698 },
-  { name: 'Lyon', latitude: 45.75, longitude: 4.85 },
-  { name: 'Toulouse', latitude: 43.6045, longitude: 1.4442 },
-  { name: 'Nice', latitude: 43.7031, longitude: 7.2661 },
-  { name: 'Nantes', latitude: 47.2184, longitude: -1.5536 },
-  { name: 'Montpellier', latitude: 43.6119, longitude: 3.8777 },
-  { name: 'Strasbourg', latitude: 48.5839, longitude: 7.7455 },
-  { name: 'Bordeaux', latitude: 44.8378, longitude: -0.5792 },
-  { name: 'Lille', latitude: 50.6333, longitude: 3.0667 },
-  { name: 'Rennes', latitude: 48.1147, longitude: -1.6794 },
-  { name: 'Reims', latitude: 49.2628, longitude: 4.0347 },
-  { name: 'Le Havre', latitude: 49.4939, longitude: 0.1079 },
-  { name: 'Saint-Étienne', latitude: 45.4339, longitude: 4.39 },
-  { name: 'Toulon', latitude: 43.1258, longitude: 5.9306 },
-  { name: 'Grenoble', latitude: 45.1715, longitude: 5.7224 },
-  { name: 'Dijon', latitude: 47.3167, longitude: 5.0167 },
-  { name: 'Angers', latitude: 47.4784, longitude: -0.5632 },
-  { name: 'Nîmes', latitude: 43.838, longitude: 4.361 },
-  { name: 'Villeurbanne', latitude: 45.7667, longitude: 4.8833 }
-];
-
-const dashboardStyles = {
-  minHeight: '100vh',
-  background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
-  padding: '0',
-  fontFamily: 'Segoe UI, Arial, sans-serif'
-};
-
-const mainContainer = {
-  display: 'flex',
-  flexDirection: 'row',
-  maxWidth: 1400,
-  margin: '0 auto',
-  paddingTop: 40,
-  alignItems: 'flex-start'
-};
-
-const leftCol = {
-  flex: 3,
-  marginRight: 40,
-  minWidth: 0 // pour éviter l'overflow
-};
-
-const rightCol = {
-  flex: '0 0 320px',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  position: 'sticky',
-  top: 40,
-  height: 'fit-content',
-  background: 'transparent'
-};
-
-const cardStyles = {
-  width: '100%',
-  background: '#fff',
-  borderRadius: 18,
-  boxShadow: '0 4px 24px rgba(44,62,80,0.12)',
-  padding: '36px 40px 32px 40px',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center'
-};
-
-const titleStyles = {
-  fontSize: 32,
-  fontWeight: 700,
-  color: '#2d3a4b',
-  marginBottom: 12,
-  letterSpacing: 1
-};
-
-const subtitleStyles = {
-  fontSize: 18,
-  color: '#6c7a89',
-  marginBottom: 32
-};
-
-const chartContainerStyles = {
-  width: '100%',
-  maxWidth: 1000,
-  minHeight: 400,
-  background: '#f8fafc',
-  borderRadius: 12,
-  padding: 24,
-  boxShadow: '0 2px 8px rgba(44,62,80,0.06)'
-};
-
-const loaderStyles = {
-  color: '#2d3a4b',
-  fontSize: 22,
-  marginTop: 80,
-  textAlign: 'center'
-};
-
-const errorStyles = {
-  color: '#e74c3c',
-  fontSize: 20,
-  marginTop: 80,
-  textAlign: 'center'
-};
-
-const selectStyles = {
-  fontSize: 18,
-  padding: '12px 18px',
-  borderRadius: 8,
-  border: '1px solid #c3cfe2',
-  marginTop: 16,
-  background: '#f5f7fa',
-  color: '#2d3a4b',
-  outline: 'none',
-  width: '100%'
-};
-
-const currentTempGlobalContainer = {
-  width: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  margin: '48px 0 32px 0'
-};
-
-const currentTempText = {
-  fontSize: 96,
-  fontWeight: 900,
-  color: '#e74c3c',
-  marginBottom: 8,
-  letterSpacing: 2,
-  lineHeight: 1,
-  textShadow: '0 2px 12px rgba(231,76,60,0.08)'
-};
-
-const currentTempCity = {
-  fontSize: 32,
-  fontWeight: 500,
-  color: '#2d3a4b',
-  marginBottom: 0,
-  lineHeight: 1,
-  letterSpacing: 1
-};
+// Utilitaire pour obtenir l'emoji drapeau à partir du code pays ISO alpha-2
+function getFlagEmoji(countryCode) {
+  if (!countryCode) return '';
+  // Certains codes sont en minuscules, on les met en majuscules
+  const code = countryCode.toUpperCase();
+  // Unicode flag offset
+  return code.replace(/./g, char =>
+    String.fromCodePoint(127397 + char.charCodeAt())
+  );
+}
 
 // Dégradé du plus froid (bleu) au plus chaud (rouge)
 function getColorGradient(min, max, value) {
@@ -176,7 +43,6 @@ function getColorGradient(min, max, value) {
 // Dégradé de bleu uniquement pour les températures minimales
 function getBlueGradient(min, max, value) {
   const ratio = (value - min) / (max - min);
-  // Bleu clair (173,216,230) à Bleu foncé (0, 70, 140)
   const r = Math.round(173 - ratio * (173 - 0));
   const g = Math.round(216 - ratio * (216 - 70));
   const b = Math.round(230 - ratio * (230 - 140));
@@ -187,41 +53,74 @@ function getBlueGradient(min, max, value) {
 function detectHeatwaves(tempMax, tempMin) {
   const heatwaveDays = [];
   let current = [];
-
   for (let i = 0; i < tempMax.length; i++) {
     if (tempMax[i] > 36 && tempMin[i] > 21) {
       current.push(i);
     } else {
-      if (current.length >= 3) {
-        heatwaveDays.push([...current]);
-      }
+      if (current.length >= 3) heatwaveDays.push(...current);
       current = [];
     }
   }
-  if (current.length >= 3) {
-    heatwaveDays.push([...current]);
-  }
-  // Retourne un tableau d'indices des jours de canicule
-  return heatwaveDays.flat();
+  if (current.length >= 3) heatwaveDays.push(...current);
+  return heatwaveDays;
 }
 
+const darkTheme = {
+  '--card-background': '#23272f',
+  '--body-bg': '#181a20',
+  '--text-main': '#f5f7fa',
+  '--text-secondary': '#b0b8c1',
+  '--border-color': '#333842'
+};
+
+const lightTheme = {
+  '--card-background': '#fff',
+  '--body-bg': '#f5f7fa',
+  '--text-main': '#2d3a4b',
+  '--text-secondary': '#6c7a89',
+  '--border-color': '#eaeaea'
+};
+
 const Test = () => {
-  const [selectedCity, setSelectedCity] = useState(cities[0]);
+  const [selectedCity, setSelectedCity] = useState({
+    name: 'Paris',
+    latitude: 48.8534,
+    longitude: 2.3488,
+    country: 'France',
+    country_code: 'FR'
+  });
+  const [cityInput, setCityInput] = useState('');
+  const [citySuggestions, setCitySuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentTemp, setCurrentTemp] = useState(null);
+  const [darkMode, setDarkMode] = useState(
+    window.matchMedia &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches
+  );
+  const suggestionsRef = useRef();
 
-  // Calcule dynamiquement la plage de dates (90 derniers jours)
+  // Apply theme to root
+  useEffect(() => {
+    const theme = darkMode ? darkTheme : lightTheme;
+    for (const key in theme) {
+      document.documentElement.style.setProperty(key, theme[key]);
+    }
+    document.body.style.background = theme['--body-bg'];
+    document.body.style.color = theme['--text-main'];
+  }, [darkMode]);
+
   function getDateRange() {
     const end = new Date();
     const start = new Date();
-    start.setDate(end.getDate() - 89); // 90 jours incluant aujourd'hui
+    start.setDate(end.getDate() - 89);
     const toISO = d => d.toISOString().slice(0, 10);
     return { start: toISO(start), end: toISO(end) };
   }
 
-  // Récupère la température actuelle pour la ville sélectionnée
+  // Fetch current temperature for the selected city
   const fetchCurrentTemperature = async (city) => {
     try {
       const response = await axios.get('https://api.open-meteo.com/v1/forecast', {
@@ -238,6 +137,7 @@ const Test = () => {
     }
   };
 
+  // Fetch temperature data for the selected city
   const fetchTemperatureData = async (city) => {
     setLoading(true);
     setError(null);
@@ -258,7 +158,6 @@ const Test = () => {
       let tempMax = response.data.daily.temperature_2m_max;
       let tempMin = response.data.daily.temperature_2m_min;
 
-      // S'assurer qu'on ne garde que les 90 derniers jours (au cas où l'API en renverrait plus)
       if (dates.length > 90) {
         const startIdx = dates.length - 90;
         dates = dates.slice(startIdx);
@@ -266,10 +165,8 @@ const Test = () => {
         tempMin = tempMin.slice(startIdx);
       }
 
-      // Détection des indices de jours de canicule
       const heatwaveIndices = detectHeatwaves(tempMax, tempMin);
 
-      // Dégradé pour max (bleu->rouge) et min (bleu clair->bleu foncé)
       const minOfMax = Math.min(...tempMax);
       const maxOfMax = Math.max(...tempMax);
       const minOfMin = Math.min(...tempMin);
@@ -277,17 +174,17 @@ const Test = () => {
 
       const backgroundColorsMax = tempMax.map((t, i) =>
         heatwaveIndices.includes(i)
-          ? 'rgba(255, 60, 60, 0.85)' // fond rouge pour canicule
+          ? 'rgba(255, 60, 60, 0.85)'
           : getColorGradient(minOfMax, maxOfMax, t)
       );
       const backgroundColorsMin = tempMin.map((t, i) =>
         heatwaveIndices.includes(i)
-          ? 'rgba(255, 60, 60, 0.85)' // fond rouge pour canicule
+          ? 'rgba(255, 60, 60, 0.85)'
           : getBlueGradient(minOfMin, maxOfMin, t)
       );
 
       setData({
-        labels: dates.map(d => d.slice(0, 10)), // yyyy-MM-dd
+        labels: dates.map(d => d.slice(0, 10)),
         datasets: [
           {
             label: 'Température max journalière (°C)',
@@ -308,11 +205,68 @@ const Test = () => {
 
       setLoading(false);
     } catch (err) {
-      console.error(err);
       setError('Erreur lors de la récupération des données');
       setLoading(false);
     }
   };
+
+  // Fetch suggestions from Open-Meteo Geocoding API
+  const fetchCitySuggestions = async (query) => {
+    if (!query || query.length < 2) {
+      setCitySuggestions([]);
+      return;
+    }
+    try {
+      const response = await axios.get('https://geocoding-api.open-meteo.com/v1/search', {
+        params: {
+          name: query,
+          count: 7,
+          language: 'fr',
+          format: 'json'
+        }
+      });
+      if (response.data && response.data.results) {
+        setCitySuggestions(response.data.results);
+      } else {
+        setCitySuggestions([]);
+      }
+    } catch {
+      setCitySuggestions([]);
+    }
+  };
+
+  // Handle input change for city search
+  const handleCityInput = (e) => {
+    const value = e.target.value;
+    setCityInput(value);
+    setShowSuggestions(true);
+    fetchCitySuggestions(value);
+  };
+
+  // Handle suggestion click
+  const handleSuggestionClick = (city) => {
+    setSelectedCity({
+      name: city.name,
+      latitude: city.latitude,
+      longitude: city.longitude,
+      country: city.country,
+      country_code: city.country_code
+    });
+    setCityInput(`${city.name}${city.country ? ', ' + city.country : ''}`);
+    setShowSuggestions(false);
+    setCitySuggestions([]);
+  };
+
+  // Hide suggestions when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (suggestionsRef.current && !suggestionsRef.current.contains(event.target)) {
+        setShowSuggestions(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   useEffect(() => {
     fetchTemperatureData(selectedCity);
@@ -320,34 +274,158 @@ const Test = () => {
     // eslint-disable-next-line
   }, [selectedCity]);
 
-  const handleCityChange = (e) => {
-    const city = cities.find(c => c.name === e.target.value);
-    setSelectedCity(city);
+  // Toggle switch style
+  const switchContainer = {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 12,
+    margin: '1.5rem 0 0.5rem 0',
+    justifyContent: 'center'
   };
 
-  if (loading) return <div style={loaderStyles}>Chargement des données…</div>;
-  if (error) return <div style={errorStyles}>{error}</div>;
+  const switchLabel = {
+    fontWeight: 600,
+    color: 'var(--text-main)',
+    fontSize: 16
+  };
+
+  const switchInput = {
+    width: 40,
+    height: 22,
+    accentColor: '#e74c3c',
+    cursor: 'pointer'
+  };
+
+  // Responsive container styles
+  const mainWrapper = {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '2rem',
+    maxWidth: 1400,
+    margin: '0 auto',
+    padding: '0 1rem'
+  };
+
+  const flexRow = {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: '2.5rem',
+    alignItems: 'flex-start',
+    flexWrap: 'wrap'
+  };
+
+  const mainCol = {
+    flex: 3,
+    minWidth: 0
+  };
+
+  const asideCol = {
+    flex: '0 0 340px',
+    minWidth: 260,
+    maxWidth: 380,
+    position: 'sticky',
+    top: 60,
+    alignSelf: 'flex-start',
+    background: 'transparent',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '2.5rem'
+  };
+
+  // Responsive for mobile
+  const mediaQuery = '@media (max-width: 900px)';
+  const responsiveStyles = `
+    ${mediaQuery} {
+      .main-flex-row {
+        flex-direction: column !important;
+        gap: 1.5rem !important;
+      }
+      .main-col, .aside-col {
+        max-width: 100% !important;
+        flex: 1 1 100% !important;
+      }
+      .aside-col {
+        position: static !important;
+        top: unset !important;
+      }
+    }
+  `;
 
   return (
-    <div style={dashboardStyles}>
+    <div style={mainWrapper}>
+      <style>{responsiveStyles}</style>
       {/* Température actuelle centrée en haut */}
-      <div style={currentTempGlobalContainer}>
-        <span style={currentTempText}>
-          {currentTemp !== null ? `${currentTemp}°C` : 'Température indisponible'}
-        </span>
-        <span style={currentTempCity}>
+      <section
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          margin: '2.5rem 0 2rem 0',
+          gap: '0.7rem'
+        }}
+        aria-label="Température actuelle"
+      >
+        <div style={{display: 'flex', alignItems: 'center', gap: 16}}>
+          <div
+            style={{
+              fontSize: '7rem',
+              fontWeight: 900,
+              color: '#e74c3c',
+              margin: 0,
+              lineHeight: 1,
+              textShadow: '0 2px 12px rgba(231,76,60,0.08)'
+            }}
+          >
+            {currentTemp !== null ? `${currentTemp}°C` : <span style={{fontSize: '2rem', color: '#888'}}>Température indisponible</span>}
+          </div>
+          {selectedCity.country_code && (
+            <span style={{fontSize: '3rem', marginLeft: 8}}>
+              {getFlagEmoji(selectedCity.country_code)}
+            </span>
+          )}
+        </div>
+        <div
+          style={{
+            fontSize: '2.2rem',
+            fontWeight: 600,
+            color: 'var(--text-main)',
+            letterSpacing: 1,
+            marginBottom: 0,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10
+          }}
+        >
           {selectedCity.name}
-        </span>
-      </div>
-      {/* Contenu principal en flex */}
-      <div style={mainContainer}>
-        <div style={leftCol}>
-          <div style={cardStyles}>
-            <div style={titleStyles}>Dashboard Température France</div>
-            <div style={subtitleStyles}>
-              Températures min & max journalières à {selectedCity.name} (90 derniers jours)
-            </div>
-            <div style={chartContainerStyles}>
+          {selectedCity.country && (
+            <span style={{fontSize: '1.3rem', color: 'var(--text-secondary)'}}>
+              {selectedCity.country}
+            </span>
+          )}
+        </div>
+      </section>
+      <div className="main-flex-row" style={flexRow}>
+        <main className="main-col" style={mainCol}>
+          <article
+            style={{
+              padding: '2.5rem 2rem 2rem 2rem',
+              borderRadius: '1.2rem',
+              background: 'var(--card-background, #fff)',
+              boxShadow: '0 4px 24px rgba(44,62,80,0.10)',
+              minHeight: 520
+            }}
+          >
+            <header>
+              <h3 style={{marginBottom: 0, color: 'var(--text-main)'}}>Évolution des températures</h3>
+              <p style={{color: 'var(--text-secondary)', marginBottom: 24, marginTop: 8, fontSize: 18}}>
+                Min & max journalières à <b>{selectedCity.name}{selectedCity.country ? `, ${selectedCity.country}` : ''}</b> (90 derniers jours)
+              </p>
+            </header>
+            {loading ? (
+              <progress style={{width: '100%', margin: '2rem 0'}} aria-label="Chargement du graphique" />
+            ) : error ? (
+              <div className="alert" style={{color: '#e74c3c', background: '#fff3f3', padding: 16, borderRadius: 8}}>{error}</div>
+            ) : (
               <Bar
                 data={data}
                 options={{
@@ -357,70 +435,149 @@ const Test = () => {
                       display: true,
                       position: 'top',
                       labels: {
-                        color: '#2d3a4b',
+                        color: 'var(--text-main)',
                         font: { size: 16 }
                       }
                     },
-                    title: {
-                      display: false
-                    },
-                    tooltip: {
-                      mode: 'index',
-                      intersect: false
-                    }
+                    title: { display: false },
+                    tooltip: { mode: 'index', intersect: false }
                   },
                   scales: {
                     x: {
                       ticks: {
                         maxTicksLimit: 20,
-                        color: '#6c7a89',
-                        font: { size: 12 },
-                        callback: function(value, index, ticks) {
-                          // Affiche la date au format yyyy-MM-dd
+                        color: 'var(--text-secondary)',
+                        font: { size: 13 },
+                        callback: function(value, index) {
                           return data.labels[index];
                         }
                       },
-                      grid: {
-                        color: '#eaeaea'
-                      },
+                      grid: { color: 'var(--border-color)' },
                       stacked: false
                     },
                     y: {
                       beginAtZero: false,
-                      ticks: {
-                        color: '#6c7a89',
-                        font: { size: 14 }
-                      },
-                      grid: {
-                        color: '#eaeaea'
-                      },
+                      ticks: { color: 'var(--text-secondary)', font: { size: 15 } },
+                      grid: { color: 'var(--border-color)' },
                       stacked: false
                     }
                   }
                 }}
               />
-            </div>
-            <div style={{marginTop: 24, color: '#e74c3c', fontWeight: 500}}>
-              <span style={{background: 'rgba(255,60,60,0.85)', padding: '0 8px', borderRadius: 4, marginRight: 8}}></span>
+            )}
+            <footer style={{marginTop: 28, color: '#e74c3c', fontWeight: 500, fontSize: 16, display: 'flex', alignItems: 'center'}}>
+              <span style={{background: 'rgba(255,60,60,0.85)', padding: '0 8px', borderRadius: 4, marginRight: 8, display: 'inline-block', height: 18}}></span>
               Périodes de canicule : ≥3 jours à plus de 36°C le jour et ≥3 nuits à plus de 21°C
+            </footer>
+          </article>
+        </main>
+        <aside className="aside-col" style={asideCol}>
+          <div
+            style={{
+              background: 'var(--card-background, #fff)',
+              borderRadius: 16,
+              boxShadow: '0 2px 12px rgba(44,62,80,0.07)',
+              padding: '2rem 1.5rem',
+              width: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'stretch'
+            }}
+          >
+            <label htmlFor="city-input" style={{ fontWeight: 600, color: 'var(--text-main)', fontSize: 18, marginBottom: 12 }}>
+              Recherchez une ville
+            </label>
+            <div style={{position: 'relative'}}>
+              <input
+                id="city-input"
+                type="text"
+                autoComplete="off"
+                value={cityInput}
+                onChange={handleCityInput}
+                onFocus={() => cityInput.length > 1 && setShowSuggestions(true)}
+                placeholder="Entrez une ville (ex: Tokyo)"
+                style={{
+                  fontSize: 18,
+                  padding: '14px 18px',
+                  borderRadius: 8,
+                  width: '100%',
+                  border: '1px solid var(--border-color)',
+                  background: 'var(--body-bg)',
+                  color: 'var(--text-main)'
+                }}
+                aria-label="Recherche de ville"
+              />
+              {showSuggestions && citySuggestions.length > 0 && (
+                <ul
+                  ref={suggestionsRef}
+                  style={{
+                    position: 'absolute',
+                    top: '110%',
+                    left: 0,
+                    right: 0,
+                    background: 'var(--card-background, #fff)',
+                    border: '1px solid var(--border-color)',
+                    borderRadius: 8,
+                    zIndex: 10,
+                    maxHeight: 220,
+                    overflowY: 'auto',
+                    margin: 0,
+                    padding: 0,
+                    listStyle: 'none',
+                    boxShadow: '0 4px 16px rgba(44,62,80,0.10)'
+                  }}
+                >
+                  {citySuggestions.map(city => (
+                    <li
+                      key={city.id || `${city.name}-${city.latitude}-${city.longitude}`}
+                      onClick={() => handleSuggestionClick(city)}
+                      style={{
+                        padding: '12px 18px',
+                        cursor: 'pointer',
+                        color: 'var(--text-main)',
+                        borderBottom: '1px solid var(--border-color)',
+                        background: 'transparent',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 10
+                      }}
+                      onMouseDown={e => e.preventDefault()}
+                    >
+                      {city.country_code && (
+                        <span style={{fontSize: '1.5rem', marginRight: 6}}>
+                          {getFlagEmoji(city.country_code)}
+                        </span>
+                      )}
+                      <span>{city.name}</span>
+                      {city.country ? (
+                        <span style={{color: 'var(--text-secondary)', marginLeft: 6, fontSize: 15}}>
+                          {city.country}
+                        </span>
+                      ) : null}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+            {/* Toggle Dark/Light mode */}
+            <div style={switchContainer}>
+              <label htmlFor="theme-switch" style={switchLabel}>
+                {darkMode ? 'Mode sombre' : 'Mode clair'}
+              </label>
+              <input
+                id="theme-switch"
+                type="checkbox"
+                checked={darkMode}
+                onChange={() => setDarkMode(v => !v)}
+                style={switchInput}
+                aria-label="Basculer le mode sombre/clair"
+              />
             </div>
           </div>
-        </div>
-        <div style={rightCol}>
-          <label htmlFor="city-select" style={{ fontWeight: 600, color: '#2d3a4b', fontSize: 18, marginBottom: 8, marginTop: 24 }}>
-            Choisissez une ville :
-          </label>
-          <select
-            id="city-select"
-            style={selectStyles}
-            value={selectedCity.name}
-            onChange={handleCityChange}
-          >
-            {cities.map(city => (
-              <option key={city.name} value={city.name}>{city.name}</option>
-            ))}
-          </select>
-        </div>
+          <div style={{fontSize: 15, color: 'var(--text-secondary)', textAlign: 'center', marginTop: 8}}>
+            <b>Astuce :</b> Tapez le nom d'une ville pour explorer le monde.
+          </div>
+        </aside>
       </div>
     </div>
   );
