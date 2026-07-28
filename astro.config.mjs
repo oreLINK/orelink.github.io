@@ -9,6 +9,6 @@ import { defineConfig } from 'astro/config';
 // La GitHub Action (.github/workflows/deploy.yml) fait le reste.
 
 export default defineConfig({
-  site: 'https://TON-PSEUDO.github.io',
-  base: '/', // ou '/mon-portfolio' pour une page projet
+  site: 'https://orelink.github.io',
+  base: '/',
 });
