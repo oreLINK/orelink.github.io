@@ -1,0 +1,29 @@
+---
+// Panneau réutilisable qui glisse depuis le bas (façon iOS).
+// Basé sur <dialog> natif : focus trap, Échap et backdrop gratuits.
+interface Props {
+  id: string;        // identifiant unique (ex. "experiences")
+  eyebrow: string;   // ex. "02 · Expériences"
+  title: string;     // ex. "Toutes mes expériences"
+  count: number;     // nombre d'entrées (affiché dans l'en-tête)
+}
+const { id, eyebrow, title, count } = Astro.props;
+---
+
+<dialog id={`sheet-${id}`} class="sheet" aria-labelledby={`sheet-title-${id}`}>
+  <div class="sheet-inner">
+    <div class="sheet-grabber" aria-hidden="true"></div>
+    <div class="sheet-head">
+      <div class="sheet-eyebrow">{eyebrow} · {count} {count > 1 ? 'entrées' : 'entrée'}</div>
+      <h2 class="sheet-title" id={`sheet-title-${id}`}>{title}</h2>
+    </div>
+    <div class="sheet-scroll">
+      <slot />
+    </div>
+  </div>
+  <button class="sheet-close" data-close-sheet aria-label="Fermer le panneau">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <path d="M6 6l12 12M18 6L6 18" />
+    </svg>
+  </button>
+</dialog>

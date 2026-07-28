@@ -1,0 +1,45 @@
+[
+  {
+    "id": "master-data",
+    "diplome": "Master Data & Ingénierie des données",
+    "etablissement": "Université de Bordeaux",
+    "lieu": "Bordeaux",
+    "dateDebut": "2019-09",
+    "dateFin": "2021-09",
+    "mention": "Mention Bien",
+    "resume": "Spécialisation bases de données distribuées, big data et statistiques appliquées.",
+    "details": [
+      "Modules : systèmes distribués, data warehousing, machine learning, cloud computing.",
+      "Projet de fin d'études : pipeline temps réel Kafka → Spark → entrepôt analytique.",
+      "Alternance en parallèle sur un poste d'ingénieur données junior."
+    ]
+  },
+  {
+    "id": "licence-info",
+    "diplome": "Licence Informatique",
+    "etablissement": "Université de Pau et des Pays de l'Adour",
+    "lieu": "Pau",
+    "dateDebut": "2016-09",
+    "dateFin": "2019-06",
+    "mention": "",
+    "resume": "Fondamentaux : algorithmique, bases de données relationnelles, programmation.",
+    "details": [
+      "Bases solides en SQL, Python et Java.",
+      "Premier contact avec la modélisation relationnelle et l'algèbre relationnelle."
+    ]
+  },
+  {
+    "id": "cert-dbt",
+    "diplome": "dbt Analytics Engineering Certification",
+    "etablissement": "dbt Labs",
+    "lieu": "En ligne",
+    "dateDebut": "2023-05",
+    "dateFin": "2023-05",
+    "mention": "",
+    "resume": "Certification officielle sur la modélisation, les tests et le déploiement dbt.",
+    "details": [
+      "Bonnes pratiques de structuration d'un projet dbt (staging / intermediate / marts).",
+      "Tests, snapshots, macros et documentation."
+    ]
+  }
+]

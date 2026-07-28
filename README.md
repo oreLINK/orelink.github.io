@@ -1,70 +1,75 @@
-# Getting Started with Create React App
+# Portfolio Data Engineer — Astro
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Site statique de portfolio (Data / Analytics Engineer), hébergé sur GitHub et
+déployé via GitHub Pages. Toutes les données sont en JSON et validées au build.
 
-## Available Scripts
+## Démarrer
 
-In the project directory, you can run:
+```bash
+npm install
+npm run dev        # http://localhost:4321
+npm run build      # génère /dist
+npm run preview    # prévisualise le build
+```
 
-### `npm start`
+## Où sont mes infos ?
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Tout le contenu vit dans `src/data/` — un fichier par section :
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+| Fichier                     | Section       |
+| --------------------------- | ------------- |
+| `src/data/profil.json`      | Hero + À propos + contact |
+| `src/data/experiences.json` | Expériences   |
+| `src/data/formations.json`  | Formation     |
+| `src/data/projets.json`     | Projets       |
+| `src/data/associatif.json`  | Associatif    |
 
-### `npm test`
+**Ajouter une entrée = ajouter un objet dans le tableau JSON concerné.** Rien
+d'autre à toucher : la section affiche automatiquement la plus récente et le
+panneau « voir tout » liste l'ensemble, trié par date décroissante.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Les dates sont au format `"AAAA-MM"` (ex. `"2024-03"`). Pour un poste en cours,
+mettre `"dateFin": null` → il s'affiche « présent » et son nœud passe en couleur
+signal.
 
-### `npm run build`
+### Validation automatique
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Les schémas (`src/content.config.ts`) valident chaque entrée **au build** avec
+Zod. Une date mal formée ou un champ manquant fait échouer `npm run build` avec
+un message clair — impossible de déployer des données cassées.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Personnaliser le design
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Toutes les couleurs, typos et espacements sont des variables CSS en haut de
+`src/styles/global.css` (bloc `:root`). Change `--signal` pour une autre couleur
+d'accent, `--bg` pour le fond, etc.
 
-### `npm run eject`
+Ton CV : dépose `cv.pdf` dans `public/` (référencé par `profil.json → liens.cv`).
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Déployer sur GitHub Pages
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+1. Dans `astro.config.mjs`, règle `site` et `base` :
+   - repo `TON-PSEUDO.github.io` (page perso) → `base: '/'`
+   - repo `mon-portfolio` (page projet) → `base: '/mon-portfolio'`
+2. Pousse sur la branche `main`.
+3. Sur GitHub : **Settings → Pages → Build and deployment → Source : GitHub Actions**.
+4. Le workflow `.github/workflows/deploy.yml` build et publie automatiquement.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Structure
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```
+src/
+├── content.config.ts     # collections + schémas Zod (validation)
+├── data/                 # ← tes infos, en JSON
+├── lib/dates.ts          # tri + formatage des dates (fr-FR)
+├── layouts/Base.astro    # <head>, polices, styles globaux
+├── components/
+│   ├── Section.astro     # nœud DAG + carte résumé + bouton « voir tout »
+│   ├── BottomSheet.astro # panneau <dialog> réutilisable
+│   └── EntryCard.astro   # carte (résumé/détail) pour les 4 types
+├── styles/global.css     # thème « Console / DAG » (tokens en :root)
+└── pages/index.astro     # assemblage de la page
+```
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Polices auto-hébergées via `@fontsource` (pas d'appel à Google Fonts — plus
+respectueux du RGPD).

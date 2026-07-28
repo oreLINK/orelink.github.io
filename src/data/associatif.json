@@ -1,0 +1,28 @@
+[
+  {
+    "id": "data-for-good",
+    "role": "Bénévole data",
+    "organisation": "Data for Good",
+    "lieu": "Remote",
+    "dateDebut": "2023-01",
+    "dateFin": null,
+    "resume": "Contribution à des projets data au service d'associations d'intérêt général.",
+    "details": [
+      "Nettoyage et structuration de données pour une ONG environnementale.",
+      "Mise en place d'un tableau de bord de suivi d'impact."
+    ]
+  },
+  {
+    "id": "meetup-data",
+    "role": "Co-organisateur",
+    "organisation": "Meetup Data du Sud-Ouest",
+    "lieu": "Bordeaux",
+    "dateDebut": "2022-03",
+    "dateFin": "2023-12",
+    "resume": "Organisation de rencontres mensuelles autour de l'ingénierie des données.",
+    "details": [
+      "Programmation des talks et animation de la communauté (200+ membres).",
+      "Intervention sur l'orchestration moderne (Airflow vs Dagster)."
+    ]
+  }
+]

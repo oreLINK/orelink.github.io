@@ -1,0 +1,51 @@
+[
+  {
+    "id": "acme-data-engineer",
+    "poste": "Data Engineer",
+    "entreprise": "Acme Corp",
+    "lieu": "Paris / Remote",
+    "dateDebut": "2024-03",
+    "dateFin": null,
+    "resume": "Refonte de la plateforme data et migration de l'ELT vers dbt + Snowflake.",
+    "missions": [
+      "Migration de ~120 modèles SQL legacy vers dbt, avec tests et documentation générée automatiquement.",
+      "Mise en place de l'orchestration sous Airflow (astronomer) : 30+ DAGs, alerting Slack sur échec.",
+      "Réduction de 40 % des coûts de compute Snowflake via clustering et revue des warehouses.",
+      "Industrialisation de l'ingestion avec Airbyte (12 sources) et contrôles de fraîcheur."
+    ],
+    "stack": ["Python", "SQL", "dbt", "Airflow", "Snowflake", "Airbyte", "Terraform"],
+    "logo": ""
+  },
+  {
+    "id": "beta-analytics-engineer",
+    "poste": "Analytics Engineer",
+    "entreprise": "Beta Analytics",
+    "lieu": "Bordeaux",
+    "dateDebut": "2022-09",
+    "dateFin": "2024-02",
+    "resume": "Construction de la couche de modélisation et de la BM self-service pour les équipes métier.",
+    "missions": [
+      "Conception d'un modèle en étoile (Kimball) sur BigQuery pour les domaines Ventes et Marketing.",
+      "Déploiement de Looker : 15 explores, gouvernance des métriques centralisée.",
+      "Mise en place de tests dbt et de contrats de données pour fiabiliser les livraisons."
+    ],
+    "stack": ["dbt", "BigQuery", "Looker", "SQL", "GitHub Actions"],
+    "logo": ""
+  },
+  {
+    "id": "gamma-data-analyst",
+    "poste": "Data Analyst",
+    "entreprise": "Gamma Retail",
+    "lieu": "Toulouse",
+    "dateDebut": "2021-01",
+    "dateFin": "2022-08",
+    "resume": "Analyses ad hoc et premiers pipelines automatisés pour le pilotage commercial.",
+    "missions": [
+      "Automatisation de reportings hebdomadaires (Python + SQL) auparavant manuels.",
+      "Création de dashboards Metabase suivis par la direction commerciale.",
+      "Premiers pas en modélisation dbt pour standardiser les indicateurs."
+    ],
+    "stack": ["Python", "SQL", "Metabase", "PostgreSQL"],
+    "logo": ""
+  }
+]

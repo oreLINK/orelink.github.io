@@ -1,0 +1,48 @@
+[
+  {
+    "id": "pipeline-open-data",
+    "nom": "Pipeline open-data vélo",
+    "date": "2024-06",
+    "role": "Conception & développement",
+    "resume": "Pipeline ELT bout-en-bout sur des données ouvertes de mobilité, orchestré et testé.",
+    "description": [
+      "Ingestion horaire des stations de vélos en libre-service via API publique.",
+      "Chargement dans DuckDB puis modélisation dbt (staging → marts) avec tests de fraîcheur.",
+      "Orchestration Dagster et visualisation des taux de remplissage par quartier.",
+      "Tout est reproductible en local via Docker : `make up` et le pipeline tourne."
+    ],
+    "stack": ["Python", "dbt", "DuckDB", "Dagster", "Docker"],
+    "lien": "https://ton-demo.exemple.com",
+    "repo": "https://github.com/ton-pseudo/pipeline-open-data"
+  },
+  {
+    "id": "dwh-analytics",
+    "nom": "Mini data warehouse analytics",
+    "date": "2023-11",
+    "role": "Projet personnel",
+    "resume": "Entrepôt analytique de démonstration avec modélisation dimensionnelle complète.",
+    "description": [
+      "Génération de données e-commerce synthétiques, chargées dans BigQuery.",
+      "Modèle en étoile (faits ventes, dimensions clients / produits / temps).",
+      "Couche métriques exposée dans Metabase avec documentation dbt publiée."
+    ],
+    "stack": ["dbt", "BigQuery", "Metabase", "SQL"],
+    "lien": "",
+    "repo": "https://github.com/ton-pseudo/mini-dwh"
+  },
+  {
+    "id": "cli-data-quality",
+    "nom": "Outil CLI de qualité de données",
+    "date": "2023-03",
+    "role": "Développement",
+    "resume": "Petit outil en ligne de commande pour profiler et vérifier des jeux de données.",
+    "description": [
+      "Profilage automatique (nulls, cardinalité, distributions) sur fichiers CSV / Parquet.",
+      "Règles de validation déclaratives en YAML, rapport en sortie.",
+      "Packagé et publié sur PyPI."
+    ],
+    "stack": ["Python", "Pandas", "Typer", "PyPI"],
+    "lien": "",
+    "repo": "https://github.com/ton-pseudo/data-quality-cli"
+  }
+]
