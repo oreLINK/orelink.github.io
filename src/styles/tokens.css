@@ -1,0 +1,104 @@
+/* Jetons du design. Tous les composants passent par ces variables.
+   Thème clair par défaut, sombre selon le réglage de l'appareil ; data-theme sur <html>
+   (light | dark) force l'un ou l'autre. La couleur d'accent vient de src/data/site.json
+   (--accent-light et --accent-dark, posées par Base.astro). */
+
+:root {
+  color-scheme: light;
+
+  /* Couleurs : des gris neutres, une seule couleur d'accent */
+  --bg: #F4F5F7;
+  --surface: #FFFFFF;
+  --ink: #111318;
+  --muted: #4E535E;
+  --faint: #6E7380;
+  --rule: rgb(17 19 24 / 0.08);
+  --accent: var(--accent-light, #2F54D4);
+  --accent-ink: #FFFFFF;
+  --accent-soft: color-mix(in srgb, var(--accent) 10%, transparent);
+  --ok: #157A55;
+  --warn: #A65A0B;
+  --idle: #6E7380;
+
+  /* Fond : un éclairage doux par le haut et deux ombres grises très légères */
+  --light: #FFFFFF;
+  --shade-1: #E2E5EB;
+  --shade-2: #E9E9EE;
+
+  /* Verre */
+  --glass: rgb(255 255 255 / 0.62);
+  --glass-strong: rgb(255 255 255 / 0.85);
+  --glass-rim-1: rgb(255 255 255 / 1);
+  --glass-rim-2: rgb(255 255 255 / 0.3);
+  --glass-hairline: rgb(17 19 24 / 0.06);
+  --glass-glint: rgb(255 255 255 / 0.95);
+  --glass-shadow: 0 1px 2px rgb(17 19 24 / 0.04), 0 10px 30px -12px rgb(17 19 24 / 0.14);
+  --glass-shadow-hover: 0 2px 4px rgb(17 19 24 / 0.05), 0 18px 40px -14px rgb(17 19 24 / 0.2);
+  --glass-hover: rgb(17 19 24 / 0.04);
+  --glass-blur: blur(20px) saturate(160%);
+
+  /* Formes et typographie */
+  --radius-lg: 22px;
+  --radius-md: 14px;
+  --container: 52rem;
+  --gutter: clamp(1.125rem, 5vw, 2rem);
+  --font-sans: "Plus Jakarta Sans Variable", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0E1014;
+    --surface: #171A20;
+    --ink: #ECEEF2;
+    --muted: #A8ADB8;
+    --faint: #8C919C;
+    --rule: rgb(255 255 255 / 0.08);
+    --accent: var(--accent-dark, #9DB1FF);
+    --accent-ink: #0E1014;
+    --ok: #52D49E;
+    --warn: #F2B65A;
+    --idle: #8C919C;
+    --light: #1C2028;
+    --shade-1: #191C23;
+    --shade-2: #15171C;
+    --glass: rgb(255 255 255 / 0.045);
+    --glass-strong: rgb(36 40 49 / 0.9);
+    --glass-rim-1: rgb(255 255 255 / 0.22);
+    --glass-rim-2: rgb(255 255 255 / 0.04);
+    --glass-hairline: rgb(255 255 255 / 0.04);
+    --glass-glint: rgb(255 255 255 / 0.12);
+    --glass-shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 12px 32px -12px rgb(0 0 0 / 0.6);
+    --glass-shadow-hover: 0 2px 4px rgb(0 0 0 / 0.35), 0 20px 44px -14px rgb(0 0 0 / 0.7);
+    --glass-hover: rgb(255 255 255 / 0.06);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0E1014;
+  --surface: #171A20;
+  --ink: #ECEEF2;
+  --muted: #A8ADB8;
+  --faint: #8C919C;
+  --rule: rgb(255 255 255 / 0.08);
+  --accent: var(--accent-dark, #9DB1FF);
+  --accent-ink: #0E1014;
+  --ok: #52D49E;
+  --warn: #F2B65A;
+  --idle: #8C919C;
+  --light: #1C2028;
+  --shade-1: #191C23;
+  --shade-2: #15171C;
+  --glass: rgb(255 255 255 / 0.045);
+  --glass-strong: rgb(36 40 49 / 0.9);
+  --glass-rim-1: rgb(255 255 255 / 0.22);
+  --glass-rim-2: rgb(255 255 255 / 0.04);
+  --glass-hairline: rgb(255 255 255 / 0.04);
+  --glass-glint: rgb(255 255 255 / 0.12);
+  --glass-shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 12px 32px -12px rgb(0 0 0 / 0.6);
+  --glass-shadow-hover: 0 2px 4px rgb(0 0 0 / 0.35), 0 20px 44px -14px rgb(0 0 0 / 0.7);
+  --glass-hover: rgb(255 255 255 / 0.06);
+}

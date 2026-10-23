@@ -1,51 +1,113 @@
 [
   {
-    "id": "acme-data-engineer",
-    "poste": "Data Engineer",
-    "entreprise": "Acme Corp",
-    "lieu": "Paris / Remote",
-    "dateDebut": "2024-03",
-    "dateFin": null,
-    "resume": "Refonte de la plateforme data et migration de l'ELT vers dbt + Snowflake.",
-    "missions": [
-      "Migration de ~120 modèles SQL legacy vers dbt, avec tests et documentation générée automatiquement.",
-      "Mise en place de l'orchestration sous Airflow (astronomer) : 30+ DAGs, alerting Slack sur échec.",
-      "Réduction de 40 % des coûts de compute Snowflake via clustering et revue des warehouses.",
-      "Industrialisation de l'ingestion avec Airbyte (12 sources) et contrôles de fraîcheur."
-    ],
-    "stack": ["Python", "SQL", "dbt", "Airflow", "Snowflake", "Airbyte", "Terraform"],
-    "logo": ""
+    "id": "betclic-group",
+    "entreprise": "Betclic Group",
+    "logo": "logos/betclicgroup.png",
+    "site": "https://www.betclicgroup.com/",
+    "postes": [
+      {
+        "titre": "Data Engineer",
+        "contrat": "CDI",
+        "debut": "2026-01",
+        "fin": null,
+        "lieu": "Bordeaux, Nouvelle-Aquitaine, France",
+        "mode": "Hybride",
+        "description": "Data Engineer au sein d'une équipe Data évoluant dans les univers du pari sportif, du casino, du poker et des paris hippiques.\n\nJ'interviens sur la modélisation des données, le développement de transformations avec dbt et SQL, ainsi que sur la mise à disposition de produits data et de tableaux de bord à destination des équipes métiers. Je participe également à l'amélioration continue de la plateforme Data, à la réduction de la dette technique et à la préparation des enjeux liés aux grands événements sportifs internationaux.\nJ'utilise par ailleurs des solutions d'IA générative pour accélérer le développement, l'analyse et la valorisation de la donnée.",
+        "competences": [
+          "SQL",
+          "dbt",
+          "Snowflake",
+          "Tableau",
+          "Omni",
+          "IA générative (ChatGPT, Claude, Codex, Cortex, Rovo)"
+        ]
+      }
+    ]
   },
   {
-    "id": "beta-analytics-engineer",
-    "poste": "Analytics Engineer",
-    "entreprise": "Beta Analytics",
-    "lieu": "Bordeaux",
-    "dateDebut": "2022-09",
-    "dateFin": "2024-02",
-    "resume": "Construction de la couche de modélisation et de la BM self-service pour les équipes métier.",
-    "missions": [
-      "Conception d'un modèle en étoile (Kimball) sur BigQuery pour les domaines Ventes et Marketing.",
-      "Déploiement de Looker : 15 explores, gouvernance des métriques centralisée.",
-      "Mise en place de tests dbt et de contrats de données pour fiabiliser les livraisons."
-    ],
-    "stack": ["dbt", "BigQuery", "Looker", "SQL", "GitHub Actions"],
-    "logo": ""
+    "id": "thelio",
+    "entreprise": "Thélio",
+    "logo": "logos/thelio.png",
+    "postes": [
+      {
+        "titre": "Analytics Engineer",
+        "contrat": "CDI",
+        "debut": "2022-10",
+        "fin": "2025-09",
+        "lieu": "Bordeaux, Nouvelle-Aquitaine, France",
+        "mode": "Hybride",
+        "description": "Participation à plusieurs projets stratégiques de Data Engineering et de Data Analytics pour deux groupes internationaux de référence :\n\nClient – Leader mondial de la santé animale\n• Conception de dashboards (Salesforce Analytics Studio, Power BI) pour le suivi commercial et la qualité des données : forte réduction des contrôles manuels et meilleure réactivité des équipes.\n• Développement de solutions de pilotage d’audits dans 50+ pays, avec traduction automatique en 30+ langues et sécurité avancée (RLS).\n• Synchronisation et standardisation des données de ventes multi-sources pour 20+ filiales, garantissant un déploiement international homogène du CRM.\n• Automatisation et normalisation des KPIs via Databricks (medallion architecture), réduisant les extractions manuelles et économisant des dizaines d'heures par mois pour les équipes métiers.\n\nClient – Leader technologique pour l’industrie de la mode :\n• Refonte d’un modèle de gestion de contrats avec pipelines incrémentaux (delta logic, medallion architecture), réduisant à terme les temps de traitement et fiabilisant les données.\n• Mise en place d’un reporting Power BI centralisé (modèle en étoile, DAX), adopté par les équipes opérationnelles, remplaçant des fichiers Excel fragmentés et divisant par 2 l’effort de reporting manuel.\n\nImpact global : amélioration de la fiabilité et de la disponibilité des données, réduction des coûts de maintenance, accélération de la prise de décision (de plusieurs jours à quelques heures), et adoption accrue des solutions BI par les équipes métiers.\n\nVie interne : participation active à la dynamique de l’entreprise à travers l’organisation d’événements et d’initiatives collectives.",
+        "competences": [
+          "Data Engineering",
+          "Azure Databricks"
+        ]
+      },
+      {
+        "titre": "Data Engineer",
+        "contrat": "Contrat en alternance",
+        "debut": "2021-10",
+        "fin": "2022-09",
+        "lieu": "Bègles, Nouvelle-Aquitaine, France",
+        "description": "Participation à plusieurs projets stratégiques de modernisation et de sécurisation des flux de données pour des organisations de premier plan dans le secteur public et le tourisme.\n\nClient – Grande collectivité territoriale française\n• Mise en place d’un cadre unifié de synchronisation entre deux Data Warehouses, améliorant la cohérence des données et la fiabilité des analyses BI. Conception de flux évolutifs (Talend, SQL, Oracle) anticipant les évolutions structurelles pour garantir la scalabilité à long terme.\n\nClient – Groupe leader du tourisme résidentiel en France\n• Internalisation et industrialisation de pipelines ETL Talend, en remplacement de flux PHP obsolètes, pour un meilleur contrôle et une maintenance simplifiée.\n\nImpact global : renforcement de la fiabilité et de la cohérence des données, réduction des coûts d’exploitation, et amélioration de la réactivité des équipes BI et métiers dans la valorisation des données.\n\nVie interne : participation active à la dynamique de l’entreprise à travers l’organisation d’événements et d’initiatives collectives.",
+        "competences": [
+          "Data Engineering",
+          "Extract, Transform, Load (ETL)"
+        ]
+      }
+    ]
   },
   {
-    "id": "gamma-data-analyst",
-    "poste": "Data Analyst",
-    "entreprise": "Gamma Retail",
-    "lieu": "Toulouse",
-    "dateDebut": "2021-01",
-    "dateFin": "2022-08",
-    "resume": "Analyses ad hoc et premiers pipelines automatisés pour le pilotage commercial.",
-    "missions": [
-      "Automatisation de reportings hebdomadaires (Python + SQL) auparavant manuels.",
-      "Création de dashboards Metabase suivis par la direction commerciale.",
-      "Premiers pas en modélisation dbt pour standardiser les indicateurs."
-    ],
-    "stack": ["Python", "SQL", "Metabase", "PostgreSQL"],
-    "logo": ""
+    "id": "legalyspace",
+    "entreprise": "LEGALYSPACE",
+    "logo": "logos/legalyspace.png",
+    "postes": [
+      {
+        "titre": "Développeur web full stack",
+        "contrat": "Contrat en alternance",
+        "debut": "2020-10",
+        "fin": "2021-08",
+        "lieu": "Mérignac, Nouvelle-Aquitaine, France",
+        "mode": "Sur site",
+        "description": "Participation à plusieurs projets stratégiques de développement full stack pour une legaltech bordelaise en forte croissance.\n\n• Conception et implémentation de fonctionnalités stratégiques (Java EE, PL/SQL, HTML5, CSS, JavaScript), incluant une page de suivi client, un tableau de bord interne et l’intégration de services tiers (Tradeshift), renforçant à la fois la sécurité et la productivité.\n• Création d’une librairie Java de génération de fichiers XML conformes au standard UBL 2.1 (JAXB), documentée et versionnée sur GitHub, automatisant la production de documents fiscaux et facilitant leur intégration dans les systèmes de facturation.\n\nImpact global : amélioration de l’expérience client, optimisation des processus internes et conformité renforcée aux standards internationaux, contribuant à la croissance et à la fiabilité de la plateforme.",
+        "competences": [
+          "SQL",
+          "Design d’interface utilisateur"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "sopra-steria",
+    "entreprise": "Sopra Steria",
+    "logo": "logos/soprasteria.png",
+    "postes": [
+      {
+        "titre": "Développeur applications web",
+        "contrat": "Stage",
+        "debut": "2020-06",
+        "fin": "2020-08",
+        "lieu": "Mérignac, Nouvelle-Aquitaine, France",
+        "mode": "Sur site",
+        "description": "Participation à un projet stratégique de centralisation des outils comptables pour un organisme public majeur.\n\n• Développement d’une application web (Java EE, SQL, HTML5, CSS, JavaScript) intégrant de nouvelles fonctionnalités, dont la gestion des « Organismes » et la sauvegarde en session, contribuant à un outil unifié destiné aux praticiens affiliés à l’échelle nationale.\n\nImpact global : accélération et fiabilisation de la clôture mensuelle des comptes grâce à un outil centralisé et performant.",
+        "competences": []
+      }
+    ]
+  },
+  {
+    "id": "millesima",
+    "entreprise": "Millesima SA",
+    "logo": "logos/millesima.png",
+    "postes": [
+      {
+        "titre": "Développeur applications web",
+        "contrat": "Stage",
+        "debut": "2019-04",
+        "fin": "2019-06",
+        "lieu": "Région de Bordeaux, France",
+        "mode": "Sur site",
+        "description": "Participation à un projet stratégique de développement full stack pour un événement international dédié aux grands vins.\n\n• Conception et déploiement d’une application web interactive (Java EE, HTML5, CSS, JavaScript) intégrant formulaire d’inscription, animations 360°, espace administrateur, API REST JSON et sécurisation RGPD, utilisée sur bornes tactiles et iPads par plusieurs centaines de participants lors du Week-end des Grands Crus de Bordeaux 2019.\n\nImpact global : expérience stable, sécurisée et engageante, renforçant l’attractivité du stand client et la visibilité de la marque lors d’un événement international majeur.",
+        "competences": []
+      }
+    ]
   }
 ]

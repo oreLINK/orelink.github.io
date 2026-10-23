@@ -1,0 +1,42 @@
+---
+// Formation : une tuile par diplôme.
+import { getCollection } from 'astro:content';
+import SectionHead from '../SectionHead.astro';
+import Description from '../Description.astro';
+import OrgMark from '../OrgMark.astro';
+import Tags from '../Tags.astro';
+import { periode, plusRecentsDabord } from '../../lib/dates';
+import { t } from '../../lib/reglages';
+
+interface Props {
+  titre: string;
+}
+const { titre } = Astro.props;
+const formations = plusRecentsDabord((await getCollection('formations')).map((e) => e.data), (f) => f.fin ?? f.debut);
+---
+
+{
+  formations.length > 0 && (
+    <section class="section" id="formation" aria-labelledby="titre-formation">
+      <SectionHead id="formation" titre={titre} nombre={formations.length} />
+      <ol class="tiles">
+        {formations.map((f) => (
+          <li class="tile glass entry reveal">
+            <OrgMark name={f.etablissement} logo={f.logo} />
+            <div class="entry-body">
+              <div class="entry-top">
+                <h3 class="entry-title">{f.etablissement}</h3>
+                {(f.debut || f.fin) && <span class="entry-when">{periode(f.debut, f.fin)}</span>}
+              </div>
+              <p class="entry-org">{[f.diplome, f.domaine].filter(Boolean).join(', ')}</p>
+              {f.note && <p class="entry-meta">{f.note}</p>}
+              {f.activites && <p class="entry-meta">{t.activites} : {f.activites}</p>}
+              {f.description && <Description text={f.description} />}
+              <Tags items={f.competences} />
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+  )
+}

@@ -1,31 +1,88 @@
 ---
-import '@fontsource/space-grotesk/500.css';
-import '@fontsource/space-grotesk/600.css';
-import '@fontsource/space-grotesk/700.css';
-import '@fontsource/ibm-plex-sans/400.css';
-import '@fontsource/ibm-plex-sans/500.css';
-import '@fontsource/ibm-plex-mono/400.css';
-import '@fontsource/ibm-plex-mono/500.css';
 import '../styles/global.css';
+import Icons from '../components/Icons.astro';
+import Icon from '../components/Icon.astro';
+import Brand from '../components/Brand.astro';
+import { url, asset } from '../lib/paths';
+import { site, profil, t } from '../lib/reglages';
 
 interface Props {
-  title: string;
+  title?: string;
   description?: string;
+  /** Lien de retour affiché en haut à gauche (pages de projet). */
+  back?: { href: string; label: string };
 }
-const { title, description = '' } = Astro.props;
+const { title = site.meta.titre, description = site.meta.description, back } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const annee = new Date().getFullYear();
+const accents = `--accent-light: ${site.couleurs.accentClair}; --accent-dark: ${site.couleurs.accentSombre};`;
 ---
 
 <!doctype html>
-<html lang="fr">
+<html lang="fr" style={accents}>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="generator" content={Astro.generator} />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{title}</title>
-    {description && <meta name="description" content={description} />}
-    <meta name="color-scheme" content="dark" />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    {profil.photo && <meta property="og:image" content={new URL(asset(profil.photo), Astro.site)} />}
+    <meta name="theme-color" content="#F4F5F7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0E1014" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href={url('icons/favicon.svg')} type="image/svg+xml" />
+    <link rel="icon" href={url('icons/favicon-32.png')} sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href={url('icons/apple-touch-icon.png')} />
+
+    {/* Avant le premier rendu : thème choisi, pour éviter un flash de la mauvaise couleur. */}
+    <script is:inline>
+      document.documentElement.classList.add('js');
+      try {
+        const theme = localStorage.getItem('orelink.theme');
+        if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
+      } catch {}
+    </script>
   </head>
   <body>
-    <slot />
+    <a class="skip-link" href="#contenu">{t.allerAuContenu}</a>
+    <div class="backdrop" aria-hidden="true"><span></span><span></span></div>
+    <Icons />
+
+    <div class="page">
+      <header class="topbar">
+        {
+          back && (
+            <div class="topbar-start">
+              <a class="brand-link" href={url()} aria-label={`${site.logo.avant}${site.logo.separateur}${site.logo.apres}, ${t.retourAccueil}`}><Brand /></a>
+              <a class="back" href={back.href}>
+                <Icon name="arrow-left" class="icon-sm" /> {back.label}
+              </a>
+            </div>
+          )
+        }
+        <button class="icon-btn glass theme-toggle" type="button" aria-label={t.themeSombre} data-theme-toggle data-label-light={t.themeClair} data-label-dark={t.themeSombre}>
+          <svg class="icon i-moon" aria-hidden="true"><use href="#i-moon" /></svg>
+          <svg class="icon i-sun" aria-hidden="true"><use href="#i-sun" /></svg>
+        </button>
+      </header>
+
+      <slot />
+
+      <footer class="footer">
+        <span>© {annee} {profil.prenom} {profil.nom}</span>
+        <nav aria-label="Liens externes">
+          {profil.liens.linkedin && <a href={profil.liens.linkedin} rel="me">LinkedIn</a>}
+          {profil.liens.github && <a href={profil.liens.github} rel="me">GitHub</a>}
+          {site.piedDePage.lienCodeDuSite && <a href={site.piedDePage.lienCodeDuSite}>{t.codeDuSite}</a>}
+        </nav>
+      </footer>
+    </div>
+
+    <script>
+      import '../scripts/ui';
+    </script>
   </body>
 </html>

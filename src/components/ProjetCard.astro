@@ -1,0 +1,47 @@
+---
+// Tuile d'un projet. Toute la tuile mène à la page « Comment je l'ai réalisé » ; les deux petits
+// boutons ouvrent le projet en ligne et son code.
+import type { CollectionEntry } from 'astro:content';
+import Icon from './Icon.astro';
+import Tags from './Tags.astro';
+import { STATUTS } from '../lib/projets';
+import { url } from '../lib/paths';
+import { t } from '../lib/reglages';
+
+interface Props {
+  projet: CollectionEntry<'projets'>;
+}
+const { projet } = Astro.props;
+const p = projet.data;
+const statut = STATUTS[p.statut];
+---
+
+<article class="tile glass project">
+  <div class="project-head">
+    <span class="app-icon" style={p.couleur && `--c: ${p.couleur}`} aria-hidden="true">{p.titre[0]}</span>
+    <h3 class="project-title">{p.titre}</h3>
+    <span class:list={['badge', `is-${p.statut}`, `tone-${statut.ton}`]}>{statut.mot}</span>
+  </div>
+  <p class="project-text">{p.resume}</p>
+  <Tags items={p.stack} label={t.technologies} />
+  <div class="project-foot">
+    <a class="project-link" href={url(`projets/${projet.id}/`)}>
+      {t.commentJeLaiFait}<span class="visually-hidden"> : {p.titre}</span>
+      <Icon name="arrow-right" class="icon-sm" />
+    </a>
+    {
+      p.lien && (
+        <a class="icon-btn" href={p.lien} title={t.voirLeProjet}>
+          <Icon name="external" /><span class="visually-hidden">{t.voirLeProjet} {p.titre}</span>
+        </a>
+      )
+    }
+    {
+      p.depot && (
+        <a class="icon-btn" href={p.depot} title={t.codeSource}>
+          <Icon name="code" /><span class="visually-hidden">{t.codeSource} : {p.titre}</span>
+        </a>
+      )
+    }
+  </div>
+</article>

@@ -1,0 +1,85 @@
+---
+// Expérience : une tuile par entreprise ; plusieurs postes dans la même entreprise forment une frise.
+import { getCollection } from 'astro:content';
+import SectionHead from '../SectionHead.astro';
+import Description from '../Description.astro';
+import OrgMark from '../OrgMark.astro';
+import Duree from '../Duree.astro';
+import Tags from '../Tags.astro';
+import { periode, plusRecentsDabord } from '../../lib/dates';
+
+interface Props {
+  titre: string;
+}
+const { titre } = Astro.props;
+
+const experiences = plusRecentsDabord(
+  (await getCollection('experiences')).map((e) => ({
+    ...e.data,
+    postes: plusRecentsDabord(e.data.postes, (p) => p.debut),
+  })),
+  (e) => e.postes[0].debut,
+);
+const lieu = (p: { lieu?: string; mode?: string }) => [p.lieu, p.mode].filter(Boolean).join(' · ');
+---
+
+{
+  experiences.length > 0 && (
+    <section class="section" id="experience" aria-labelledby="titre-experience">
+      <SectionHead id="experience" titre={titre} nombre={experiences.length} />
+      <ol class="tiles">
+        {experiences.map((e) => {
+          const p0 = e.postes[0];
+          const debut = e.postes.at(-1)!.debut;
+          const fin = e.postes.some((p) => p.fin === null) ? null : plusRecentsDabord(e.postes, (p) => p.fin)[0].fin;
+          return (
+            <li class="tile glass entry reveal">
+              <OrgMark name={e.entreprise} logo={e.logo} />
+              {e.postes.length === 1 ? (
+                <div class="entry-body">
+                  <div class="entry-top">
+                    <h3 class="entry-title">{p0.titre}</h3>
+                    <span class="entry-when">{periode(p0.debut, p0.fin)}</span>
+                  </div>
+                  <p class="entry-org">{[e.entreprise, p0.contrat].filter(Boolean).join(' · ')}</p>
+                  <p class="entry-meta">
+                    <Duree debut={p0.debut} fin={p0.fin} />
+                    {lieu(p0) && <> · {lieu(p0)}</>}
+                  </p>
+                  {p0.description && <Description text={p0.description} />}
+                  <Tags items={p0.competences} />
+                </div>
+              ) : (
+                <div class="entry-body">
+                  <div class="entry-top">
+                    <h3 class="entry-title is-company">{e.entreprise}</h3>
+                    <span class="entry-when"><Duree debut={debut} fin={fin} /></span>
+                  </div>
+                  <ol class="roles">
+                    {e.postes.map((p) => (
+                      <li class:list={['role', { 'is-current': p.fin === null }]}>
+                        <div class="entry-body">
+                          <div class="entry-top">
+                            <h4 class="entry-title">{p.titre}</h4>
+                            <span class="entry-when">{periode(p.debut, p.fin)}</span>
+                          </div>
+                          <p class="entry-meta">
+                            {[p.contrat, lieu(p)].filter(Boolean).join(' · ')}
+                            {(p.contrat || lieu(p)) && ' · '}
+                            <Duree debut={p.debut} fin={p.fin} />
+                          </p>
+                          {p.description && <Description text={p.description} />}
+                          <Tags items={p.competences} />
+                        </div>
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              )}
+            </li>
+          );
+        })}
+      </ol>
+    </section>
+  )
+}

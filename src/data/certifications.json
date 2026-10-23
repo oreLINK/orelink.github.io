@@ -1,0 +1,12 @@
+[
+  {
+    "id": "dbt",
+    "nom": "dbt Analytics Engineering Certification",
+    "organisme": "dbt Labs",
+    "obtention": "2023-05",
+    "expiration": "2025-05",
+    "identifiant": "EXEMPLE-0000",
+    "url": "https://www.getdbt.com/certifications",
+    "competences": ["dbt", "SQL"]
+  }
+]

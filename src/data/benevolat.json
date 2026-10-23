@@ -1,0 +1,11 @@
+[
+  {
+    "id": "association-exemple",
+    "role": "Bénévole data",
+    "organisation": "Association Exemple",
+    "cause": "Environnement",
+    "debut": "2023-01",
+    "fin": null,
+    "description": "Nettoyage et structuration de données pour une ONG, puis tableau de bord de suivi d'impact."
+  }
+]

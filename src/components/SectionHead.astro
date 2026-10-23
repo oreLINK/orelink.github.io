@@ -1,0 +1,14 @@
+---
+// Titre de section, posé sur le fond (hors tuile), avec le nombre d'éléments.
+interface Props {
+  id: string;
+  titre: string;
+  nombre: number;
+}
+const { id, titre, nombre } = Astro.props;
+---
+
+<header class="section-head">
+  <h2 id={`titre-${id}`}>{titre}</h2>
+  <span class="section-count">{nombre}</span>
+</header>

@@ -1,0 +1,67 @@
+{
+  "meta": {
+    "titre": "oreLINK · Aurélien Bertrand, Data Engineer",
+    "description": "Portfolio d'Aurélien Bertrand (oreLINK), Data Engineer chez Betclic Group à Bordeaux : expérience, projets, formation, certifications et bénévolat."
+  },
+
+  "logo": {
+    "avant": "ore",
+    "separateur": "_",
+    "apres": "link"
+  },
+
+  "couleurs": {
+    "accentClair": "#2F54D4",
+    "accentSombre": "#9DB1FF"
+  },
+
+  "sections": [
+    { "id": "experience", "titre": "Expérience", "afficher": true },
+    { "id": "projets", "titre": "Projets", "afficher": false },
+    { "id": "formation", "titre": "Formation", "afficher": true },
+    { "id": "certifications", "titre": "Licences et certifications", "afficher": false },
+    { "id": "benevolat", "titre": "Bénévolat", "afficher": false }
+  ],
+
+  "textes": {
+    "meContacter": "Me contacter",
+    "aPropos": "À propos",
+    "aujourdhui": "aujourd’hui",
+    "activites": "Activités et associations",
+    "voirPlus": "Voir plus",
+    "voirMoins": "Voir moins",
+    "delivreeEn": "Délivrée en",
+    "expireEn": "Expire en",
+    "expireeEn": "Expirée en",
+    "identifiant": "Identifiant",
+    "afficherCertification": "Afficher la certification",
+    "commentJeLaiFait": "Comment je l'ai fait",
+    "commentJeLaiRealise": "Comment je l'ai réalisé",
+    "voirLeProjet": "Voir le projet",
+    "codeSource": "Code source",
+    "retour": "Retour au portfolio",
+    "statut": "Statut",
+    "commenceEn": "Commencé en",
+    "role": "Rôle",
+    "technologies": "Technologies",
+    "sommaire": "Sommaire",
+    "precedent": "Précédent",
+    "suivant": "Suivant",
+    "statuts": {
+      "en-ligne": "En ligne",
+      "en-cours": "En cours",
+      "archive": "Archivé"
+    },
+    "themeClair": "Passer au thème clair",
+    "themeSombre": "Passer au thème sombre",
+    "allerAuContenu": "Aller au contenu",
+    "codeDuSite": "Code du site",
+    "introuvableTitre": "Page introuvable",
+    "introuvableTexte": "Cette page n'existe pas, ou plus.",
+    "retourAccueil": "Retour à l'accueil"
+  },
+
+  "piedDePage": {
+    "lienCodeDuSite": "https://github.com/oreLINK/orelink.github.io"
+  }
+}

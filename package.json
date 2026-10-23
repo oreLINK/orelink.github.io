@@ -1,17 +1,16 @@
 {
-  "name": "portfolio-data-engineer",
+  "name": "orelink-portfolio",
   "type": "module",
-  "version": "1.0.0",
+  "version": "2.0.0",
+  "private": true,
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview",
-    "check": "astro check"
+    "preview": "astro preview"
   },
   "dependencies": {
-    "astro": "^5.13.0",
-    "@fontsource/space-grotesk": "^5.2.5",
-    "@fontsource/ibm-plex-sans": "^5.2.5",
-    "@fontsource/ibm-plex-mono": "^5.2.5"
+    "@fontsource-variable/plus-jakarta-sans": "^5.3.0",
+    "@fontsource/jetbrains-mono": "^5.3.0",
+    "astro": "^5.13.0"
   }
 }

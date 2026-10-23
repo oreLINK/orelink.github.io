@@ -1,0 +1,21 @@
+---
+// Logo d'une organisation (entreprise, école, organisme), ou ses initiales s'il n'y en a pas.
+import { asset } from '../lib/paths';
+
+interface Props {
+  name: string;
+  logo?: string;
+  size?: 'md' | 'sm';
+}
+const { name, logo, size = 'md' } = Astro.props;
+const initiales = name
+  .split(/[\s'’-]+/)
+  .filter((mot) => mot.length > 2 || /^[A-Z]/.test(mot))
+  .slice(0, 2)
+  .map((mot) => mot[0].toUpperCase())
+  .join('');
+---
+
+<div class:list={['org-mark', { 'is-sm': size === 'sm' }]} aria-hidden="true">
+  {logo ? <img src={asset(logo)} alt="" loading="lazy" decoding="async" /> : initiales}
+</div>

@@ -1,18 +1,24 @@
 {
-  "nom": "Prénom Nom",
-  "titre": "Data Engineer · Analytics Engineer",
-  "accroche": "Je construis des pipelines fiables et des modèles de données dont les équipes peuvent réellement se servir.",
-  "localisation": "Bayonne, France",
-  "email": "prenom.nom@email.com",
-  "disponibilite": "Ouvert aux opportunités",
-  "liens": {
-    "github": "https://github.com/ton-pseudo",
-    "linkedin": "https://linkedin.com/in/ton-profil",
-    "cv": "/cv.pdf"
+  "pseudo": "oreLINK",
+  "prenom": "Aurélien",
+  "nom": "Bertrand",
+  "photo": "img/orelink-400.jpg",
+  "poste": {
+    "titre": "Data Engineer",
+    "entreprise": "Betclic Group",
+    "logo": "logos/betclicgroup.png",
+    "site": "https://www.betclicgroup.com/"
   },
-  "apropos": [
-    "Data Engineer avec un pied côté Analytics Engineering : je m'occupe autant de l'ingestion et de l'orchestration que de la modélisation qui rend la donnée exploitable en aval. Mon terrain de jeu, ce sont les pipelines ELT modernes — de la source brute jusqu'à des tables propres, testées et documentées.",
-    "J'aime les architectures simples qui tiennent dans le temps : un schéma clair, des tests de qualité qui tournent à chaque run, et une documentation que les analystes lisent vraiment. Je pense coût, maintenabilité et lisibilité autant que performance.",
-    "En dehors du code, je m'intéresse à l'observabilité des données et à tout ce qui réduit la distance entre la donnée et la décision."
-  ]
+  "statut": {
+    "texte": "",
+    "ton": "none"
+  },
+  "localisation": "Bordeaux, France",
+  "email": "orelienbertrand@gmail.com",
+  "liens": {
+    "linkedin": "https://www.linkedin.com/in/aurelienbertrand/",
+    "github": "https://github.com/oreLINK",
+    "cv": ""
+  },
+  "aPropos": "Data Engineer avec un pied côté Analytics Engineering : de la source brute jusqu'à des tables propres, testées et documentées. En dehors du travail, je construis des petits sites statiques autour de mes passions : la montagne, les transports, les langues."
 }

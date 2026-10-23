@@ -1,0 +1,109 @@
+---
+// Page de doc d'un projet : « comment je l'ai réalisé ». Le contenu est le corps du fichier
+// src/content/projets/<slug>.md ; son en-tête remplit l'introduction et la fiche du projet.
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import Tags from '../../components/Tags.astro';
+import { STATUTS, trierProjets } from '../../lib/projets';
+import { dateLisible } from '../../lib/dates';
+import { url } from '../../lib/paths';
+import { profil, t } from '../../lib/reglages';
+
+export async function getStaticPaths() {
+  const projets = trierProjets(await getCollection('projets'));
+  return projets.map((projet, i) => ({
+    params: { slug: projet.id },
+    props: { projet, precedent: projets[i - 1], suivant: projets[i + 1] },
+  }));
+}
+
+const { projet, precedent, suivant } = Astro.props;
+const p = projet.data;
+const statut = STATUTS[p.statut];
+const { Content, headings } = await render(projet);
+const sommaire = headings.filter((h) => h.depth === 2);
+---
+
+<Base title={`${p.titre} · ${t.commentJeLaiRealise} · ${profil.prenom} ${profil.nom}`} description={p.resume} back={{ href: url('#projets'), label: t.retour }}>
+  <header class="project-intro reveal">
+    <span class="app-icon is-lg" style={p.couleur && `--c: ${p.couleur}`} aria-hidden="true">{p.titre[0]}</span>
+    <div>
+      <p class="eyebrow">{t.commentJeLaiRealise}</p>
+      <h1>{p.titre}</h1>
+      <p class="lead">{p.resume}</p>
+    </div>
+    {
+      (p.lien || p.depot) && (
+        <div class="actions">
+          {p.lien && <a class="btn" href={p.lien}>{t.voirLeProjet} <Icon name="external" class="icon-sm" /></a>}
+          {p.depot && <a class="btn btn-soft" href={p.depot}><Icon name="code" class="icon-sm" /> {t.codeSource}</a>}
+        </div>
+      )
+    }
+  </header>
+
+  <main id="contenu" class="stack">
+    <dl class="tile glass facts-tile reveal">
+      <div>
+        <dt>{t.statut}</dt>
+        <dd><span class:list={['badge', `is-${p.statut}`, `tone-${statut.ton}`]}>{statut.mot}</span></dd>
+      </div>
+      <div>
+        <dt>{t.commenceEn}</dt>
+        <dd>{dateLisible(p.date)}</dd>
+      </div>
+      {
+        p.role && (
+          <div>
+            <dt>{t.role}</dt>
+            <dd>{p.role}</dd>
+          </div>
+        )
+      }
+      {
+        p.stack.length > 0 && (
+          <div class="is-wide">
+            <dt>{t.technologies}</dt>
+            <dd><Tags items={p.stack} label={t.technologies} /></dd>
+          </div>
+        )
+      }
+    </dl>
+
+    {
+      sommaire.length > 1 && (
+        <nav class="toc reveal" aria-label={t.sommaire}>
+          <ol>
+            {sommaire.map((h) => (
+              <li><a href={`#${h.slug}`}>{h.text}</a></li>
+            ))}
+          </ol>
+        </nav>
+      )
+    }
+
+    <article class="prose glass reveal">
+      <Content />
+    </article>
+
+    {
+      (precedent || suivant) && (
+        <nav class="pager" aria-label="Autres projets">
+          {precedent && (
+            <a class="tile glass" href={url(`projets/${precedent.id}/`)} rel="prev">
+              <small><Icon name="arrow-left" class="icon-sm" /> {t.precedent}</small>
+              <strong>{precedent.data.titre}</strong>
+            </a>
+          )}
+          {suivant && (
+            <a class="tile glass is-next" href={url(`projets/${suivant.id}/`)} rel="next">
+              <small>{t.suivant} <Icon name="arrow-right" class="icon-sm" /></small>
+              <strong>{suivant.data.titre}</strong>
+            </a>
+          )}
+        </nav>
+      )
+    }
+  </main>
+</Base>

@@ -1,0 +1,15 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { url } from '../lib/paths';
+import { t } from '../lib/reglages';
+---
+
+<Base title={t.introuvableTitre} description={t.introuvableTexte}>
+  <main id="contenu" class="notfound">
+    <p class="code">404</p>
+    <h1>{t.introuvableTitre}</h1>
+    <p>{t.introuvableTexte}</p>
+    <a class="btn" href={url()}><Icon name="arrow-left" class="icon-sm" /> {t.retourAccueil}</a>
+  </main>
+</Base>

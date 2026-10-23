@@ -1,75 +1,115 @@
-# Portfolio Data Engineer — Astro
+# Portfolio · orelink.github.io
 
-Site statique de portfolio (Data / Analytics Engineer), hébergé sur GitHub et
-déployé via GitHub Pages. Toutes les données sont en JSON et validées au build.
-
-## Démarrer
+Site statique (Astro), une seule page qui défile, pensée autant pour l'ordinateur que
+pour le téléphone. Publié sur GitHub Pages à chaque push sur `main`
+(`.github/workflows/deploy.yml`).
 
 ```bash
 npm install
 npm run dev        # http://localhost:4321
-npm run build      # génère /dist
-npm run preview    # prévisualise le build
+npm run build      # génère dist/ (et vérifie tous les réglages)
+npm run preview    # sert dist/
 ```
 
-## Où sont mes infos ?
+## Modifier le site : les fichiers de réglage
 
-Tout le contenu vit dans `src/data/` — un fichier par section :
+Tout ce qui s'affiche vient de ces fichiers. On n'a jamais besoin de toucher au code.
 
-| Fichier                     | Section       |
-| --------------------------- | ------------- |
-| `src/data/profil.json`      | Hero + À propos + contact |
-| `src/data/experiences.json` | Expériences   |
-| `src/data/formations.json`  | Formation     |
-| `src/data/projets.json`     | Projets       |
-| `src/data/associatif.json`  | Associatif    |
+| Fichier | Ce qu'il règle |
+|---|---|
+| `src/data/profil.json` | Prénom, nom, photo, situation, disponibilité, lieu, e-mail, liens, « À propos » |
+| `src/data/site.json` | Titre de l'onglet, description, couleur d'accent, **ordre et titres des sections**, tous les libellés (boutons, mentions…) |
+| `src/data/experiences.json` | Expérience : une entreprise, un ou plusieurs postes |
+| `src/data/formations.json` | Formation |
+| `src/data/certifications.json` | Licences et certifications |
+| `src/data/benevolat.json` | Bénévolat |
+| `src/content/projets/*.md` | Projets : un fichier par projet (tuile de l'accueil + page de doc) |
 
-**Ajouter une entrée = ajouter un objet dans le tableau JSON concerné.** Rien
-d'autre à toucher : la section affiche automatiquement la plus récente et le
-panneau « voir tout » liste l'ensemble, trié par date décroissante.
+Pour ajouter une entrée, ajouter un objet dans le tableau JSON concerné, avec un `id`
+unique. L'ordre se calcule tout seul, du plus récent au plus ancien.
 
-Les dates sont au format `"AAAA-MM"` (ex. `"2024-03"`). Pour un poste en cours,
-mettre `"dateFin": null` → il s'affiche « présent » et son nœud passe en couleur
-signal.
+### `site.json`
 
-### Validation automatique
+- `sections` : l'ordre du tableau est l'ordre sur la page. `"afficher": false` masque une
+  section ; `titre` change son titre. Une section vide disparaît d'elle-même.
+- `couleurs.accentClair` / `couleurs.accentSombre` : la couleur des boutons et des liens,
+  en thème clair et en thème sombre (`#RRGGBB`).
+- `textes` : chaque libellé du site (« Me contacter », « Comment je l'ai fait », « En
+  ligne »…).
 
-Les schémas (`src/content.config.ts`) valident chaque entrée **au build** avec
-Zod. Une date mal formée ou un champ manquant fait échouer `npm run build` avec
-un message clair — impossible de déployer des données cassées.
+### `profil.json`
 
-## Personnaliser le design
+- `photo` : déposer l'image dans `public/` (ex. `public/photo.jpg`) et écrire
+  `"photo": "photo.jpg"`. Vide, ce sont les initiales qui s'affichent.
+- `statut.ton` : couleur de la pastille de disponibilité, `ok` (vert), `soon` (orange)
+  ou `none` (gris). Vider `statut.texte` masque la pastille.
+- `liens.cv` : déposer `public/cv.pdf` et écrire `"cv": "cv.pdf"`. Un lien vide masque
+  son bouton.
 
-Toutes les couleurs, typos et espacements sont des variables CSS en haut de
-`src/styles/global.css` (bloc `:root`). Change `--signal` pour une autre couleur
-d'accent, `--bg` pour le fond, etc.
+### Dates
 
-Ton CV : dépose `cv.pdf` dans `public/` (référencé par `profil.json → liens.cv`).
+Format `"AAAA-MM"` (ex. `"2024-03"`), ou `"AAAA"` seul pour une formation. Pour un poste
+ou un bénévolat en cours, mettre `"fin": null` : la page affiche « aujourd'hui », et la
+durée (« 2 ans 8 mois ») se met à jour toute seule.
 
-## Déployer sur GitHub Pages
+### Logos d'organisations
 
-1. Dans `astro.config.mjs`, règle `site` et `base` :
-   - repo `TON-PSEUDO.github.io` (page perso) → `base: '/'`
-   - repo `mon-portfolio` (page projet) → `base: '/mon-portfolio'`
-2. Pousse sur la branche `main`.
-3. Sur GitHub : **Settings → Pages → Build and deployment → Source : GitHub Actions**.
-4. Le workflow `.github/workflows/deploy.yml` build et publie automatiquement.
+Champ `logo` facultatif (entreprise, école, organisme) : un chemin dans `public/`
+(ex. `"logos/acme.png"`) ou une URL. Sans logo, les initiales s'affichent.
+
+### Projets
+
+Un fichier `src/content/projets/<nom>.md` = une tuile sur l'accueil **et** une page
+`/projets/<nom>/` « Comment je l'ai réalisé » :
+
+```yaml
+---
+titre: Terminus
+resume: Une ou deux phrases.
+date: 2026-09            # début du projet
+statut: en-ligne         # en-ligne | en-cours | archive
+role: Projet personnel
+lien: https://…          # le projet en ligne (facultatif)
+depot: https://github.com/…  # le code (facultatif)
+stack: [HTML, CSS]
+ordre: 1                 # facultatif : force l'ordre (le plus petit d'abord)
+couleur: "#E8962E"       # facultatif : couleur de la pastille du projet
+---
+
+## Le besoin
+…
+```
+
+Le corps est du Markdown classique. Les titres `##` forment le sommaire de la page.
+
+### Vérification
+
+Tous ces fichiers sont vérifiés au build. Une date mal écrite, une couleur invalide ou
+un champ manquant fait échouer `npm run build` (donc la mise en ligne), avec un message
+qui désigne le fichier et le champ.
+
+## Design
+
+- Police : Plus Jakarta Sans, hébergée avec le site (`@fontsource-variable`), sans appel
+  à un service tiers.
+- `src/styles/tokens.css` : couleurs (gris neutres, clair et sombre), verre, formes.
+- `src/styles/global.css` : mise en page et composants.
+- Le bouton en haut à droite passe du thème clair au sombre ; le choix est gardé sur
+  l'appareil. Sans choix, le site suit le réglage du système.
+- Les animations s'arrêtent si l'appareil demande moins de mouvement.
 
 ## Structure
 
 ```
 src/
-├── content.config.ts     # collections + schémas Zod (validation)
-├── data/                 # ← tes infos, en JSON
-├── lib/dates.ts          # tri + formatage des dates (fr-FR)
-├── layouts/Base.astro    # <head>, polices, styles globaux
-├── components/
-│   ├── Section.astro     # nœud DAG + carte résumé + bouton « voir tout »
-│   ├── BottomSheet.astro # panneau <dialog> réutilisable
-│   └── EntryCard.astro   # carte (résumé/détail) pour les 4 types
-├── styles/global.css     # thème « Console / DAG » (tokens en :root)
-└── pages/index.astro     # assemblage de la page
+├── data/                  # réglages et contenu (JSON)
+├── content/projets/       # un .md par projet
+├── content.config.ts      # vérification du contenu
+├── lib/reglages.ts        # vérification de site.json et profil.json
+├── layouts/Base.astro     # <head>, haut de page, pied de page
+├── components/sections/   # une section par fichier
+├── components/            # tuile projet, logo d'organisation, étiquettes, icônes
+├── pages/                 # accueil, page de projet, 404
+├── scripts/ui.ts          # thème, apparition, durées
+└── styles/                # jetons et composants
 ```
-
-Polices auto-hébergées via `@fontsource` (pas d'appel à Google Fonts — plus
-respectueux du RGPD).

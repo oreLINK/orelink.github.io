@@ -1,45 +1,64 @@
 [
   {
-    "id": "master-data",
-    "diplome": "Master Data & Ingénierie des données",
+    "id": "master-miage",
     "etablissement": "Université de Bordeaux",
-    "lieu": "Bordeaux",
-    "dateDebut": "2019-09",
-    "dateFin": "2021-09",
-    "mention": "Mention Bien",
-    "resume": "Spécialisation bases de données distribuées, big data et statistiques appliquées.",
-    "details": [
-      "Modules : systèmes distribués, data warehousing, machine learning, cloud computing.",
-      "Projet de fin d'études : pipeline temps réel Kafka → Spark → entrepôt analytique.",
-      "Alternance en parallèle sur un poste d'ingénieur données junior."
-    ]
+    "logo": "logos/universitedebordeaux.png",
+    "diplome": "Master",
+    "domaine": "MIAGE",
+    "debut": "2020-09",
+    "fin": "2022-09",
+    "note": "Niveau : Diplômé",
+    "activites": "BDE (Asso MIAGE Bordeaux) : Président (1 an) puis Vice-Président (1 an) ; Conseil des Collèges (Campus Peixotto & Bordes) : Élu étudiant (1 an et 9 mois).",
+    "description": "Le master MIAGE (Méthodes Informatiques Appliquées à la Gestion des Entreprises) forme des cadres d'entreprise experts en ingénierie et management des systèmes d'information.\nCe cursus de niveau bac+5 allie une double compétence en sciences du numérique (programmation, logique mathématique…) et en sciences du management (finance, comptabilité, marketing, gestion de projet…).",
+    "competences": []
   },
   {
-    "id": "licence-info",
-    "diplome": "Licence Informatique",
+    "id": "licence-miage",
+    "etablissement": "Université de Bordeaux",
+    "logo": "logos/universitedebordeaux.png",
+    "diplome": "Licence 3 parcours MIAGE",
+    "domaine": "Informatique",
+    "debut": "2019-09",
+    "fin": "2020-08",
+    "note": "Niveau : Diplômé",
+    "description": "La licence 3 parcours MIAGE (Méthodes Informatiques Appliquées à la Gestion des Entreprises) allie une double compétence en sciences du numérique (programmation, logique mathématique…) et en sciences du management (finance, comptabilité, marketing, gestion de projet…).\nCe cursus de niveau bac+3 est nécessaire pour intégrer un master MIAGE.",
+    "competences": []
+  },
+  {
+    "id": "dut-info",
+    "etablissement": "Université de Bordeaux",
+    "logo": "logos/universitedebordeaux.png",
+    "diplome": "IUT",
+    "domaine": "Computer Science",
+    "debut": "2017-09",
+    "fin": "2019-06",
+    "note": "Niveau : Diplômé",
+    "activites": "BDE (L'ABEII) : Trésorier (1 an)",
+    "description": "Le DUT Informatique forme des informaticiens généralistes à travers une solide formation théorique et pratique.",
+    "competences": []
+  },
+  {
+    "id": "licence-maths",
     "etablissement": "Université de Pau et des Pays de l'Adour",
-    "lieu": "Pau",
-    "dateDebut": "2016-09",
-    "dateFin": "2019-06",
-    "mention": "",
-    "resume": "Fondamentaux : algorithmique, bases de données relationnelles, programmation.",
-    "details": [
-      "Bases solides en SQL, Python et Java.",
-      "Premier contact avec la modélisation relationnelle et l'algèbre relationnelle."
-    ]
+    "logo": "logos/universitepau.png",
+    "diplome": "Licence",
+    "domaine": "Mathematics",
+    "debut": "2015-09",
+    "fin": "2017-05",
+    "note": "Niveau : Première année validée.",
+    "description": "La licence mathématiques donne aux étudiants de solides connaissances en mathématiques en abordant les notions de base d’algèbre, de géométrie, d’analyse et de probabilités.",
+    "competences": []
   },
   {
-    "id": "cert-dbt",
-    "diplome": "dbt Analytics Engineering Certification",
-    "etablissement": "dbt Labs",
-    "lieu": "En ligne",
-    "dateDebut": "2023-05",
-    "dateFin": "2023-05",
-    "mention": "",
-    "resume": "Certification officielle sur la modélisation, les tests et le déploiement dbt.",
-    "details": [
-      "Bonnes pratiques de structuration d'un projet dbt (staging / intermediate / marts).",
-      "Tests, snapshots, macros et documentation."
-    ]
+    "id": "bac-s",
+    "etablissement": "Lycée René Cassin",
+    "logo": "logos/lyceerenecassin.png",
+    "diplome": "Baccalauréat",
+    "domaine": "Scientifique",
+    "debut": "2012-09",
+    "fin": "2015-07",
+    "note": "Niveau : Diplômé",
+    "description": "Option mathématiques.",
+    "competences": []
   }
 ]

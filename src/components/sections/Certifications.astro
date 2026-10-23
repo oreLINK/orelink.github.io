@@ -1,0 +1,50 @@
+---
+// Licences et certifications : une tuile par certification.
+import { getCollection } from 'astro:content';
+import SectionHead from '../SectionHead.astro';
+import OrgMark from '../OrgMark.astro';
+import Tags from '../Tags.astro';
+import Icon from '../Icon.astro';
+import { dateLisible, ordre, plusRecentsDabord } from '../../lib/dates';
+import { t } from '../../lib/reglages';
+
+interface Props {
+  titre: string;
+}
+const { titre } = Astro.props;
+const certifications = plusRecentsDabord((await getCollection('certifications')).map((e) => e.data), (c) => c.obtention);
+const aujourdhui = new Date().toISOString().slice(0, 7);
+---
+
+{
+  certifications.length > 0 && (
+    <section class="section" id="certifications" aria-labelledby="titre-certifications">
+      <SectionHead id="certifications" titre={titre} nombre={certifications.length} />
+      <ol class="tiles">
+        {certifications.map((c) => (
+          <li class="tile glass entry reveal">
+            <OrgMark name={c.organisme} logo={c.logo} />
+            <div class="entry-body">
+              <div class="entry-top">
+                <h3 class="entry-title">{c.nom}</h3>
+                <span class="entry-when">{dateLisible(c.obtention)}</span>
+              </div>
+              <p class="entry-org">{c.organisme}</p>
+              <p class="entry-meta">
+                {t.delivreeEn} {dateLisible(c.obtention)}
+                {c.expiration && <> · {ordre(c.expiration) < ordre(aujourdhui) ? t.expireeEn : t.expireEn} {dateLisible(c.expiration)}</>}
+              </p>
+              {c.identifiant && <p class="entry-meta">{t.identifiant} : {c.identifiant}</p>}
+              <Tags items={c.competences} />
+              {c.url && (
+                <div class="entry-links">
+                  <a class="btn btn-soft" href={c.url}>{t.afficherCertification} <Icon name="external" class="icon-sm" /></a>
+                </div>
+              )}
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+  )
+}

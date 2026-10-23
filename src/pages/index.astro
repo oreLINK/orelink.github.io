@@ -1,148 +1,68 @@
 ---
-import { getCollection } from 'astro:content';
+// La page unique : le profil posé sur le fond, puis les sections dans l'ordre de site.json.
 import Base from '../layouts/Base.astro';
-import Section from '../components/Section.astro';
-import EntryCard from '../components/EntryCard.astro';
-import { parDateDesc } from '../lib/dates';
-import profil from '../data/profil.json';
+import Icon from '../components/Icon.astro';
+import Brand from '../components/Brand.astro';
+import OrgMark from '../components/OrgMark.astro';
+import Experience from '../components/sections/Experience.astro';
+import Projets from '../components/sections/Projets.astro';
+import Formation from '../components/sections/Formation.astro';
+import Certifications from '../components/sections/Certifications.astro';
+import Benevolat from '../components/sections/Benevolat.astro';
+import { asset } from '../lib/paths';
+import { site, profil, t } from '../lib/reglages';
 
-// Chargement + tri (le plus récent d'abord) de chaque collection
-const experiences = parDateDesc(await getCollection('experiences'), (e) => e.data.dateDebut);
-const formations  = parDateDesc(await getCollection('formations'),  (e) => e.data.dateDebut);
-const projets     = parDateDesc(await getCollection('projets'),     (e) => e.data.date);
-const associatif  = parDateDesc(await getCollection('associatif'),  (e) => e.data.dateDebut);
+const SECTIONS = { experience: Experience, projets: Projets, formation: Formation, certifications: Certifications, benevolat: Benevolat };
+const sections = site.sections.filter((s) => s.afficher);
 
 const l = profil.liens;
+const initiales = `${profil.prenom[0]}${profil.nom[0]}`.toUpperCase();
 ---
 
-<Base title={`${profil.nom} — ${profil.titre}`} description={profil.accroche}>
-  <main class="page dag">
+<Base>
+  <!-- ── Profil ─────────────────────────────────────────────────────────────────────────────── -->
+  <section class="intro reveal" aria-labelledby="nom">
+    <div class:list={['photo', { glass: !profil.photo }]}>
+      {profil.photo ? <img src={asset(profil.photo)} alt={`${profil.prenom} ${profil.nom}`} width="304" height="304" /> : <span aria-hidden="true">{initiales}</span>}
+    </div>
+    <div>
+      <h1 class="name" id="nom">
+        {profil.pseudo ? <Brand size="lg" /> : <>{profil.prenom} <span class="surname">{profil.nom}</span></>}
+      </h1>
+      {profil.pseudo && <p class="realname">{profil.prenom} <span class="surname">{profil.nom}</span></p>}
+    </div>
 
-    <!-- ── Hero ─────────────────────────────────────────────────────────── -->
-    <header class="hero node is-active">
-      <div class="eyebrow">portfolio · data engineering</div>
-      <h1>{profil.nom}</h1>
-      <div class="titre">{profil.titre}</div>
-      <p class="accroche">{profil.accroche}</p>
-      <div class="meta">
-        {profil.localisation}
-        {profil.disponibilite && <> · <span class="dispo">{profil.disponibilite}</span></>}
+    <div class="intro-more">
+      <ul class="facts">
+        {profil.statut.texte && <li class:list={['availability', `tone-${profil.statut.ton}`]}>{profil.statut.texte}</li>}
+        <li class="job">
+          <OrgMark name={profil.poste.entreprise} logo={profil.poste.logo} size="sm" />
+          <span>
+            <strong>{profil.poste.titre}</strong>
+            {' '}chez{' '}
+            {profil.poste.site ? <a class="job-org" href={profil.poste.site}>{profil.poste.entreprise}</a> : <span class="job-org">{profil.poste.entreprise}</span>}
+          </span>
+        </li>
+        {profil.localisation && <li><Icon name="pin" />{profil.localisation}</li>}
+      </ul>
+
+      <div class="actions">
+        {profil.email && <a class="btn" href={`mailto:${profil.email}`}><Icon name="mail" class="icon-sm" /> {t.meContacter}</a>}
+        {l.linkedin && <a class="btn btn-soft" href={l.linkedin} rel="me">LinkedIn</a>}
+        {l.github && <a class="btn btn-soft" href={l.github} rel="me">GitHub</a>}
+        {l.cv && <a class="btn btn-soft" href={asset(l.cv)}><Icon name="doc" class="icon-sm" /> CV</a>}
       </div>
-      <nav class="liens" aria-label="Liens de contact">
-        {l.github && (
-          <a class="lien" href={l.github} target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.9 10.9.6.1.8-.2.8-.5v-1.8c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.7 1.3 3.4 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 5 18.3 5.3 18.3 5.3c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.6.8.5 4.6-1.5 7.9-5.8 7.9-10.9C23.5 5.7 18.3.5 12 .5Z"/></svg>
-            GitHub
-          </a>
-        )}
-        {l.linkedin && (
-          <a class="lien" href={l.linkedin} target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 2h-17A1.5 1.5 0 0 0 2 3.5v17A1.5 1.5 0 0 0 3.5 22h17a1.5 1.5 0 0 0 1.5-1.5v-17A1.5 1.5 0 0 0 20.5 2ZM8 19H5v-9h3v9Zm-1.5-10.3a1.7 1.7 0 1 1 0-3.5 1.7 1.7 0 0 1 0 3.5ZM19 19h-3v-4.7c0-1.1 0-2.6-1.6-2.6s-1.8 1.2-1.8 2.5V19h-3v-9h2.9v1.2h.1a3.2 3.2 0 0 1 2.9-1.6c3.1 0 3.7 2 3.7 4.7V19Z"/></svg>
-            LinkedIn
-          </a>
-        )}
-        {profil.email && (
-          <a class="lien" href={`mailto:${profil.email}`}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>
-            Email
-          </a>
-        )}
-        {l.cv && (
-          <a class="lien" href={l.cv} target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"/></svg>
-            CV
-          </a>
-        )}
-      </nav>
-    </header>
 
-    <!-- ── 01 · À propos ────────────────────────────────────────────────── -->
-    <section class="stage node" id="apropos">
-      <div class="eyebrow"><span class="num">01</span> · À propos</div>
-      <h2>À propos</h2>
-      <div class="apropos">
-        {profil.apropos.map((p) => <p>{p}</p>)}
-      </div>
-    </section>
+      {profil.aPropos && <p class="about">{profil.aPropos}</p>}
+    </div>
+  </section>
 
-    <!-- ── 02 · Expériences ─────────────────────────────────────────────── -->
-    <Section id="experiences" num="02" title="Expériences" count={experiences.length} active={experiences[0]?.data.dateFin === null}>
-      <EntryCard slot="summary" kind="experience" variant="summary" entry={experiences[0].data} />
-      <Fragment slot="details">
-        {experiences.map((e) => <EntryCard kind="experience" variant="detail" entry={e.data} />)}
-      </Fragment>
-    </Section>
-
-    <!-- ── 03 · Formation ───────────────────────────────────────────────── -->
-    <Section id="formations" num="03" title="Formation" count={formations.length}>
-      <EntryCard slot="summary" kind="formation" variant="summary" entry={formations[0].data} />
-      <Fragment slot="details">
-        {formations.map((e) => <EntryCard kind="formation" variant="detail" entry={e.data} />)}
-      </Fragment>
-    </Section>
-
-    <!-- ── 04 · Projets ─────────────────────────────────────────────────── -->
-    <Section id="projets" num="04" title="Projets" count={projets.length}>
-      <EntryCard slot="summary" kind="projet" variant="summary" entry={projets[0].data} />
-      <Fragment slot="details">
-        {projets.map((e) => <EntryCard kind="projet" variant="detail" entry={e.data} />)}
-      </Fragment>
-    </Section>
-
-    <!-- ── 05 · Associatif ──────────────────────────────────────────────── -->
-    <Section id="associatif" num="05" title="Associatif" count={associatif.length}>
-      <EntryCard slot="summary" kind="associatif" variant="summary" entry={associatif[0].data} />
-      <Fragment slot="details">
-        {associatif.map((e) => <EntryCard kind="associatif" variant="detail" entry={e.data} />)}
-      </Fragment>
-    </Section>
-
-    <!-- ── Footer ───────────────────────────────────────────────────────── -->
-    <footer class="footer node is-end" id="contact">
-      <div class="eyebrow"><span class="num">06</span> · Contact</div>
-      <h2>On échange ?</h2>
-      <p>Une opportunité, une question sur un pipeline ou juste envie de parler data — écris-moi.</p>
-      <nav class="liens" aria-label="Contact">
-        {profil.email && <a class="lien" href={`mailto:${profil.email}`}>{profil.email}</a>}
-        {l.linkedin && <a class="lien" href={l.linkedin} target="_blank" rel="noopener">LinkedIn</a>}
-        {l.github && <a class="lien" href={l.github} target="_blank" rel="noopener">GitHub</a>}
-      </nav>
-      <div class="colophon">Construit avec Astro · déployé sur GitHub Pages · données en JSON</div>
-    </footer>
-
+  <main id="contenu" class="sections">
+    {
+      sections.map((s) => {
+        const Section = SECTIONS[s.id];
+        return <Section titre={s.titre} />;
+      })
+    }
   </main>
-
-  <script>
-    // Contrôleur du bottom sheet : ouverture/fermeture animée, Échap,
-    // clic sur le fond, respect de « prefers-reduced-motion ».
-    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    document.querySelectorAll<HTMLButtonElement>('[data-open-sheet]').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const id = btn.getAttribute('data-open-sheet');
-        const dlg = document.getElementById('sheet-' + id) as HTMLDialogElement | null;
-        if (!dlg) return;
-        dlg.showModal();
-        if (reduce) dlg.classList.add('is-open');
-        else requestAnimationFrame(() => requestAnimationFrame(() => dlg.classList.add('is-open')));
-      });
-    });
-
-    document.querySelectorAll<HTMLDialogElement>('dialog.sheet').forEach((dlg) => {
-      const close = () => {
-        if (reduce) { dlg.classList.remove('is-open'); dlg.close(); return; }
-        dlg.classList.remove('is-open');
-        const onEnd = (e: TransitionEvent) => {
-          if (e.target === dlg && e.propertyName === 'transform') {
-            dlg.close();
-            dlg.removeEventListener('transitionend', onEnd);
-          }
-        };
-        dlg.addEventListener('transitionend', onEnd);
-      };
-      dlg.querySelectorAll('[data-close-sheet]').forEach((b) => b.addEventListener('click', close));
-      dlg.addEventListener('click', (e) => { if (e.target === dlg) close(); });
-      dlg.addEventListener('cancel', (e) => { e.preventDefault(); close(); });
-    });
-  </script>
 </Base>
