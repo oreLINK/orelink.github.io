@@ -1,22 +1,23 @@
-name: Deploy to GitHub Pages
+# Mise en production : à chaque merge dans main, construit le site et publie dist/ dans la
+# branche gh-pages, servie par GitHub Pages (Settings → Pages : branche gh-pages, dossier /).
+# gh-pages est protégée : seule la clé de déploiement GH_PAGES_DEPLOY_KEY peut y écrire.
+name: Deploy to gh-pages
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: pages
-  cancel-in-progress: true
+  group: deploy-gh-pages
+  cancel-in-progress: false
 
 jobs:
-  build:
+  deploy:
+    name: Build & deploy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -25,7 +26,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
@@ -34,18 +35,12 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Publish dist/ to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          deploy_key: ${{ secrets.GH_PAGES_DEPLOY_KEY }}
+          publish_branch: gh-pages
+          publish_dir: ./dist
+          user_name: github-actions[bot]
+          user_email: 41898282+github-actions[bot]@users.noreply.github.com
+          full_commit_message: "deploy: ${{ github.sha }}"

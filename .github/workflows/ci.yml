@@ -1,0 +1,49 @@
+# Vérifications d'une pull request vers main (toutes deux obligatoires pour merger) :
+#   - Build : le site se construit (les fichiers de réglage et le contenu sont valides) ;
+#   - Source dev : la PR part de la branche dev.
+# Le build tourne aussi à chaque push sur dev, pour voir tôt ce qui casse.
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [dev]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+  source:
+    name: Source dev
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: La PR vers main doit partir de dev
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+        run: |
+          if [ "$HEAD_REF" != "dev" ]; then
+            echo "::error::Les PR vers main doivent partir de la branche dev (branche actuelle : $HEAD_REF)."
+            exit 1
+          fi
+          echo "PR depuis dev : OK"

@@ -1,8 +1,8 @@
 # Portfolio · orelink.github.io
 
 Site statique (Astro), une seule page qui défile, pensée autant pour l'ordinateur que
-pour le téléphone. Publié sur GitHub Pages à chaque push sur `main`
-(`.github/workflows/deploy.yml`).
+pour le téléphone. Publié sur GitHub Pages à chaque merge dans `main` (voir
+« Branches et mise en ligne »).
 
 ```bash
 npm install
@@ -10,6 +10,33 @@ npm run dev        # http://localhost:4321
 npm run build      # génère dist/ (et vérifie tous les réglages)
 npm run preview    # sert dist/
 ```
+
+## Branches et mise en ligne
+
+| Branche | Rôle | Qui peut y écrire |
+|---|---|---|
+| `dev` | développement : on y pousse son travail | tout le monde (push direct) |
+| `main` | production : ce qui est en ligne | personne en direct, uniquement par PR depuis `dev` |
+| `gh-pages` | le site construit (`dist/`), servi par GitHub Pages | uniquement l'action de déploiement |
+
+Le circuit :
+
+1. Travailler sur `dev`, pousser : la CI construit le site à chaque push.
+2. Ouvrir une PR `dev` → `main`. Deux vérifications doivent passer pour pouvoir merger :
+   **Build** (le site se construit) et **Source dev** (la PR part bien de `dev`).
+3. Merger la PR : `.github/workflows/deploy.yml` construit `main` et publie `dist/` dans
+   `gh-pages`. Le site est en ligne une à deux minutes plus tard.
+
+Les règles sont des *rulesets* GitHub (Settings → Rules → Rulesets) :
+
+- **main** : PR obligatoire, vérifications Build et Source dev obligatoires, ni force push ni
+  suppression. Personne ne les contourne, administrateur compris.
+- **gh-pages** : écriture réservée à la clé de déploiement « gh-pages deploy (GitHub
+  Actions) » (Settings → Deploy keys), dont la partie privée est le secret
+  `GH_PAGES_DEPLOY_KEY` de l'action. Ni force push ni suppression.
+
+GitHub Pages sert la branche `gh-pages`, dossier `/` (Settings → Pages). Pour relancer une
+mise en ligne sans changement : Actions → Deploy to gh-pages → Run workflow.
 
 ## Modifier le site : les fichiers de réglage
 
