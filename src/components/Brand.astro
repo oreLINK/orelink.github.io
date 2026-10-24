@@ -1,12 +1,13 @@
 ---
 // Le logo « ore_link » en snake_case : le séparateur en couleur d'accent (textes dans site.json → logo).
-import { site } from '../lib/reglages';
+import { reglages } from '../lib/reglages';
+import { langueDe } from '../lib/i18n';
 
 interface Props {
   size?: 'lg' | 'sm';
 }
 const { size = 'sm' } = Astro.props;
-const { avant, separateur, apres } = site.logo;
+const { avant, separateur, apres } = reglages(langueDe(Astro.url)).site.logo;
 ---
 
 <span class:list={['brand', `is-${size}`]} role="img" aria-label={`${avant}${separateur}${apres}`}>

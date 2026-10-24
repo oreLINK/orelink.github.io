@@ -1,0 +1,21 @@
+---
+// Liste d'une section, repliée à une hauteur maximale (hauteurSectionRepliee dans site.json) : le bas
+// s'estompe, avec « Tout afficher (n) » / « Voir moins ». Sans JavaScript, tout s'affiche ; le bouton
+// n'apparaît que si la liste dépasse nettement.
+import { reglages } from '../lib/reglages';
+import { langueDe } from '../lib/i18n';
+
+interface Props {
+  nombre: number;
+}
+const { nombre } = Astro.props;
+const { site, t } = reglages(langueDe(Astro.url));
+const toutAfficher = `${t.toutAfficher} (${nombre})`;
+---
+
+<div class="fold" data-fold style={`--fold-max: ${site.hauteurSectionRepliee}px`}>
+  <div class="fold-body">
+    <slot />
+  </div>
+  <button class="more-toggle fold-toggle" type="button" aria-expanded="false" data-label-more={toutAfficher} data-label-less={t.voirMoins} hidden>{toutAfficher}</button>
+</div>

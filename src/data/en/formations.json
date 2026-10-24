@@ -1,0 +1,36 @@
+[
+  {
+    "id": "master-miage",
+    "diplome": "Master's degree",
+    "note": "Grade: Graduated",
+    "activites": "Student union (Asso MIAGE Bordeaux): President (1 year) then Vice President (1 year); College Council (Peixotto & Bordes campuses): Student elected representative (1 year 9 months).",
+    "description": "The MIAGE master's degree (Computer Methods Applied to Business Management) trains business executives who are experts in information systems engineering and management.\nThis five-year program combines a dual skill set in digital sciences (programming, mathematical logic…) and management sciences (finance, accounting, marketing, project management…)."
+  },
+  {
+    "id": "licence-miage",
+    "diplome": "Bachelor's degree (3rd year), MIAGE track",
+    "domaine": "Computer Science",
+    "note": "Grade: Graduated",
+    "description": "The third year of the bachelor's MIAGE track (Computer Methods Applied to Business Management) combines a dual skill set in digital sciences (programming, mathematical logic…) and management sciences (finance, accounting, marketing, project management…).\nThis three-year program is required to enter a MIAGE master's degree."
+  },
+  {
+    "id": "dut-info",
+    "diplome": "DUT (two-year technical degree)",
+    "note": "Grade: Graduated",
+    "activites": "Student union (L'ABEII): Treasurer (1 year)",
+    "description": "The DUT in Computer Science trains general-purpose computer scientists through solid theoretical and practical training."
+  },
+  {
+    "id": "licence-maths",
+    "diplome": "Bachelor's degree",
+    "note": "Grade: First year completed.",
+    "description": "The bachelor's degree in mathematics gives students solid knowledge of mathematics, covering the basics of algebra, geometry, analysis and probability."
+  },
+  {
+    "id": "bac-s",
+    "diplome": "Baccalauréat (high school diploma)",
+    "domaine": "Science",
+    "note": "Grade: Graduated",
+    "description": "Mathematics option."
+  }
+]

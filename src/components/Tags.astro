@@ -1,9 +1,12 @@
 ---
+import { reglages } from '../lib/reglages';
+import { langueDe } from '../lib/i18n';
+
 interface Props {
   items: string[];
   label?: string;
 }
-const { items, label = 'Compétences' } = Astro.props;
+const { items, label = reglages(langueDe(Astro.url)).t.competences } = Astro.props;
 ---
 
 {

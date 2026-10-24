@@ -1,11 +1,102 @@
 [
   {
-    "id": "association-exemple",
-    "role": "Bénévole data",
-    "organisation": "Association Exemple",
-    "cause": "Environnement",
-    "debut": "2023-01",
-    "fin": null,
-    "description": "Nettoyage et structuration de données pour une ONG, puis tableau de bord de suivi d'impact."
+    "id": "mab-membre-actif",
+    "role": "Membre actif",
+    "organisation": "Miagistes Alumni Bordelais",
+    "logo": "logos/miagistesalumnibordelais.png",
+    "cause": "Arts et culture",
+    "debut": "2024-10",
+    "fin": "2026-09",
+    "description": "Association des Miagistes Alumni Bordelais depuis 2022\n• Création d'un large éventail de supports visuels pour l'association (publications et stories pour les réseaux sociaux, photos, brochures, modèles d'e-mails, PDF) sur plusieurs canaux (Facebook, Instagram, LinkedIn, Linktree)\n• Organisation et promotion d'afterworks de networking à Bordeaux, réunissant 30 à 60 participants par événement"
+  },
+  {
+    "id": "mab-vp-communication",
+    "role": "Vice-président Communication",
+    "organisation": "Miagistes Alumni Bordelais",
+    "logo": "logos/miagistesalumnibordelais.png",
+    "cause": "Arts et culture",
+    "debut": "2022-10",
+    "fin": "2024-09",
+    "description": "Association des Miagistes Alumni Bordelais depuis 2022\n• Cofondation de l'association en 2022 pour renforcer la communauté des anciens de la MIAGE de Bordeaux\n• Conception de l'identité visuelle de l'association et élaboration de chartes graphiques annuelles et propres à chaque événement\n• Réalisation de plus de 150 supports de communication (publications et stories pour les réseaux sociaux, photos, brochures, modèles d'e-mails, PDF)\n• Visibilité en ligne accrue grâce à une croissance régulière de la communauté (+250 abonnés Instagram, +200 abonnés LinkedIn la première année)\n• Planification et mise en œuvre de stratégies de communication annuelles, avec des campagnes adaptées à chaque événement\n• Organisation et promotion de plus de 20 afterworks de networking à Bordeaux, réunissant 30 à 60 participants par événement"
+  },
+  {
+    "id": "amb-membre-actif",
+    "role": "Membre actif",
+    "organisation": "AMB - Asso MIAGE Bordeaux",
+    "logo": "logos/assomiagebordeaux.png",
+    "cause": "Arts et culture",
+    "debut": "2022-06",
+    "fin": "2023-05",
+    "description": "Association des étudiants de la MIAGE de l'Université de Bordeaux depuis 1984\n• Participation à la préparation de divers événements étudiants\n• Contribution à l'organisation et à l'accompagnement sur place pendant les événements"
+  },
+  {
+    "id": "amb-vice-president",
+    "role": "Vice-président",
+    "organisation": "AMB - Asso MIAGE Bordeaux",
+    "logo": "logos/assomiagebordeaux.png",
+    "cause": "Arts et culture",
+    "debut": "2021-06",
+    "fin": "2022-05",
+    "description": "Association des étudiants de la MIAGE de l'Université de Bordeaux depuis 1984\n• Contribution à l'organisation de grands événements étudiants, dont des afterworks (~170 participants), le week-end d'intégration (~100 participants) et le week-end ski (~110 participants)\n• Bénévole dans l'équipe d'organisation de la 12e édition du Gala MIAGE Bordeaux aux Bassins des Lumières (~400 participants)\n• Participation à la rédaction de documents de capitalisation pour aider les futurs bureaux à organiser les événements récurrents (soirée d'intégration, WEI, WES, etc.)"
+  },
+  {
+    "id": "amb-president",
+    "role": "Président",
+    "organisation": "AMB - Asso MIAGE Bordeaux",
+    "logo": "logos/assomiagebordeaux.png",
+    "cause": "Arts et culture",
+    "debut": "2020-06",
+    "fin": "2021-05",
+    "description": "Association des étudiants de la MIAGE de l'Université de Bordeaux depuis 1984\n• Contribution à l'organisation de grands événements étudiants malgré la pandémie de COVID-19, dont des afterworks (~150 participants) et des rencontres en ligne sur Discord (~50 participants)\n• Maintien d'une forte cohésion entre les promotions MIAGE ainsi qu'avec les générations d'anciens\n• Engagement actif dans la vie étudiante locale et régionale au sein de la fédération territoriale ATENA (assemblées générales, votes, soutien aux initiatives)\n• Soutien à la promotion de la formation MIAGE, de ses traditions et de ses projets au sein de la fédération nationale MIAGE Connection (assemblées générales, votes, initiatives)"
+  },
+  {
+    "id": "mayday-festival",
+    "role": "Staff bénévole",
+    "organisation": "Mayday Festival",
+    "logo": "logos/maydayfestival.png",
+    "cause": "Arts et culture",
+    "debut": "2021-10",
+    "fin": "2021-10",
+    "description": "Festival de musique créé en 2016 à Talence, organisé en association depuis 2018.\n• Surveillance et sécurisation du périmètre du festival pour garantir la sécurité des festivaliers\n• Accueil des festivaliers : réponse à leurs questions et orientation sur le site\n• Renfort au bar pendant les heures de pointe pour absorber une forte affluence"
+  },
+  {
+    "id": "miage-connection-vp-reseau",
+    "role": "Vice-président Réseau",
+    "organisation": "MIAGE Connection",
+    "logo": "logos/miageconnection.png",
+    "cause": "Droits civiques et action sociale",
+    "debut": "2021-03",
+    "fin": "2021-10",
+    "description": "Fédération nationale des étudiants en MIAGE en France depuis 2005\n• Maintien du lien entre les associations membres (BDE, Junior-Entreprises, associations d'anciens) pendant la crise du Covid-19\n• Collecte et partage des activités des associations membres via la plateforme en ligne MIAGE Weather, favorisant la visibilité et l'échange d'idées et d'actualités sur les événements\n• Facilitation de la collaboration avec le pôle Formation pour accompagner les membres dans leur préparation académique\n• Accompagnement du renouvellement des bureaux étudiants pour assurer la continuité des activités essentielles à la MIAGE"
+  },
+  {
+    "id": "miage-connection-vp-international",
+    "role": "Vice-président International",
+    "organisation": "MIAGE Connection",
+    "logo": "logos/miageconnection.png",
+    "cause": "Formation",
+    "debut": "2021-03",
+    "fin": "2021-10",
+    "description": "Fédération nationale des étudiants en MIAGE en France depuis 2005\n• Maintien du lien avec les communautés MIAGE et les réseaux équivalents à l'étranger (Luxembourg, Belgique, Canada, États-Unis, etc.)\n• Rédaction d'un guide d'accompagnement pour aider les étudiants à s'installer à l'étranger : démarches administratives, conseils pratiques, logement et recommandations recueillies auprès d'anciens déjà expatriés"
+  },
+  {
+    "id": "ub-elu-etudiant",
+    "role": "Élu étudiant",
+    "organisation": "Université de Bordeaux",
+    "logo": "logos/universitedebordeaux.png",
+    "cause": "Droits civiques et action sociale",
+    "debut": "2020-12",
+    "fin": "2022-08",
+    "description": "• Représentation des étudiants dans les conseils centraux de l'université (notamment le Conseil d'administration et le Conseil académique), avec participation aux décisions pédagogiques, financières et administratives\n• Siège aux conseils de collège et de composante, avec contribution à la conception et à la validation de l'offre de formation, des modalités d'évaluation, des critères d'admission et de la politique de vie étudiante\n• Collaboration avec les vice-présidents de campus sur le bien-être étudiant, la vie de campus et la vie associative, en tant qu'intermédiaire entre les étudiants, l'administration et les associations étudiantes"
+  },
+  {
+    "id": "abeii-tresorier",
+    "role": "Trésorier",
+    "organisation": "L'ABEII",
+    "logo": "logos/lassoif.png",
+    "cause": "Services sociaux",
+    "debut": "2018-04",
+    "fin": "2019-03",
+    "description": "Association bordelaise des étudiants en informatique de l'Université de Bordeaux depuis 2012\n• Planification et coordination d'événements étudiants de 50 à plus de 150 participants, avec des budgets allant jusqu'à 3 000 €\n• Supervision du fonctionnement quotidien du foyer étudiant, fréquenté par plus de 200 étudiants\n• Gestion des stocks, des prix et des ventes de snacks et de boissons pour assurer des recettes régulières\n• Élaboration et suivi des budgets pour garantir la pérennité financière de l'association"
   }
 ]

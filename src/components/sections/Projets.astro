@@ -2,6 +2,7 @@
 // Projets : une tuile par projet, en grille sur grand écran.
 import { getCollection } from 'astro:content';
 import SectionHead from '../SectionHead.astro';
+import Repli from '../Repli.astro';
 import ProjetCard from '../ProjetCard.astro';
 import { trierProjets } from '../../lib/projets';
 
@@ -16,13 +17,15 @@ const projets = trierProjets(await getCollection('projets'));
   projets.length > 0 && (
     <section class="section" id="projets" aria-labelledby="titre-projets">
       <SectionHead id="projets" titre={titre} nombre={projets.length} />
-      <ul class="tiles is-grid">
-        {projets.map((p) => (
-          <li class="reveal">
-            <ProjetCard projet={p} />
-          </li>
-        ))}
-      </ul>
+      <Repli nombre={projets.length}>
+        <ul class="tiles is-grid">
+          {projets.map((p) => (
+            <li class="reveal">
+              <ProjetCard projet={p} />
+            </li>
+          ))}
+        </ul>
+      </Repli>
     </section>
   )
 }

@@ -51,6 +51,8 @@ Tout ce qui s'affiche vient de ces fichiers. On n'a jamais besoin de toucher au 
 | `src/data/certifications.json` | Licences et certifications |
 | `src/data/benevolat.json` | Bénévolat |
 | `src/content/projets/*.md` | Projets : un fichier par projet (tuile de l'accueil + page de doc) |
+| `src/data/en/*.json` | Version anglaise (voir « Langues » plus bas) |
+| `src/data/themes.json` | Thèmes d'habillage saisonniers (Halloween…) : voir [THEMES.md](THEMES.md) |
 
 Pour ajouter une entrée, ajouter un objet dans le tableau JSON concerné, avec un `id`
 unique. L'ordre se calcule tout seul, du plus récent au plus ancien.
@@ -72,6 +74,22 @@ unique. L'ordre se calcule tout seul, du plus récent au plus ancien.
   ou `none` (gris). Vider `statut.texte` masque la pastille.
 - `liens.cv` : déposer `public/cv.pdf` et écrire `"cv": "cv.pdf"`. Un lien vide masque
   son bouton.
+- `langues` : un drapeau par langue à côté du lieu, avec `nom` et `niveau` dans une bulle
+  au survol ou au toucher. `code` vaut `fr`, `en` ou `es` (drapeaux dessinés dans
+  `src/components/Drapeau.astro`). Un tableau vide masque les drapeaux.
+
+### Langues
+
+Le site existe en français (à `/`, par défaut) et en anglais (à `/en/`) ; le bouton à
+gauche du thème passe de l'un à l'autre en restant sur la même page.
+
+Les fichiers de `src/data/en/` ne contiennent **que les textes à traduire** : le reste
+(dates, logos, liens…) vient du fichier français du même nom. Une entrée se retrouve par
+son `id` (expériences, formations, bénévolat, sections de `site.json`) ; les postes d'une
+même entreprise et les langues de `profil.json` se suivent dans le même ordre qu'en
+français. Un champ absent reste en français ; un champ ou un `id` inconnu fait échouer le
+build avec un message qui le désigne. Les pages de projets (`src/content/projets/`) ne sont
+écrites qu'en français.
 
 ### Dates
 
@@ -121,9 +139,10 @@ qui désigne le fichier et le champ.
   à un service tiers.
 - `src/styles/tokens.css` : couleurs (gris neutres, clair et sombre), verre, formes.
 - `src/styles/global.css` : mise en page et composants.
-- Le bouton en haut à droite passe du thème clair au sombre ; le choix est gardé sur
-  l'appareil. Sans choix, le site suit le réglage du système.
+- Le bouton en haut à droite passe du thème clair au sombre ; le choix vaut pour la visite
+  en cours. Par défaut, et à chaque nouvelle visite, le site suit le réglage du système.
 - Les animations s'arrêtent si l'appareil demande moins de mouvement.
+- Thèmes d'habillage saisonniers (Halloween en octobre) : voir [THEMES.md](THEMES.md).
 
 ## Structure
 
@@ -132,11 +151,14 @@ src/
 ├── data/                  # réglages et contenu (JSON)
 ├── content/projets/       # un .md par projet
 ├── content.config.ts      # vérification du contenu
-├── lib/reglages.ts        # vérification de site.json et profil.json
+├── data/en/               # traductions anglaises (seulement les textes)
+├── lib/reglages.ts        # vérification de site.json et profil.json, par langue
+├── lib/i18n.ts            # langues, et pose des traductions sur le français
 ├── layouts/Base.astro     # <head>, haut de page, pied de page
 ├── components/sections/   # une section par fichier
 ├── components/            # tuile projet, logo d'organisation, étiquettes, icônes
-├── pages/                 # accueil, page de projet, 404
+├── vues/                  # accueil et page de projet, communes aux deux langues
+├── pages/                 # adresses : / et /en/, projets, 404
 ├── scripts/ui.ts          # thème, apparition, durées
 └── styles/                # jetons et composants
 ```

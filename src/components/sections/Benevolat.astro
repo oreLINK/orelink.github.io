@@ -1,42 +1,47 @@
 ---
 // Bénévolat : une tuile par engagement.
-import { getCollection } from 'astro:content';
 import SectionHead from '../SectionHead.astro';
+import Repli from '../Repli.astro';
 import Description from '../Description.astro';
 import OrgMark from '../OrgMark.astro';
 import Duree from '../Duree.astro';
 import { periode, plusRecentsDabord } from '../../lib/dates';
+import { liste } from '../../lib/contenu';
+import { langueDe } from '../../lib/i18n';
 
 interface Props {
   titre: string;
 }
 const { titre } = Astro.props;
-const benevolat = plusRecentsDabord((await getCollection('benevolat')).map((e) => e.data), (b) => b.debut);
+const langue = langueDe(Astro.url);
+const benevolat = plusRecentsDabord(await liste('benevolat', langue), (b) => b.debut);
 ---
 
 {
   benevolat.length > 0 && (
     <section class="section" id="benevolat" aria-labelledby="titre-benevolat">
       <SectionHead id="benevolat" titre={titre} nombre={benevolat.length} />
-      <ol class="tiles">
-        {benevolat.map((b) => (
-          <li class="tile glass entry reveal">
-            <OrgMark name={b.organisation} logo={b.logo} />
-            <div class="entry-body">
-              <div class="entry-top">
-                <h3 class="entry-title">{b.role}</h3>
-                <span class="entry-when">{periode(b.debut, b.fin)}</span>
+      <Repli nombre={benevolat.length}>
+        <ol class="tiles">
+          {benevolat.map((b) => (
+            <li class="tile glass entry reveal">
+              <OrgMark name={b.organisation} logo={b.logo} />
+              <div class="entry-body">
+                <div class="entry-top">
+                  <h3 class="entry-title">{b.role}</h3>
+                  <span class="entry-when">{periode(b.debut, b.fin, langue)}</span>
+                </div>
+                <p class="entry-org">{b.organisation}</p>
+                <p class="entry-meta">
+                  <Duree debut={b.debut} fin={b.fin} />
+                  {b.cause && <> · {b.cause}</>}
+                </p>
+                {b.description && <Description text={b.description} />}
               </div>
-              <p class="entry-org">{b.organisation}</p>
-              <p class="entry-meta">
-                <Duree debut={b.debut} fin={b.fin} />
-                {b.cause && <> · {b.cause}</>}
-              </p>
-              {b.description && <Description text={b.description} />}
-            </div>
-          </li>
-        ))}
-      </ol>
+            </li>
+          ))}
+        </ol>
+      </Repli>
     </section>
   )
 }

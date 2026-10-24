@@ -4,16 +4,19 @@
 import type { CollectionEntry } from 'astro:content';
 import Icon from './Icon.astro';
 import Tags from './Tags.astro';
-import { STATUTS } from '../lib/projets';
+import { statuts } from '../lib/projets';
 import { url } from '../lib/paths';
-import { t } from '../lib/reglages';
+import { reglages } from '../lib/reglages';
+import { langueDe } from '../lib/i18n';
 
 interface Props {
   projet: CollectionEntry<'projets'>;
 }
 const { projet } = Astro.props;
 const p = projet.data;
-const statut = STATUTS[p.statut];
+const langue = langueDe(Astro.url);
+const { t } = reglages(langue);
+const statut = statuts(t)[p.statut];
 ---
 
 <article class="tile glass project">
@@ -25,7 +28,7 @@ const statut = STATUTS[p.statut];
   <p class="project-text">{p.resume}</p>
   <Tags items={p.stack} label={t.technologies} />
   <div class="project-foot">
-    <a class="project-link" href={url(`projets/${projet.id}/`)}>
+    <a class="project-link" href={url(`projets/${projet.id}/`, langue)}>
       {t.commentJeLaiFait}<span class="visually-hidden"> : {p.titre}</span>
       <Icon name="arrow-right" class="icon-sm" />
     </a>

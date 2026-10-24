@@ -2,7 +2,10 @@
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import { url } from '../lib/paths';
-import { t } from '../lib/reglages';
+import { reglages } from '../lib/reglages';
+
+// Une seule page 404 pour tout le site (GitHub Pages), dans la langue par défaut.
+const { t } = reglages('fr');
 ---
 
 <Base title={t.introuvableTitre} description={t.introuvableTexte}>

@@ -5,6 +5,7 @@
 @import "@fontsource/jetbrains-mono/latin-600.css";
 @import "@fontsource/jetbrains-mono/latin-700.css";
 @import "./tokens.css";
+@import "./habillages/halloween.css";
 
 /* ---------- Base ---------- */
 
@@ -61,9 +62,20 @@ a { color: inherit; }
   position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none;
   background: radial-gradient(120% 70% at 50% -10%, var(--light), transparent 70%), var(--bg);
 }
-.backdrop span { position: absolute; border-radius: 50%; filter: blur(90px); }
-.backdrop span:nth-child(1) { width: 60vmax; height: 60vmax; top: 15vh; left: -30vmax; background: var(--shade-1); }
-.backdrop span:nth-child(2) { width: 55vmax; height: 55vmax; bottom: -25vmax; right: -25vmax; background: var(--shade-2); }
+.backdrop > span { position: absolute; border-radius: 50%; filter: blur(90px); }
+.backdrop > span:nth-child(1) { width: 60vmax; height: 60vmax; top: 15vh; left: -30vmax; background: var(--shade-1); }
+.backdrop > span:nth-child(2) { width: 55vmax; height: 55vmax; bottom: -25vmax; right: -25vmax; background: var(--shade-2); }
+
+/* Décors des thèmes d'habillage (voir THEMES.md), posés dans le fond : cachés hors saison, et
+   chacun en deux versions, le jour (apparence claire) et la nuit (apparence sombre). */
+.decor { display: none; position: absolute; inset: 0; }
+.decor-nuit { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .decor-jour { display: none; }
+  :root:not([data-theme="light"]) .decor-nuit { display: block; }
+}
+:root[data-theme="dark"] .decor-jour { display: none; }
+:root[data-theme="dark"] .decor-nuit { display: block; }
 
 /* ---------- Verre ---------- */
 
@@ -129,9 +141,36 @@ a { color: inherit; }
 :root { --show-moon: block; --show-sun: none; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --show-moon: none; --show-sun: block; } }
 :root[data-theme="dark"] { --show-moon: none; --show-sun: block; }
-.theme-toggle { margin-left: auto; }
+.topbar-end { display: flex; align-items: center; gap: 0.5rem; margin-left: auto; }
 .theme-toggle .i-moon { display: var(--show-moon); }
 .theme-toggle .i-sun { display: var(--show-sun); }
+
+/* Langue du site : le drapeau de la langue en cours ; le menu est un popover en verre, placé
+   sous le bouton par ui.ts. */
+.lang-switch .flag { width: 1.25rem; }
+.lang-menu {
+  position: absolute; inset: auto; top: 4rem; right: var(--gutter); margin: 0;
+  min-width: 11.5rem; padding: 0.375rem; border: 0; border-radius: 18px; overflow: visible; color: var(--ink);
+  transform-origin: top right;
+}
+.lang-menu ul { display: flex; flex-direction: column; gap: 2px; }
+.lang-menu a {
+  display: flex; align-items: center; gap: 0.75rem; min-height: 2.75rem; padding: 0 0.75rem; border-radius: 12px;
+  font-size: 0.9375rem; font-weight: 550; text-decoration: none; transition: background-color 0.15s ease;
+}
+.lang-menu a:hover { background: var(--glass-hover); }
+.lang-menu a[aria-current] { font-weight: 700; }
+.lang-menu .flag { width: 1.375rem; }
+.lang-menu .icon { margin-left: auto; color: var(--accent); }
+@media (prefers-reduced-motion: no-preference) {
+  .lang-menu {
+    transition: opacity 0.2s var(--ease), transform 0.3s var(--ease), overlay 0.3s allow-discrete, display 0.3s allow-discrete;
+  }
+  .lang-menu:not(:popover-open) { opacity: 0; transform: translateY(-6px) scale(0.96); }
+  @starting-style {
+    .lang-menu:popover-open { opacity: 0; transform: translateY(-6px) scale(0.96); }
+  }
+}
 
 /* ---------- Icônes ---------- */
 
@@ -161,20 +200,22 @@ a { color: inherit; }
 }
 .brand-sep { font-weight: 700; color: var(--accent); }
 .brand.is-sm { font-size: 1.125rem; }
-.brand.is-lg { font-size: clamp(2.5rem, 8vw, 4rem); letter-spacing: -0.045em; }
+.brand.is-lg { font-size: clamp(2.25rem, 8vw, 4rem); letter-spacing: -0.045em; }
 .brand-link { display: inline-flex; align-items: center; min-height: 2.75rem; border-radius: 8px; text-decoration: none; }
 .topbar-start { display: flex; align-items: center; gap: 1rem; min-width: 0; }
 
 /* ---------- Profil, posé sur le fond ---------- */
 
-.intro { display: grid; gap: 1.5rem; padding-top: clamp(1.5rem, 6vw, 3.5rem); }
-@media (min-width: 44rem) {
-  .intro { grid-template-columns: auto minmax(0, 1fr); column-gap: 2.25rem; align-items: center; }
-  .intro .intro-more { grid-column: 1 / -1; }
+/* La photo à côté du nom, sur téléphone comme sur grand écran : l'en-tête reste compact. */
+.intro {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 1.5rem 1.125rem;
+  padding-top: clamp(0.25rem, 6vw - 1rem, 3.5rem);
 }
+.intro .intro-more { grid-column: 1 / -1; }
+@media (min-width: 44rem) { .intro { column-gap: 2.25rem; } }
 
 .photo {
-  display: grid; place-items: center; width: clamp(6.5rem, 22vw, 9.5rem); aspect-ratio: 1; overflow: hidden;
+  display: grid; place-items: center; width: clamp(5rem, 22vw, 9.5rem); aspect-ratio: 1; overflow: hidden;
   border-radius: 32%;
   font-size: clamp(2rem, 7vw, 2.75rem); font-weight: 700; letter-spacing: -0.03em; color: var(--muted);
 }
@@ -197,6 +238,28 @@ a { color: inherit; }
 a.job-org { min-height: 0; text-underline-offset: 0.2em; }
 a.job-org:hover { text-decoration: underline; }
 .org-mark.is-sm { width: 2rem; height: 2rem; border-radius: 9px; font-size: 0.6875rem; }
+
+/* Langues : un drapeau par langue, le niveau dans une bulle (survol, focus ou toucher ; voir ui.ts).
+   Le bouton garde une zone de toucher confortable, le drapeau reste petit. */
+.facts .langs { gap: 0; margin-left: -0.4375rem; }
+.lang { position: relative; display: inline-flex; }
+.lang-flag { display: grid; place-items: center; width: 2.25rem; height: 2.75rem; padding: 0; border: 0; background: none; }
+.flag { width: 1.375rem; height: auto; aspect-ratio: 3 / 2; border-radius: 3px; box-shadow: 0 0 0 1px var(--rule); transition: transform 0.2s var(--ease); }
+.lang-flag:hover .flag, .lang.is-open .flag { transform: scale(1.12); }
+.lang-tip {
+  position: absolute; z-index: 10; bottom: calc(100% - 0.25rem); left: 50%; translate: calc(-50% + var(--shift, 0px)) 0;
+  display: none; flex-direction: column; align-items: center; width: max-content; max-width: 15rem;
+  padding: 0.5rem 0.875rem; border-radius: var(--radius-md); pointer-events: none;
+  font-size: 0.8125rem; line-height: 1.4; color: var(--muted); text-align: center;
+  background: var(--surface); box-shadow: var(--glass-shadow), inset 0 0 0 1px var(--rule);
+}
+.lang-tip strong { font-weight: 650; color: var(--ink); }
+html:not(.js) .lang:is(:hover, :focus-within) .lang-tip,
+.lang.is-open .lang-tip { display: flex; }
+@media (prefers-reduced-motion: no-preference) {
+  .lang.is-open .lang-tip { animation: tip-in 0.2s var(--ease); }
+}
+@keyframes tip-in { from { opacity: 0; transform: translateY(4px) scale(0.97); } }
 
 .facts .availability {
   display: inline-flex; align-items: center; gap: 0.5rem; min-height: 2rem;
@@ -230,6 +293,33 @@ a.job-org:hover { text-decoration: underline; }
 .section-head h2 { font-size: clamp(1.5rem, 4vw, 1.875rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1.2; }
 .section-count { font-size: 0.9375rem; font-weight: 600; color: var(--faint); font-variant-numeric: tabular-nums; }
 
+/* Liste de section repliée à --fold-max (avec JavaScript seulement). La marge débordante laisse
+   la place aux ombres des tuiles, que le rognage couperait sinon ; elle reste ouverte comme fermée
+   pour que la hauteur ne saute pas pendant l'animation. */
+.js .fold-body { margin: -1rem calc(-1 * var(--gutter)) 0; padding: 1rem var(--gutter) 0; }
+.js .fold.is-clamped:not(.is-open) .fold-body { max-height: calc(var(--fold-max) + 1rem); overflow: hidden; --fade: 6rem; }
+.fold-toggle { margin: 0.25rem 0 0; padding-inline: 0.25rem; }
+
+/* Fondu du bas d'un bloc replié (section ou description). --fade est déclarée pour pouvoir
+   s'animer avec la hauteur à l'ouverture et à la fermeture (voir ui.ts). */
+@property --fade { syntax: "<length>"; inherits: false; initial-value: 0px; }
+.js .fold.is-clamped:not(.is-open) .fold-body,
+.js .more.is-clamped:not(.is-open) .entry-text,
+.is-sliding {
+  -webkit-mask: linear-gradient(180deg, #000 calc(100% - var(--fade)), transparent);
+  mask: linear-gradient(180deg, #000 calc(100% - var(--fade)), transparent);
+}
+/* Pendant l'animation, la hauteur est menée par ui.ts : plus de plafond de repli. */
+.js .is-sliding { overflow: hidden; max-height: none !important; }
+
+/* Changement de thème, et passage d'une page à l'autre (dont le changement de langue) : fondu
+   enchaîné de toute la page (View Transitions, si disponible). */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+}
+::view-transition-old(root),
+::view-transition-new(root) { animation-duration: 0.45s; animation-timing-function: ease; }
+
 .tiles { display: flex; flex-direction: column; gap: 0.875rem; }
 .tiles.is-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr)); gap: 1rem; }
 
@@ -238,7 +328,19 @@ a.job-org:hover { text-decoration: underline; }
 /* ---------- Contenu d'une tuile (expérience, formation, certification, bénévolat) ---------- */
 
 .entry { display: grid; grid-template-columns: 3rem minmax(0, 1fr); column-gap: 1rem; }
-@media (max-width: 26rem) { .entry { grid-template-columns: 2.5rem minmax(0, 1fr); column-gap: 0.75rem; } .org-mark { width: 2.5rem; height: 2.5rem; border-radius: 11px; } }
+/* Sur téléphone, le logo n'accompagne que l'en-tête (titre, date, organisation, première ligne de
+   détails) : la suite reprend toute la largeur de la tuile au lieu de rester en colonne étroite. */
+@media (max-width: 36rem) {
+  .tiles { gap: 1rem; }
+  .tile { padding: 1.25rem; }
+  .entry { grid-template-columns: 2.75rem minmax(0, 1fr); column-gap: 0.875rem; align-items: start; }
+  .entry > .org-mark { grid-row: span 3; width: 2.75rem; height: 2.75rem; border-radius: 12px; }
+  .entry > .entry-body { display: contents; }
+  .entry > .entry-body > * { grid-column: 1 / -1; }
+  .entry > .entry-body > :is(.entry-top, .entry-org, .entry-org + .entry-meta) { grid-column: 2; }
+  .entry-top { flex-direction: column; }
+  .entry-text { margin-top: 0.875rem; }
+}
 
 .org-mark {
   display: grid; place-items: center; width: 3rem; height: 3rem; overflow: hidden; border-radius: 13px;
@@ -259,10 +361,7 @@ a.job-org:hover { text-decoration: underline; }
 /* Description repliée à 3 lignes (avec JavaScript seulement) */
 .js .more:not(.is-open) .entry-text { max-height: calc(3 * 1.65em); overflow: hidden; }
 .js .more:not(.is-open) .entry-text > p + p { margin-top: 0; }
-.js .more.is-clamped:not(.is-open) .entry-text {
-  -webkit-mask: linear-gradient(180deg, #000 calc(100% - 1.65em), transparent);
-  mask: linear-gradient(180deg, #000 calc(100% - 1.65em), transparent);
-}
+.js .more.is-clamped:not(.is-open) .entry-text { --fade: 1.65em; }
 .more-toggle {
   display: inline-flex; align-items: center; min-height: 2.75rem; margin-bottom: -0.5rem; padding: 0; border: 0;
   background: none; font-size: 0.875rem; font-weight: 650; color: var(--accent); cursor: pointer;
@@ -273,7 +372,7 @@ a.job-org:hover { text-decoration: underline; }
 
 .tags { display: flex; flex-wrap: wrap; gap: 0.375rem; margin-top: 0.875rem; }
 .tags li {
-  padding: 0.125rem 0.625rem; border-radius: 999px;
+  padding: 0.125rem 0.625rem; border-radius: 0.8rem; /* reste une pastille, même sur deux lignes */
   font-size: 0.8125rem; font-weight: 500; line-height: 1.6; color: var(--muted);
   background: var(--glass-hover);
 }

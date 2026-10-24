@@ -1,0 +1,15 @@
+{
+  "forcer": "",
+
+  "themes": [
+    {
+      "id": "halloween",
+      "nom": "Halloween",
+      "actif": true,
+      "debut": "10-01",
+      "fin": "10-31",
+      "accentClair": "#C2410C",
+      "accentSombre": "#FB923C"
+    }
+  ]
+}

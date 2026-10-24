@@ -3,8 +3,11 @@ import '../styles/global.css';
 import Icons from '../components/Icons.astro';
 import Icon from '../components/Icon.astro';
 import Brand from '../components/Brand.astro';
+import Drapeau from '../components/Drapeau.astro';
+import Halloween from '../components/habillages/Halloween.astro';
 import { url, asset } from '../lib/paths';
-import { site, profil, t } from '../lib/reglages';
+import { reglages, themes } from '../lib/reglages';
+import { LANGUES, cheminSansLangue, langueDe, type Langue } from '../lib/i18n';
 
 interface Props {
   title?: string;
@@ -12,20 +15,28 @@ interface Props {
   /** Lien de retour affiché en haut à gauche (pages de projet). */
   back?: { href: string; label: string };
 }
+const langue = langueDe(Astro.url);
+const { site, profil, t } = reglages(langue);
 const { title = site.meta.titre, description = site.meta.description, back } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
+// La même page dans chaque langue (sélecteur de langue et liens hreflang).
+const chemin = cheminSansLangue(Astro.url);
+const versions = (Object.keys(LANGUES) as Langue[]).map((code) => ({ code, ...LANGUES[code], href: url(chemin, code) }));
+// Thèmes d'habillage (src/data/themes.json, voir THEMES.md), choisis dans le navigateur d'après la date.
+const habillages = { forcer: themes.forcer, themes: themes.themes.map(({ nom, ...t }) => t) };
 const annee = new Date().getFullYear();
 const accents = `--accent-light: ${site.couleurs.accentClair}; --accent-dark: ${site.couleurs.accentSombre};`;
 ---
 
 <!doctype html>
-<html lang="fr" style={accents}>
+<html lang={langue} style={accents}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    {versions.map((v) => <link rel="alternate" hreflang={v.code} href={new URL(v.href, Astro.site)} />)}
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -37,18 +48,51 @@ const accents = `--accent-light: ${site.couleurs.accentClair}; --accent-dark: ${
     <link rel="icon" href={url('icons/favicon-32.png')} sizes="32x32" type="image/png" />
     <link rel="apple-touch-icon" href={url('icons/apple-touch-icon.png')} />
 
-    {/* Avant le premier rendu : thème choisi, pour éviter un flash de la mauvaise couleur. */}
+    {/* Avant le premier rendu : thème choisi pendant la visite, pour éviter un flash de la mauvaise
+        couleur. Sans choix, le thème est celui du système (voir ui.ts). */}
     <script is:inline>
       document.documentElement.classList.add('js');
       try {
-        const theme = localStorage.getItem('orelink.theme');
+        localStorage.removeItem('orelink.theme'); // ancien choix gardé d'une visite à l'autre
+        const theme = sessionStorage.getItem('orelink.theme');
         if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
       } catch {}
+    </script>
+
+    {/* Thème d'habillage du moment, posé avant le premier rendu. `?theme=<id>` (ou `?theme=aucun`)
+        dans l'adresse permet de le prévisualiser à toute date. */}
+    <script is:inline define:vars={{ habillages }}>
+      (() => {
+        let choix = null;
+        try {
+          choix = new URLSearchParams(location.search).get('theme');
+        } catch {}
+        if (choix === null) choix = habillages.forcer;
+        let theme;
+        if (choix) {
+          theme = habillages.themes.find((t) => t.id === choix);
+        } else {
+          // Jour de l'année du visiteur, comparé aux dates « MM-JJ » (une période peut passer le 31 décembre).
+          const d = new Date();
+          const jour = (d.getMonth() + 1) * 100 + d.getDate();
+          const n = (mmjj) => Number(mmjj.replace('-', ''));
+          theme = habillages.themes.find((t) => {
+            const debut = n(t.debut);
+            const fin = n(t.fin);
+            return t.actif && (debut <= fin ? debut <= jour && jour <= fin : jour >= debut || jour <= fin);
+          });
+        }
+        if (!theme) return;
+        const html = document.documentElement;
+        html.dataset.habillage = theme.id;
+        html.style.setProperty('--accent-light', theme.accentClair);
+        html.style.setProperty('--accent-dark', theme.accentSombre);
+      })();
     </script>
   </head>
   <body>
     <a class="skip-link" href="#contenu">{t.allerAuContenu}</a>
-    <div class="backdrop" aria-hidden="true"><span></span><span></span></div>
+    <div class="backdrop" aria-hidden="true"><span></span><span></span><Halloween /></div>
     <Icons />
 
     <div class="page">
@@ -56,24 +100,42 @@ const accents = `--accent-light: ${site.couleurs.accentClair}; --accent-dark: ${
         {
           back && (
             <div class="topbar-start">
-              <a class="brand-link" href={url()} aria-label={`${site.logo.avant}${site.logo.separateur}${site.logo.apres}, ${t.retourAccueil}`}><Brand /></a>
+              <a class="brand-link" href={url('', langue)} aria-label={`${site.logo.avant}${site.logo.separateur}${site.logo.apres}, ${t.retourAccueil}`}><Brand /></a>
               <a class="back" href={back.href}>
                 <Icon name="arrow-left" class="icon-sm" /> {back.label}
               </a>
             </div>
           )
         }
-        <button class="icon-btn glass theme-toggle" type="button" aria-label={t.themeSombre} data-theme-toggle data-label-light={t.themeClair} data-label-dark={t.themeSombre}>
-          <svg class="icon i-moon" aria-hidden="true"><use href="#i-moon" /></svg>
-          <svg class="icon i-sun" aria-hidden="true"><use href="#i-sun" /></svg>
-        </button>
+        <div class="topbar-end">
+          <button class="icon-btn glass lang-switch" type="button" popovertarget="menu-langue" aria-label={t.changerDeLangue} title={t.changerDeLangue}>
+            <Drapeau code={LANGUES[langue].drapeau} />
+          </button>
+          <div class="lang-menu glass" id="menu-langue" popover data-lang-menu>
+            <ul>
+              {versions.map((v) => (
+                <li>
+                  <a href={v.href} hreflang={v.code} lang={v.code} aria-current={v.code === langue ? 'page' : undefined}>
+                    <Drapeau code={v.drapeau} />
+                    <span>{v.nom}</span>
+                    {v.code === langue && <Icon name="check" class="icon-sm" />}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <button class="icon-btn glass theme-toggle" type="button" aria-label={t.themeSombre} data-theme-toggle data-label-light={t.themeClair} data-label-dark={t.themeSombre}>
+            <svg class="icon i-moon" aria-hidden="true"><use href="#i-moon" /></svg>
+            <svg class="icon i-sun" aria-hidden="true"><use href="#i-sun" /></svg>
+          </button>
+        </div>
       </header>
 
       <slot />
 
       <footer class="footer">
         <span>© {annee} {profil.prenom} {profil.nom}</span>
-        <nav aria-label="Liens externes">
+        <nav aria-label={t.liensExternes}>
           {profil.liens.linkedin && <a href={profil.liens.linkedin} rel="me">LinkedIn</a>}
           {profil.liens.github && <a href={profil.liens.github} rel="me">GitHub</a>}
           {site.piedDePage.lienCodeDuSite && <a href={site.piedDePage.lienCodeDuSite}>{t.codeDuSite}</a>}

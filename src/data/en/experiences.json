@@ -1,0 +1,76 @@
+[
+  {
+    "id": "betclic-group",
+    "postes": [
+      {
+        "contrat": "Full-time",
+        "mode": "Hybrid",
+        "description": "Data Engineer in a Data team working across sports betting, casino, poker and horse racing.\n\nI work on data modeling, building transformations with dbt and SQL, and delivering data products and dashboards to business teams. I also contribute to the continuous improvement of the Data platform, to reducing technical debt and to getting ready for the challenges of major international sporting events.\nI also use generative AI tools to speed up development, analysis and the use of data.",
+        "competences": [
+          "SQL",
+          "dbt",
+          "Snowflake",
+          "Tableau",
+          "Omni",
+          "Generative AI (ChatGPT, Claude, Codex, Cortex, Rovo)"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "thelio",
+    "postes": [
+      {
+        "contrat": "Full-time",
+        "mode": "Hybrid",
+        "description": "Contributed to several strategic Data Engineering and Data Analytics projects for two leading international groups:\n\nClient – Global leader in animal health\n• Designed dashboards (Salesforce Analytics Studio, Power BI) for sales tracking and data quality: far fewer manual checks and faster response from the teams.\n• Developed audit management solutions in 50+ countries, with automatic translation into 30+ languages and advanced security (RLS).\n• Synchronized and standardized multi-source sales data for 20+ subsidiaries, ensuring a consistent international CRM rollout.\n• Automated and standardized KPIs with Databricks (medallion architecture), cutting manual extractions and saving business teams dozens of hours per month.\n\nClient – Technology leader for the fashion industry:\n• Redesigned a contract management model with incremental pipelines (delta logic, medallion architecture), reducing processing times over time and making the data more reliable.\n• Set up centralized Power BI reporting (star schema, DAX), adopted by operational teams, replacing fragmented Excel files and halving manual reporting effort.\n\nOverall impact: more reliable and available data, lower maintenance costs, faster decision-making (from several days to a few hours), and wider adoption of BI solutions by business teams.\n\nCompany life: actively involved in the company's culture by organizing events and collective initiatives."
+      },
+      {
+        "contrat": "Apprenticeship",
+        "description": "Contributed to several strategic projects to modernize and secure data flows for leading organizations in the public sector and tourism.\n\nClient – Major French local authority\n• Set up a unified synchronization framework between two Data Warehouses, improving data consistency and the reliability of BI analyses. Designed scalable flows (Talend, SQL, Oracle) that anticipate structural changes to ensure long-term scalability.\n\nClient – Leading residential tourism group in France\n• Brought in-house and industrialized Talend ETL pipelines, replacing legacy PHP flows, for better control and simpler maintenance.\n\nOverall impact: more reliable and consistent data, lower operating costs, and BI and business teams able to make use of their data faster.\n\nCompany life: actively involved in the company's culture by organizing events and collective initiatives.",
+        "competences": [
+          "Data Engineering",
+          "Extract, Transform, Load (ETL)"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "legalyspace",
+    "postes": [
+      {
+        "titre": "Full Stack Web Developer",
+        "contrat": "Apprenticeship",
+        "mode": "On-site",
+        "description": "Contributed to several strategic full stack development projects for a fast-growing legaltech company in Bordeaux.\n\n• Designed and implemented key features (Java EE, PL/SQL, HTML5, CSS, JavaScript), including a customer tracking page, an internal dashboard and the integration of third-party services (Tradeshift), improving both security and productivity.\n• Built a Java library generating XML files compliant with the UBL 2.1 standard (JAXB), documented and versioned on GitHub, automating the production of tax documents and easing their integration into invoicing systems.\n\nOverall impact: a better customer experience, streamlined internal processes and stronger compliance with international standards, supporting the platform's growth and reliability.",
+        "competences": [
+          "SQL",
+          "User Interface Design"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "sopra-steria",
+    "postes": [
+      {
+        "titre": "Web Application Developer",
+        "contrat": "Internship",
+        "mode": "On-site",
+        "description": "Contributed to a strategic project centralizing accounting tools for a major public body.\n\n• Developed a web application (Java EE, SQL, HTML5, CSS, JavaScript) with new features, including “Organizations” management and session saving, contributing to a unified tool for affiliated practitioners nationwide.\n\nOverall impact: a faster and more reliable monthly closing of accounts thanks to a centralized, high-performance tool."
+      }
+    ]
+  },
+  {
+    "id": "millesima",
+    "postes": [
+      {
+        "titre": "Web Application Developer",
+        "contrat": "Internship",
+        "lieu": "Bordeaux Area, France",
+        "mode": "On-site",
+        "description": "Contributed to a strategic full stack development project for an international fine wine event.\n\n• Designed and deployed an interactive web application (Java EE, HTML5, CSS, JavaScript) with a registration form, 360° animations, an admin area, a JSON REST API and GDPR-compliant security, used on touch kiosks and iPads by several hundred attendees at the 2019 Bordeaux Grands Crus Weekend.\n\nOverall impact: a stable, secure and engaging experience that made the client's booth more attractive and boosted brand visibility at a major international event."
+      }
+    ]
+  }
+]
