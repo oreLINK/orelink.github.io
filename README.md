@@ -48,7 +48,7 @@ Tout ce qui s'affiche vient de ces fichiers. On n'a jamais besoin de toucher au 
 | `src/data/site.json` | Titre de l'onglet, description, couleur d'accent, **ordre et titres des sections**, tous les libellés (boutons, mentions…) |
 | `src/data/experiences.json` | Expérience : une entreprise, un ou plusieurs postes |
 | `src/data/formations.json` | Formation |
-| `src/data/certifications.json` | Licences et certifications |
+| `src/data/certifications.json` | Certifications |
 | `src/data/benevolat.json` | Bénévolat |
 | `src/content/projets/*.md` | Projets : un fichier par projet (tuile de l'accueil + page de doc) |
 | `src/data/en/*.json` | Version anglaise (voir « Langues » plus bas) |

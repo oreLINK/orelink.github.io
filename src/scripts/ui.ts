@@ -211,6 +211,15 @@ document.addEventListener('click', (e) => {
 });
 document.addEventListener('keydown', (e) => e.key === 'Escape' && langs.forEach((l) => showTip(l, false)));
 
+// ---------- Liens externes : dans un nouvel onglet ----------
+// Les liens internes du site sont relatifs (« /projets/… ») : une adresse complète (https://…) mène
+// toujours ailleurs, même sur le même domaine (ex. les projets en ligne sous orelink.github.io).
+
+document.querySelectorAll<HTMLAnchorElement>('a[href^="http://"], a[href^="https://"]').forEach((a) => {
+  a.target = '_blank';
+  a.relList.add('noopener');
+});
+
 // ---------- Durées des postes en cours, au mois près ----------
 
 const now = new Date();

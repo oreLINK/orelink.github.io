@@ -55,7 +55,7 @@ const formations = defineCollection({
   }),
 });
 
-// ── Licences et certifications ────────────────────────────────────────────────────────────────
+// ── Certifications ────────────────────────────────────────────────────────────────────────────
 const certifications = defineCollection({
   loader: file('src/data/certifications.json'),
   schema: z.object({
