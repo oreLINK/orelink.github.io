@@ -24,7 +24,6 @@ const chemin = cheminSansLangue(Astro.url);
 const versions = (Object.keys(LANGUES) as Langue[]).map((code) => ({ code, ...LANGUES[code], href: url(chemin, code) }));
 // Thèmes d'habillage (src/data/themes.json, voir THEMES.md), choisis dans le navigateur d'après la date.
 const habillages = { forcer: themes.forcer, themes: themes.themes.map(({ nom, ...t }) => t) };
-const annee = new Date().getFullYear();
 const accents = `--accent-light: ${site.couleurs.accentClair}; --accent-dark: ${site.couleurs.accentSombre};`;
 ---
 
@@ -134,11 +133,11 @@ const accents = `--accent-light: ${site.couleurs.accentClair}; --accent-dark: ${
       <slot />
 
       <footer class="footer">
-        <span>© {annee} {profil.prenom} {profil.nom}</span>
-        <nav aria-label={t.liensExternes}>
-          {profil.liens.linkedin && <a href={profil.liens.linkedin} rel="me">LinkedIn</a>}
-          {profil.liens.github && <a href={profil.liens.github} rel="me">GitHub</a>}
-          {site.piedDePage.lienCodeDuSite && <a href={site.piedDePage.lienCodeDuSite}>{t.codeDuSite}</a>}
+        <Brand />
+        <nav class="footer-links" aria-label={t.liensExternes}>
+          {profil.liens.linkedin && <a class="icon-btn glass" href={profil.liens.linkedin} rel="me" aria-label="LinkedIn" title="LinkedIn"><Icon name="linkedin" /></a>}
+          {profil.liens.github && <a class="icon-btn glass" href={profil.liens.github} rel="me" aria-label="GitHub" title="GitHub"><Icon name="github" /></a>}
+          {site.piedDePage.lienCodeDuSite && <a class="icon-btn glass" href={site.piedDePage.lienCodeDuSite} aria-label={t.codeDuSite} title={t.codeDuSite}><Icon name="code" /></a>}
         </nav>
       </footer>
     </div>

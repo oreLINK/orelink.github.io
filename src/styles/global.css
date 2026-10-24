@@ -527,11 +527,13 @@ html:not(.js) .lang:is(:hover, :focus-within) .lang-tip,
 .notfound h1 { font-size: 1.75rem; letter-spacing: -0.03em; }
 .notfound p { color: var(--muted); }
 
+/* Pied de page, posé sur le fond et aligné à droite : le logo, puis les liens en pastilles d'icônes. */
 .footer {
-  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.25rem 1.5rem;
-  padding-block: 1.5rem 2.5rem; border-top: 1px solid var(--rule);
+  display: flex; align-items: center; justify-content: flex-end; gap: 1rem;
+  padding: 0 0.25rem; margin-bottom: max(2rem, env(safe-area-inset-bottom));
   font-size: 0.875rem; color: var(--faint);
 }
-.footer nav { display: flex; flex-wrap: wrap; gap: 0 1.25rem; }
-.footer a { display: inline-flex; align-items: center; min-height: 2.75rem; text-decoration: none; }
-.footer a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 0.2em; }
+.footer-links { display: flex; gap: 0.5rem; }
+.footer-links .icon-btn { color: var(--muted); transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s var(--ease); }
+.footer-links .icon-btn:hover { color: var(--ink); background: var(--glass-strong); transform: translateY(-2px); }
+
