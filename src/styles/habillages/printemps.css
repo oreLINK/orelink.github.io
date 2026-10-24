@@ -1,0 +1,34 @@
+/* Habillage Printemps (voir THEMES.md) : pétales de cerisier le jour, lucioles et étoiles la nuit. */
+
+:root[data-habillage="printemps"] { --light: #F8FFF4; --shade-1: #D2ECCB; --shade-2: #F5CFDF; }
+@media (prefers-color-scheme: dark) {
+  :root[data-habillage="printemps"]:not([data-theme="light"]) { --light: #1C2D21; --shade-1: #16301E; --shade-2: #321A28; }
+}
+:root[data-habillage="printemps"][data-theme="dark"] { --light: #1C2D21; --shade-1: #16301E; --shade-2: #321A28; }
+[data-habillage="printemps"] .decor-printemps { display: block; }
+
+.sp-petal {
+  position: absolute; left: var(--x); top: var(--top); width: var(--s); height: calc(var(--s) * 0.7);
+  border-radius: 80% 0 80% 0; background: linear-gradient(135deg, #FBD3E0, #EE8DB1); opacity: 0.75; rotate: 20deg;
+}
+.sp-fly {
+  position: absolute; left: var(--x); top: var(--y); width: 3.5px; height: 3.5px; border-radius: 50%;
+  background: #EFFDB8; box-shadow: 0 0 8px 3px rgb(217 249 157 / 0.6); opacity: 0.7;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sp-petal { animation: sp-drift var(--dur) linear var(--delay) infinite; }
+  .sp-fly { animation: sp-wander var(--dur) ease-in-out var(--delay) infinite alternate, sp-blink calc(var(--dur) / 3) ease-in-out var(--delay) infinite alternate; }
+}
+@keyframes sp-drift {
+  from { transform: translate(0, calc(-1 * var(--top) - 8vh)) rotate(0deg); }
+  50% { transform: translate(var(--drift), calc(50vh - var(--top))) rotate(calc(var(--spin) / 2)); }
+  to { transform: translate(calc(var(--drift) * 2.2), calc(108vh - var(--top))) rotate(var(--spin)); }
+}
+@keyframes sp-wander {
+  0% { translate: 0 0; }
+  33% { translate: 22px -16px; }
+  66% { translate: -14px -30px; }
+  100% { translate: 12px -8px; }
+}
+@keyframes sp-blink { from { opacity: 0.1; } to { opacity: 0.95; } }

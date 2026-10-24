@@ -1,0 +1,36 @@
+---
+// Décor Été (voir THEMES.md), derrière le contenu et caché hors saison.
+// Jour : halo de soleil et dunes de sable. Nuit : Voie lactée en diagonale, lueur chaude sur
+// l'horizon, étoiles et étoiles filantes.
+import Etoiles from './Etoiles.astro';
+import { hasard, vars } from '../../lib/decor';
+
+// La Voie lactée : de minuscules étoiles serrées autour d'une bande (une seule boîte, des ombres).
+const h = hasard(3);
+const poussiere = Array.from(
+  { length: 110 },
+  () => `${h.entre(-62, 62)}vw ${h.normale(4.5).toFixed(1)}vh 0 ${h.parmi([0, 0, 0.4, 0.8])}px rgb(255 255 255 / ${h.entre(0.25, 0.8, 2)})`,
+).join(', ');
+const filantes = [
+  { x: '12%', y: '9%', dur: '11s', delay: '-3s' },
+  { x: '34%', y: '17%', dur: '16s', delay: '-9s' },
+  { x: '58%', y: '6%', dur: '21s', delay: '-15s' },
+];
+---
+
+<div class="decor decor-ete" aria-hidden="true">
+  <div class="decor-jour">
+    <span class="et-sun"></span>
+    <svg class="et-dunes" viewBox="0 0 1200 100" preserveAspectRatio="none" focusable="false">
+      <path class="is-back" d="M0 55C150 30 300 40 450 50c170 12 310-22 480-12 120 7 200 12 270 6v56H0Z" />
+      <path class="is-front" d="M0 75c180-17 360-5 520-9 180-6 340 14 500 4 80-5 140-2 180-4v34H0Z" />
+    </svg>
+  </div>
+  <div class="decor-nuit">
+    <span class="et-horizon"></span>
+    <span class="et-milky"></span>
+    <span class="et-dust" style={`box-shadow: ${poussiere}`}></span>
+    <Etoiles nombre={10} larges={6} hauteur={70} graine={4} />
+    {filantes.map((f, i) => <span class:list={['et-meteor', { 'is-wide': i >= 2 }]} style={vars(f)} />)}
+  </div>
+</div>

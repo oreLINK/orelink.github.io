@@ -1,0 +1,30 @@
+---
+// Étoiles qui scintillent, pour les versions nuit des habillages. Au-delà de `larges`, elles ne
+// s'affichent que sur grand écran ; `hauteur` : jusqu'où elles descendent (en % de l'écran).
+import { hasard, vars } from '../../lib/decor';
+
+interface Props {
+  nombre: number;
+  larges: number;
+  hauteur: number;
+  graine: number;
+}
+const { nombre, larges, hauteur, graine } = Astro.props;
+const h = hasard(graine);
+const etoiles = Array.from({ length: nombre }, () => ({
+  x: h.entre(3, 97),
+  y: h.entre(3, hauteur),
+  taille: h.parmi([1.5, 2, 2.5]),
+  dur: h.entre(3, 6.5),
+  delay: h.entre(-6, 0),
+}));
+---
+
+{
+  etoiles.map((e, i) => (
+    <span
+      class:list={['x-star x-twinkle', { 'is-wide': i >= larges }]}
+      style={`left: ${e.x}%; top: ${e.y}%; width: ${e.taille}px; ${vars({ dur: `${e.dur}s`, delay: `${e.delay}s` })}`}
+    />
+  ))
+}

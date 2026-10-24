@@ -1,0 +1,40 @@
+---
+// Décor Fête de la musique (voir THEMES.md), derrière le contenu et caché hors période.
+// Jour : notes qui s'envolent, égaliseur en bas. Nuit : les mêmes en néon, et deux projecteurs
+// qui balaient la scène.
+import { hasard, vars } from '../../lib/decor';
+
+const h = hasard(14);
+const notes = () =>
+  Array.from({ length: 10 }, (_, i) => ({
+    signe: '♪♫♬♩'[i % 4],
+    large: i >= 6,
+    style: vars({
+      x: `${h.entre(3, 95)}%`,
+      top: `${h.entre(15, 80)}%`,
+      s: `${h.entre(1.1, 2)}rem`,
+      dur: `${h.entre(12, 19)}s`,
+      delay: `${h.entre(-19, 0)}s`,
+      drift: `${h.entre(-40, 40, 0)}px`,
+    }),
+  }));
+const barres = Array.from({ length: 36 }, (_, i) => ({
+  large: i % 2 === 1,
+  style: vars({ h: `${h.entre(35, 100, 0)}%`, dur: `${h.entre(0.45, 1.1, 2)}s`, delay: `${h.entre(-1, 0, 2)}s` }),
+}));
+const jour = notes();
+const nuit = notes();
+---
+
+<div class="decor decor-fete-musique" aria-hidden="true">
+  <div class="decor-jour">
+    {jour.map((n) => <span class:list={['fm-note', { 'is-wide': n.large }]} style={n.style}>{n.signe}</span>)}
+    <div class="fm-eq">{barres.map((b) => <span class:list={{ 'is-wide': b.large }} style={b.style} />)}</div>
+  </div>
+  <div class="decor-nuit">
+    <span class="fm-spot is-1"></span>
+    <span class="fm-spot is-2"></span>
+    {nuit.map((n) => <span class:list={['fm-note', { 'is-wide': n.large }]} style={n.style}>{n.signe}</span>)}
+    <div class="fm-eq">{barres.map((b) => <span class:list={{ 'is-wide': b.large }} style={b.style} />)}</div>
+  </div>
+</div>

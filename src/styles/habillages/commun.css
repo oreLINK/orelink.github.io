@@ -1,0 +1,35 @@
+/* Pièces communes aux habillages (voir THEMES.md) : étoiles qui scintillent, chutes (feuilles,
+   pétales, confettis, neige), et moins d'éléments sur téléphone (classe is-wide). Les animations
+   ne tournent que si l'appareil accepte le mouvement ; sinon le décor reste affiché, immobile. */
+
+@media (prefers-reduced-motion: no-preference) {
+  .x-twinkle { animation: twinkle var(--dur, 4s) ease-in-out var(--delay, 0s) infinite alternate; }
+  .x-fall { animation: fall var(--dur) linear var(--delay) infinite; }
+  .x-snow { animation: snow var(--dur) linear var(--delay) infinite; }
+}
+/* Flocon : sa couleur (--flake) vient de l'habillage qui l'utilise (Hiver, Noël). */
+.x-flake { position: absolute; left: var(--x); top: var(--top); width: var(--s); aspect-ratio: 1; border-radius: 50%; background: var(--flake); }
+.x-star { position: absolute; aspect-ratio: 1; border-radius: 50%; background: var(--star, rgb(236 254 255 / 0.85)); opacity: 0.55; }
+
+@keyframes twinkle { from { opacity: 0.15; } to { opacity: 0.95; } }
+/* Chute du haut de l'écran jusqu'en bas, en tournoyant (feuilles, pétales, confettis). */
+@keyframes fall {
+  from { transform: translate(0, calc(-1 * var(--top) - 10vh)) rotate(0deg); }
+  25% { transform: translate(var(--drift), calc(-1 * var(--top) + 17.5vh)) rotate(calc(var(--spin) * 0.25)); }
+  50% { transform: translate(0, calc(-1 * var(--top) + 45vh)) rotate(calc(var(--spin) * 0.5)); }
+  75% { transform: translate(calc(-1 * var(--drift)), calc(-1 * var(--top) + 72.5vh)) rotate(calc(var(--spin) * 0.75)); }
+  to { transform: translate(0, calc(-1 * var(--top) + 110vh)) rotate(var(--spin)); }
+}
+/* Neige : chute lente et régulière, avec un léger balancement. */
+@keyframes snow {
+  from { transform: translate(0, calc(-1 * var(--top) - 4vh)); }
+  25% { transform: translate(var(--drift), calc(-1 * var(--top) + 23vh)); }
+  50% { transform: translate(0, calc(-1 * var(--top) + 50vh)); }
+  75% { transform: translate(calc(-1 * var(--drift)), calc(-1 * var(--top) + 77vh)); }
+  to { transform: translate(0, calc(-1 * var(--top) + 104vh)); }
+}
+
+/* Sur téléphone, les éléments marqués is-wide sont retirés. */
+@media (max-width: 36rem) {
+  .decor .is-wide { display: none; }
+}

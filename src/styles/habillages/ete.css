@@ -1,0 +1,51 @@
+/* Habillage Été (voir THEMES.md) : halo de soleil et dunes le jour ; la nuit, Voie lactée,
+   lueur chaude sur l'horizon et étoiles filantes. */
+
+:root[data-habillage="ete"] {
+  --light: #FFF0C2; --shade-1: #BCE8E5; --shade-2: #F8D9A0;
+  --sand-1: #F2D59B; --sand-2: #E8C07A;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-habillage="ete"]:not([data-theme="light"]) { --light: #13304A; --shade-1: #0F2A3A; --shade-2: #2A1F26; }
+}
+:root[data-habillage="ete"][data-theme="dark"] { --light: #13304A; --shade-1: #0F2A3A; --shade-2: #2A1F26; }
+[data-habillage="ete"] .decor-ete { display: block; }
+
+/* Jour : halo de soleil et dunes de sable. */
+.et-sun {
+  position: absolute; top: -10rem; right: -8rem; width: 30rem; aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(circle, rgb(253 224 71 / 0.6), rgb(253 186 116 / 0.22) 45%, transparent 70%);
+}
+.et-dunes { position: absolute; inset: auto 0 0; width: 100%; height: clamp(3rem, 9vh, 5rem); }
+.et-dunes .is-back { fill: var(--sand-2); }
+.et-dunes .is-front { fill: var(--sand-1); }
+/* Nuit : la Voie lactée en diagonale, une lueur chaude sur l'horizon, des étoiles filantes. */
+.et-milky {
+  position: absolute; top: -6vh; left: -20vw; width: 140vw; height: 36vh; rotate: -16deg; filter: blur(16px);
+  background: radial-gradient(ellipse at 50% 50%, rgb(226 232 255 / 0.2), rgb(196 181 253 / 0.09) 45%, transparent 70%);
+}
+.et-dust { position: absolute; top: 12vh; left: 50%; width: 1px; height: 1px; rotate: -16deg; border-radius: 50%; }
+.et-horizon { position: absolute; inset: auto 0 0; height: 32vh; background: linear-gradient(to top, rgb(251 146 60 / 0.16), rgb(167 139 250 / 0.08) 50%, transparent); }
+.et-meteor {
+  position: absolute; top: var(--y); right: var(--x); width: 8rem; height: 1.5px; opacity: 0;
+  background: linear-gradient(90deg, rgb(236 254 255 / 0.95), transparent); rotate: -28deg; transform-origin: left center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .et-sun { animation: et-pulse 9s ease-in-out infinite alternate; }
+  .et-milky { animation: et-breathe 12s ease-in-out infinite alternate; }
+  .et-meteor { animation: et-shoot var(--dur) ease-in var(--delay) infinite; }
+}
+@keyframes et-pulse { to { transform: scale(1.08); opacity: 0.85; } }
+@keyframes et-breathe { from { opacity: 0.75; } to { opacity: 1; } }
+@keyframes et-shoot {
+  0% { opacity: 0; transform: translateX(0); }
+  2% { opacity: 1; }
+  7% { opacity: 0; transform: translateX(-16rem); }
+  100% { opacity: 0; transform: translateX(-16rem); }
+}
+
+/* Sur téléphone */
+@media (max-width: 36rem) {
+  .et-sun { width: 20rem; top: -8rem; right: -7rem; }
+}

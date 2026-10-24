@@ -85,23 +85,23 @@ const profilSchema = z.object({
   aPropos: z.string(),
 });
 
-// Thèmes d'habillage (voir THEMES.md). `id` : un habillage dessiné dans le code
-// (src/styles/habillages/<id>.css et src/components/habillages/).
-export const HABILLAGES = ['halloween'] as const;
+// Thèmes d'habillage (voir THEMES.md), sur trois niveaux : un spécial en cours l'emporte sur un
+// récurrent, qui l'emporte sur la saison. `id` (ou `habillage` pour un spécial) : un habillage dessiné
+// dans le code (src/styles/habillages/<id>.css et src/components/habillages/).
+export const HABILLAGES = ['printemps', 'ete', 'automne', 'hiver', 'halloween', 'noel', 'nouvel-an', 'fete-musique'] as const;
 const jourDeLAnnee = z.string().regex(/^(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/, 'Format attendu : MM-JJ (ex. 10-31)');
+const jourPrecis = z.string().regex(/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/, 'Format attendu : AAAA-MM-JJ (ex. 2026-06-11)');
+const accents = { accentClair: couleur, accentSombre: couleur };
+// Chaque année : premier jour dès minuit, dernier jour jusqu'à 23 h 59 (heure du visiteur) ;
+// une `fin` avant le `debut` passe le 31 décembre.
+const annuel = z.object({ id: z.enum(HABILLAGES), nom: texte, actif: z.boolean(), debut: jourDeLAnnee, fin: jourDeLAnnee, ...accents });
 const themesSchema = z.object({
-  forcer: z.enum(['', 'aucun', ...HABILLAGES]), // vide = selon les dates ; « aucun » = jamais d'habillage
-  themes: z.array(
-    z.object({
-      id: z.enum(HABILLAGES),
-      nom: texte,
-      actif: z.boolean(),
-      debut: jourDeLAnnee, // premier jour, dès minuit (heure du visiteur)
-      fin: jourDeLAnnee, // dernier jour, jusqu'à 23 h 59 ; avant `debut` = à cheval sur deux années
-      accentClair: couleur,
-      accentSombre: couleur,
-    }),
+  forcer: z.string(), // vide = selon les dates ; « aucun » = jamais d'habillage ; sinon l'id d'un thème
+  speciaux: z.array(
+    z.object({ id: z.string().regex(/^[a-z0-9-]+$/, 'Lettres minuscules, chiffres et tirets'), nom: texte, habillage: z.enum(HABILLAGES), actif: z.boolean(), debut: jourPrecis, fin: jourPrecis, ...accents }),
   ),
+  recurrents: z.array(annuel),
+  saisons: z.array(annuel),
 });
 
 function verifier<T>(schema: z.ZodType<T>, valeur: unknown, fichier: string): T {
@@ -112,6 +112,14 @@ function verifier<T>(schema: z.ZodType<T>, valeur: unknown, fichier: string): T 
 }
 
 export const themes = verifier(themesSchema, themesJson, 'src/data/themes.json');
+{
+  const ids = [...themes.speciaux, ...themes.recurrents, ...themes.saisons].map((t) => t.id);
+  const doublon = ids.find((id, i) => ids.indexOf(id) !== i);
+  if (doublon) throw new Error(`Réglage invalide dans src/data/themes.json : l'id « ${doublon} » est utilisé deux fois`);
+  if (themes.forcer && themes.forcer !== 'aucun' && !ids.includes(themes.forcer)) {
+    throw new Error(`Réglage invalide dans src/data/themes.json : forcer « ${themes.forcer} » ne correspond à aucun thème`);
+  }
+}
 
 function charger(langue: Langue) {
   const ou = (fichier: string) => (langue === 'fr' ? `src/data/${fichier}.json` : `src/data/${fichier}.json + src/data/${langue}/${fichier}.json`);

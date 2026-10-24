@@ -1,15 +1,19 @@
 {
   "forcer": "",
 
-  "themes": [
-    {
-      "id": "halloween",
-      "nom": "Halloween",
-      "actif": true,
-      "debut": "10-01",
-      "fin": "10-31",
-      "accentClair": "#C2410C",
-      "accentSombre": "#FB923C"
-    }
+  "speciaux": [],
+
+  "recurrents": [
+    { "id": "halloween", "nom": "Halloween", "actif": true, "debut": "10-01", "fin": "10-31", "accentClair": "#C2410C", "accentSombre": "#FB923C" },
+    { "id": "noel", "nom": "Noël", "actif": true, "debut": "12-01", "fin": "12-26", "accentClair": "#B91C1C", "accentSombre": "#FCA5A5" },
+    { "id": "nouvel-an", "nom": "Nouvel An", "actif": true, "debut": "12-31", "fin": "01-02", "accentClair": "#A16207", "accentSombre": "#FACC15" },
+    { "id": "fete-musique", "nom": "Fête de la musique", "actif": true, "debut": "06-21", "fin": "06-21", "accentClair": "#7C3AED", "accentSombre": "#C4B5FD" }
+  ],
+
+  "saisons": [
+    { "id": "printemps", "nom": "Printemps", "actif": true, "debut": "03-20", "fin": "06-20", "accentClair": "#2E7D46", "accentSombre": "#86D19C" },
+    { "id": "ete", "nom": "Été", "actif": true, "debut": "06-21", "fin": "09-22", "accentClair": "#0E7490", "accentSombre": "#5EC8D8" },
+    { "id": "automne", "nom": "Automne", "actif": true, "debut": "09-23", "fin": "12-20", "accentClair": "#9F1239", "accentSombre": "#F08BA0" },
+    { "id": "hiver", "nom": "Hiver", "actif": true, "debut": "12-21", "fin": "03-19", "accentClair": "#0369A1", "accentSombre": "#7DD3FC" }
   ]
 }

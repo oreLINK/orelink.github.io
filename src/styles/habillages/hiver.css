@@ -1,0 +1,37 @@
+/* Habillage Hiver (voir THEMES.md) : neige et congères le jour ; la nuit, aurore boréale,
+   étoiles et neige. */
+
+:root[data-habillage="hiver"] {
+  --light: #FFFFFF; --shade-1: #C9DCF1; --shade-2: #D7E2F2;
+  --flake: rgb(96 128 170 / 0.5); --drift-1: #FFFFFF; --drift-2: #E8F0FA;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-habillage="hiver"]:not([data-theme="light"]) {
+    --light: #1A2B40; --shade-1: #10223D; --shade-2: #17203A;
+    --flake: rgb(241 245 249 / 0.7); --drift-1: #26364D; --drift-2: #1F2D42;
+  }
+}
+:root[data-habillage="hiver"][data-theme="dark"] {
+  --light: #1A2B40; --shade-1: #10223D; --shade-2: #17203A;
+  --flake: rgb(241 245 249 / 0.7); --drift-1: #26364D; --drift-2: #1F2D42;
+}
+[data-habillage="hiver"] .decor-hiver { display: block; }
+
+.hi-drift { position: absolute; inset: auto 0 0; width: 100%; height: clamp(2.5rem, 7vh, 4rem); filter: drop-shadow(0 -2px 6px rgb(96 128 170 / 0.18)); }
+.hi-drift .is-back { fill: var(--drift-2); }
+.hi-drift .is-front { fill: var(--drift-1); }
+/* Aurore boréale : deux voiles flous qui ondulent en haut de l'écran. */
+.hi-aurora { position: absolute; inset: -4rem -10vw auto; height: 45vh; filter: blur(30px); opacity: 0.5; }
+.hi-aurora span { position: absolute; inset: 0; border-radius: 50%; }
+.hi-aurora .is-1 { background: linear-gradient(100deg, transparent 10%, rgb(52 211 153 / 0.55) 35%, rgb(34 211 238 / 0.4) 55%, transparent 80%); top: -10%; }
+.hi-aurora .is-2 { background: linear-gradient(80deg, transparent 20%, rgb(167 139 250 / 0.35) 45%, rgb(52 211 153 / 0.35) 65%, transparent 90%); top: 12%; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .hi-aurora .is-1 { animation: hi-wave 16s ease-in-out infinite alternate; }
+  .hi-aurora .is-2 { animation: hi-wave 22s ease-in-out -7s infinite alternate-reverse; }
+}
+@keyframes hi-wave {
+  0% { transform: translateX(-6%) skewX(-8deg) scaleY(0.9); opacity: 0.7; }
+  50% { transform: translateX(4%) skewX(6deg) scaleY(1.15); opacity: 1; }
+  100% { transform: translateX(8%) skewX(-4deg) scaleY(0.95); opacity: 0.75; }
+}

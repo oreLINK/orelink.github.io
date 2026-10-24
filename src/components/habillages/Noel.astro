@@ -1,0 +1,16 @@
+---
+// Décor Noël (voir THEMES.md), derrière le contenu et caché hors période.
+// Jour : neige qui tombe sur un fond rouge et vert. Nuit : neige et ciel étoilé.
+import Etoiles from './Etoiles.astro';
+import Flocons from './Flocons.astro';
+---
+
+<div class="decor decor-noel" aria-hidden="true">
+  <div class="decor-jour">
+    <Flocons nombre={14} larges={8} graine={9} />
+  </div>
+  <div class="decor-nuit">
+    <Etoiles nombre={6} larges={3} hauteur={45} graine={10} />
+    <Flocons nombre={14} larges={8} graine={11} />
+  </div>
+</div>

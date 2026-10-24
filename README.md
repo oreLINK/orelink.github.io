@@ -52,7 +52,7 @@ Tout ce qui s'affiche vient de ces fichiers. On n'a jamais besoin de toucher au 
 | `src/data/benevolat.json` | Bénévolat |
 | `src/content/projets/*.md` | Projets : un fichier par projet (tuile de l'accueil + page de doc) |
 | `src/data/en/*.json` | Version anglaise (voir « Langues » plus bas) |
-| `src/data/themes.json` | Thèmes d'habillage saisonniers (Halloween…) : voir [THEMES.md](THEMES.md) |
+| `src/data/themes.json` | Thèmes d'habillage (saisons, fêtes, événements) : voir [THEMES.md](THEMES.md) |
 
 Pour ajouter une entrée, ajouter un objet dans le tableau JSON concerné, avec un `id`
 unique. L'ordre se calcule tout seul, du plus récent au plus ancien.
@@ -142,7 +142,8 @@ qui désigne le fichier et le champ.
 - Le bouton en haut à droite passe du thème clair au sombre ; le choix vaut pour la visite
   en cours. Par défaut, et à chaque nouvelle visite, le site suit le réglage du système.
 - Les animations s'arrêtent si l'appareil demande moins de mouvement.
-- Thèmes d'habillage saisonniers (Halloween en octobre) : voir [THEMES.md](THEMES.md).
+- Thèmes d'habillage : une saison toujours active, et des fêtes par-dessus (Halloween, Noël,
+  Nouvel An, Fête de la musique) : voir [THEMES.md](THEMES.md).
 
 ## Structure
 

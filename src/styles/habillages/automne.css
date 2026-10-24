@@ -1,0 +1,32 @@
+/* Habillage Automne (voir THEMES.md) : feuilles qui tombent le jour ; la nuit, lune rousse,
+   brume qui dérive et quelques feuilles sombres. */
+
+:root[data-habillage="automne"] { --light: #FFEEDB; --shade-1: #EFCB9E; --shade-2: #EAC2CD; }
+@media (prefers-color-scheme: dark) {
+  :root[data-habillage="automne"]:not([data-theme="light"]) { --light: #2E1E18; --shade-1: #321E0F; --shade-2: #2E1421; }
+}
+:root[data-habillage="automne"][data-theme="dark"] { --light: #2E1E18; --shade-1: #321E0F; --shade-2: #2E1421; }
+[data-habillage="automne"] .decor-automne { display: block; }
+
+.au-leaf { position: absolute; left: var(--x); top: var(--top); fill: currentColor; opacity: 0.38; rotate: 25deg; }
+.decor-nuit .au-leaf { opacity: 0.2; }
+.au-moon {
+  position: absolute; top: clamp(4.5rem, 11vh, 6.5rem); right: clamp(1.75rem, 11vw, 8rem);
+  width: clamp(2.75rem, 6vw, 4.25rem); aspect-ratio: 1; border-radius: 50%; opacity: 0.75;
+  background: radial-gradient(circle at 38% 35%, #FCD9B0, #E58F4F 70%);
+  box-shadow: 0 0 3rem 0.5rem rgb(233 151 90 / 0.3);
+}
+.au-mist {
+  position: absolute; left: -20vw; width: 75vw; height: 10rem; border-radius: 50%;
+  background: radial-gradient(ellipse, rgb(255 236 220 / 0.11), transparent 70%); filter: blur(12px);
+}
+.au-mist.is-1 { bottom: 6vh; }
+.au-mist.is-2 { bottom: 22vh; left: 40vw; width: 65vw; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .au-moon { animation: au-glow 7s ease-in-out infinite alternate; }
+  .au-mist.is-1 { animation: au-drift 40s ease-in-out infinite alternate; }
+  .au-mist.is-2 { animation: au-drift 55s ease-in-out -20s infinite alternate-reverse; }
+}
+@keyframes au-glow { to { box-shadow: 0 0 4.5rem 1rem rgb(233 151 90 / 0.42); } }
+@keyframes au-drift { to { transform: translateX(25vw); } }
