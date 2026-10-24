@@ -1,165 +1,224 @@
-# Portfolio · orelink.github.io
+<div align="center">
 
-Site statique (Astro), une seule page qui défile, pensée autant pour l'ordinateur que
-pour le téléphone. Publié sur GitHub Pages à chaque merge dans `main` (voir
-« Branches et mise en ligne »).
+# oreLINK · Portfolio
+
+**Portfolio of Aurélien Bertrand, Data Engineer based in Bordeaux, France.**
+A single-page static site in French and English, driven entirely by data files.
+
+[**orelink.github.io**](https://orelink.github.io) · [English version](https://orelink.github.io/en/)
+
+[![Deploy](https://github.com/oreLINK/orelink.github.io/actions/workflows/deploy.yml/badge.svg)](https://github.com/oreLINK/orelink.github.io/actions/workflows/deploy.yml)
+[![CI](https://github.com/oreLINK/orelink.github.io/actions/workflows/ci.yml/badge.svg)](https://github.com/oreLINK/orelink.github.io/actions/workflows/ci.yml)
+![Astro](https://img.shields.io/badge/Astro-5-BC52EE?logo=astro&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)
+
+</div>
+
+---
+
+## Highlights
+
+- **Data-driven**: profile, experience, education, certifications, volunteering, labels and
+  themes all live in JSON files. No content is hard-coded.
+- **Validated at build time**: every file is checked against a schema (zod). A malformed
+  date, an invalid color or a broken translation blocks deployment with a precise error.
+- **Bilingual**: French at `/`, English at `/en/`, on the same page. Translation files hold
+  only the text; everything else comes from the French source.
+- **Light and dark**: follows the device setting, with a toggle to switch.
+- **Seasonal skins**: one season is always active (spring, summer, autumn, winter), with
+  holidays layered on top (Halloween, Christmas, New Year, Fête de la musique), each with a
+  day and a night version. See [THEMES.md](THEMES.md).
+- **Lightweight**: HTML and CSS generated at build time, a single small browser script,
+  self-hosted fonts, no third-party calls.
+- **Accessible**: keyboard navigation, screen-reader labels, checked contrast in both
+  themes, animations disabled when the device asks for reduced motion, readable without
+  JavaScript.
+- **Mobile-first**, as much as desktop.
+
+## Tech stack
+
+| Purpose | Choice |
+|---|---|
+| Generator | [Astro 5](https://astro.build), fully static output |
+| Language | TypeScript (strict) |
+| Data | JSON and Markdown, validated with zod (Astro content collections) |
+| Styling | Plain CSS: design tokens, frosted glass, View Transitions |
+| Fonts | Plus Jakarta Sans, JetBrains Mono (`@fontsource`, self-hosted) |
+| Hosting | GitHub Pages, deployed with GitHub Actions |
+
+## Getting started
+
+Requirements: **Node.js 22** and npm.
 
 ```bash
 npm install
-npm run dev        # http://localhost:4321
-npm run build      # génère dist/ (et vérifie tous les réglages)
-npm run preview    # sert dist/
+npm run dev        # dev server: http://localhost:4321
+npm run build      # builds dist/ and validates all data
+npm run preview    # serves dist/ to check the final output
 ```
 
-## Branches et mise en ligne
+`npm run build` doubles as the test suite: if it passes, the content is valid and the site
+is ready to ship.
 
-| Branche | Rôle | Qui peut y écrire |
-|---|---|---|
-| `dev` | développement : on y pousse son travail | tout le monde (push direct) |
-| `main` | production : ce qui est en ligne | personne en direct, uniquement par PR depuis `dev` |
-| `gh-pages` | le site construit (`dist/`), servi par GitHub Pages | uniquement l'action de déploiement |
+## Editing the content
 
-Le circuit :
+Everything on the page comes from these files; the code never needs to change.
 
-1. Travailler sur `dev`, pousser : la CI construit le site à chaque push.
-2. Ouvrir une PR `dev` → `main`. Deux vérifications doivent passer pour pouvoir merger :
-   **Build** (le site se construit) et **Source dev** (la PR part bien de `dev`).
-3. Merger la PR : `.github/workflows/deploy.yml` construit `main` et publie `dist/` dans
-   `gh-pages`. Le site est en ligne une à deux minutes plus tard.
-
-Les règles sont des *rulesets* GitHub (Settings → Rules → Rulesets) :
-
-- **main** : PR obligatoire, vérifications Build et Source dev obligatoires, ni force push ni
-  suppression. Personne ne les contourne, administrateur compris.
-- **gh-pages** : écriture réservée à la clé de déploiement « gh-pages deploy (GitHub
-  Actions) » (Settings → Deploy keys), dont la partie privée est le secret
-  `GH_PAGES_DEPLOY_KEY` de l'action. Ni force push ni suppression.
-
-GitHub Pages sert la branche `gh-pages`, dossier `/` (Settings → Pages). Pour relancer une
-mise en ligne sans changement : Actions → Deploy to gh-pages → Run workflow.
-
-## Modifier le site : les fichiers de réglage
-
-Tout ce qui s'affiche vient de ces fichiers. On n'a jamais besoin de toucher au code.
-
-| Fichier | Ce qu'il règle |
+| File | Content |
 |---|---|
-| `src/data/profil.json` | Prénom, nom, photo, situation, disponibilité, lieu, e-mail, liens, « À propos » |
-| `src/data/site.json` | Titre de l'onglet, description, couleur d'accent, **ordre et titres des sections**, tous les libellés (boutons, mentions…) |
-| `src/data/experiences.json` | Expérience : une entreprise, un ou plusieurs postes |
-| `src/data/formations.json` | Formation |
+| `src/data/profil.json` | Name, photo, job, location, spoken languages, email, links, "About" |
+| `src/data/site.json` | Title and description, accent color, **section order and titles**, every UI label |
+| `src/data/experiences.json` | Experience: one company, one or more positions |
+| `src/data/formations.json` | Education |
 | `src/data/certifications.json` | Certifications |
-| `src/data/benevolat.json` | Bénévolat |
-| `src/content/projets/*.md` | Projets : un fichier par projet (tuile de l'accueil + page de doc) |
-| `src/data/en/*.json` | Version anglaise (voir « Langues » plus bas) |
-| `src/data/themes.json` | Thèmes d'habillage (saisons, fêtes, événements) : voir [THEMES.md](THEMES.md) |
+| `src/data/benevolat.json` | Volunteering |
+| `src/content/projets/*.md` | Projects: one file per project (home page tile and detail page) |
+| `src/data/en/*.json` | English translation (text only) |
+| `src/data/themes.json` | Seasonal and holiday skins, see [THEMES.md](THEMES.md) |
 
-Pour ajouter une entrée, ajouter un objet dans le tableau JSON concerné, avec un `id`
-unique. L'ordre se calcule tout seul, du plus récent au plus ancien.
+To add an entry, add an object with a unique `id` to the relevant array. Display order is
+computed automatically, from most recent to oldest.
 
-### `site.json`
+<details>
+<summary><strong><code>site.json</code> settings</strong></summary>
 
-- `sections` : l'ordre du tableau est l'ordre sur la page. `"afficher": false` masque une
-  section ; `titre` change son titre. Une section vide disparaît d'elle-même.
-- `couleurs.accentClair` / `couleurs.accentSombre` : la couleur des boutons et des liens,
-  en thème clair et en thème sombre (`#RRGGBB`).
-- `textes` : chaque libellé du site (« Me contacter », « Comment je l'ai fait », « En
-  ligne »…).
+- `sections`: array order is page order. `"afficher": false` hides a section; `titre`
+  changes its heading. An empty section disappears on its own.
+- `hauteurSectionRepliee`: above this height (in pixels), a section collapses behind a
+  "Show all" button.
+- `couleurs.accentClair` / `couleurs.accentSombre`: button and link color in light and dark
+  themes (`#RRGGBB`), used when no skin is active.
+- `textes`: every label on the site ("Contact me", "See more"…).
 
-### `profil.json`
+</details>
 
-- `photo` : déposer l'image dans `public/` (ex. `public/photo.jpg`) et écrire
-  `"photo": "photo.jpg"`. Vide, ce sont les initiales qui s'affichent.
-- `statut.ton` : couleur de la pastille de disponibilité, `ok` (vert), `soon` (orange)
-  ou `none` (gris). Vider `statut.texte` masque la pastille.
-- `liens.cv` : déposer `public/cv.pdf` et écrire `"cv": "cv.pdf"`. Un lien vide masque
-  son bouton.
-- `langues` : un drapeau par langue à côté du lieu, avec `nom` et `niveau` dans une bulle
-  au survol ou au toucher. `code` vaut `fr`, `en` ou `es` (drapeaux dessinés dans
-  `src/components/Drapeau.astro`). Un tableau vide masque les drapeaux.
+<details>
+<summary><strong><code>profil.json</code> settings</strong></summary>
 
-### Langues
+- `photo`: put the image in `public/` (e.g. `public/img/photo.jpg`) and set
+  `"photo": "img/photo.jpg"`. Leave it empty to show initials instead.
+- `statut`: availability badge; `ton` is `ok` (green), `soon` (orange) or `none` (grey).
+  An empty `statut.texte` hides the badge.
+- `langues`: one flag per language next to the location, with `nom` and `niveau` shown in a
+  tooltip. `code` is `fr`, `en` or `es` (flags drawn in `src/components/Drapeau.astro`).
+- `liens.cv`: put `public/cv.pdf` in place and set `"cv": "cv.pdf"`. An empty link hides its
+  button.
 
-Le site existe en français (à `/`, par défaut) et en anglais (à `/en/`) ; le bouton à
-gauche du thème passe de l'un à l'autre en restant sur la même page.
+</details>
 
-Les fichiers de `src/data/en/` ne contiennent **que les textes à traduire** : le reste
-(dates, logos, liens…) vient du fichier français du même nom. Une entrée se retrouve par
-son `id` (expériences, formations, bénévolat, sections de `site.json`) ; les postes d'une
-même entreprise et les langues de `profil.json` se suivent dans le même ordre qu'en
-français. Un champ absent reste en français ; un champ ou un `id` inconnu fait échouer le
-build avec un message qui le désigne. Les pages de projets (`src/content/projets/`) ne sont
-écrites qu'en français.
+<details>
+<summary><strong>Dates, logos and projects</strong></summary>
 
-### Dates
+**Dates**: `"YYYY-MM"` format (e.g. `"2024-03"`), or `"YYYY"` alone for education. For an
+ongoing position or commitment, use `"fin": null`: the page shows "Present" and the duration
+("2 yrs 8 mos") updates itself.
 
-Format `"AAAA-MM"` (ex. `"2024-03"`), ou `"AAAA"` seul pour une formation. Pour un poste
-ou un bénévolat en cours, mettre `"fin": null` : la page affiche « aujourd'hui », et la
-durée (« 2 ans 8 mois ») se met à jour toute seule.
+**Logos**: optional `logo` field, a path inside `public/` (e.g. `"logos/acme.png"`) or a URL.
+Square images work best (400 × 400). Without a logo, initials are shown.
 
-### Logos d'organisations
-
-Champ `logo` facultatif (entreprise, école, organisme) : un chemin dans `public/`
-(ex. `"logos/acme.png"`) ou une URL. Sans logo, les initiales s'affichent.
-
-### Projets
-
-Un fichier `src/content/projets/<nom>.md` = une tuile sur l'accueil **et** une page
-`/projets/<nom>/` « Comment je l'ai réalisé » :
+**Projects**: a `src/content/projets/<name>.md` file creates a tile on the home page **and**
+a `/projets/<name>/` "How I built it" page.
 
 ```yaml
 ---
 titre: Terminus
-resume: Une ou deux phrases.
-date: 2026-09            # début du projet
-statut: en-ligne         # en-ligne | en-cours | archive
-role: Projet personnel
-lien: https://…          # le projet en ligne (facultatif)
-depot: https://github.com/…  # le code (facultatif)
+resume: One or two sentences.
+date: 2026-09                 # project start
+statut: en-ligne              # en-ligne | en-cours | archive
+role: Side project
+lien: https://…               # live project (optional)
+depot: https://github.com/…   # source code (optional)
 stack: [HTML, CSS]
-ordre: 1                 # facultatif : force l'ordre (le plus petit d'abord)
-couleur: "#E8962E"       # facultatif : couleur de la pastille du projet
+ordre: 1                      # optional: forces the order (lowest first)
+couleur: "#E8962E"            # optional: badge color
 ---
 
-## Le besoin
+## The need
 …
 ```
 
-Le corps est du Markdown classique. Les titres `##` forment le sommaire de la page.
+The body is plain Markdown; `##` headings build the page's table of contents.
 
-### Vérification
+</details>
 
-Tous ces fichiers sont vérifiés au build. Une date mal écrite, une couleur invalide ou
-un champ manquant fait échouer `npm run build` (donc la mise en ligne), avec un message
-qui désigne le fichier et le champ.
+<details>
+<summary><strong>English translation</strong></summary>
 
-## Design
+Files in `src/data/en/` contain **only the text to translate**: everything else (dates,
+logos, links…) comes from the French file with the same name.
 
-- Police : Plus Jakarta Sans, hébergée avec le site (`@fontsource-variable`), sans appel
-  à un service tiers.
-- `src/styles/tokens.css` : couleurs (gris neutres, clair et sombre), verre, formes.
-- `src/styles/global.css` : mise en page et composants.
-- Le bouton en haut à droite passe du thème clair au sombre ; le choix vaut pour la visite
-  en cours. Par défaut, et à chaque nouvelle visite, le site suit le réglage du système.
-- Les animations s'arrêtent si l'appareil demande moins de mouvement.
-- Thèmes d'habillage : une saison toujours active, et des fêtes par-dessus (Halloween, Noël,
-  Nouvel An, Fête de la musique) : voir [THEMES.md](THEMES.md).
+- Entries are matched by `id` (experience, education, certifications, volunteering,
+  `site.json` sections).
+- Lists without an `id` (positions within a company, profile languages) follow the French
+  order; plain text lists (skills) are replaced as a whole.
+- A missing field stays in French; an unknown field or `id` fails the build.
+- Project pages are written in French only; the surrounding interface is translated.
 
-## Structure
+</details>
+
+## Architecture
 
 ```
 src/
-├── data/                  # réglages et contenu (JSON)
-├── content/projets/       # un .md par projet
-├── content.config.ts      # vérification du contenu
-├── data/en/               # traductions anglaises (seulement les textes)
-├── lib/reglages.ts        # vérification de site.json et profil.json, par langue
-├── lib/i18n.ts            # langues, et pose des traductions sur le français
-├── layouts/Base.astro     # <head>, haut de page, pied de page
-├── components/sections/   # une section par fichier
-├── components/            # tuile projet, logo d'organisation, étiquettes, icônes
-├── vues/                  # accueil et page de projet, communes aux deux langues
-├── pages/                 # adresses : / et /en/, projets, 404
-├── scripts/ui.ts          # thème, apparition, durées
-└── styles/                # jetons et composants
+├── data/                   # content and settings (JSON); data/en/: translations
+├── content/projets/        # one Markdown file per project
+├── content.config.ts       # data schemas
+├── lib/                    # settings per language, translations, dates, links, decor
+├── layouts/Base.astro      # <head>, pre-render scripts, header and footer
+├── vues/                   # home and project page, shared by both languages
+├── pages/                  # routes: /, /en/, /projets/…, /en/projets/…, 404
+├── components/
+│   ├── sections/           # one home page section per file
+│   └── habillages/         # decor for the seasonal and holiday skins
+├── scripts/ui.ts           # all browser-side JavaScript
+└── styles/
+    ├── tokens.css          # design tokens (light / dark)
+    ├── global.css          # layout and components
+    └── habillages/         # one file per skin
 ```
+
+The codebase (file names, identifiers, comments) is written in French; see
+[AGENTS.md](AGENTS.md) for conventions.
+
+## Deployment
+
+| Branch | Role | Write access |
+|---|---|---|
+| `dev` | Development | Direct push |
+| `main` | Production, what is live | Pull requests from `dev` only |
+| `gh-pages` | Built site (`dist/`), served by GitHub Pages | Deployment workflow only |
+
+1. Work happens on `dev`; CI builds the site on every push.
+2. A `dev` → `main` pull request must pass two checks: **Build** (the site builds) and
+   **Source dev** (the PR comes from `dev`).
+3. On merge, [`deploy.yml`](.github/workflows/deploy.yml) builds `main` and publishes `dist/`
+   to `gh-pages`. The site is live one to two minutes later.
+
+<details>
+<summary><strong>Repository protection</strong></summary>
+
+Rules are defined as GitHub *rulesets* (Settings → Rules → Rulesets):
+
+- **main**: pull request required, Build and Source dev checks required, no force push or
+  deletion. Nobody can bypass them, admins included.
+- **gh-pages**: writes restricted to the "gh-pages deploy (GitHub Actions)" deploy key
+  (Settings → Deploy keys), whose private key is the workflow's `GH_PAGES_DEPLOY_KEY`
+  secret. No force push or deletion.
+
+GitHub Pages serves the `gh-pages` branch, `/` folder (Settings → Pages). To redeploy
+without changes: Actions → Deploy to gh-pages → Run workflow.
+
+</details>
+
+## Documentation
+
+| Document | Audience |
+|---|---|
+| [README.md](README.md) | Project overview and content editing |
+| [THEMES.md](THEMES.md) | Light / dark appearance and skins: calendar, settings, adding a theme |
+| [AGENTS.md](AGENTS.md) | Code conventions, for contributors and coding agents |
+
+## Author
+
+**Aurélien Bertrand** (oreLINK) · Data Engineer at Betclic Group, Bordeaux
+[LinkedIn](https://www.linkedin.com/in/aurelienbertrand/) · [GitHub](https://github.com/oreLINK)
