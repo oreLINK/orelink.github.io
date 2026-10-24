@@ -1,0 +1,88 @@
+---
+// La page d'accueil : le profil posé sur le fond, puis les sections dans l'ordre de site.json.
+// Une seule page pour toutes les langues : la langue vient de l'adresse (/ ou /en/).
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Brand from '../components/Brand.astro';
+import OrgMark from '../components/OrgMark.astro';
+import Drapeau from '../components/Drapeau.astro';
+import Experience from '../components/sections/Experience.astro';
+import Projets from '../components/sections/Projets.astro';
+import Formation from '../components/sections/Formation.astro';
+import Certifications from '../components/sections/Certifications.astro';
+import Benevolat from '../components/sections/Benevolat.astro';
+import { asset } from '../lib/paths';
+import { reglages } from '../lib/reglages';
+import { langueDe } from '../lib/i18n';
+
+const { site, profil, t } = reglages(langueDe(Astro.url));
+
+const SECTIONS = { experience: Experience, projets: Projets, formation: Formation, certifications: Certifications, benevolat: Benevolat };
+const sections = site.sections.filter((s) => s.afficher);
+
+const l = profil.liens;
+const initiales = `${profil.prenom[0]}${profil.nom[0]}`.toUpperCase();
+---
+
+<Base>
+  <!-- ── Profil ─────────────────────────────────────────────────────────────────────────────── -->
+  <section class="intro reveal" aria-labelledby="nom">
+    <div class:list={['photo', { glass: !profil.photo }]}>
+      {profil.photo ? <img src={asset(profil.photo)} alt={`${profil.prenom} ${profil.nom}`} width="304" height="304" /> : <span aria-hidden="true">{initiales}</span>}
+    </div>
+    <div>
+      <h1 class="name" id="nom">
+        {profil.pseudo ? <Brand size="lg" /> : <>{profil.prenom} <span class="surname">{profil.nom}</span></>}
+      </h1>
+      {profil.pseudo && <p class="realname">{profil.prenom} <span class="surname">{profil.nom}</span></p>}
+    </div>
+
+    <div class="intro-more">
+      <ul class="facts">
+        {profil.statut.texte && <li class:list={['availability', `tone-${profil.statut.ton}`]}>{profil.statut.texte}</li>}
+        <li class="job">
+          <OrgMark name={profil.poste.entreprise} logo={profil.poste.logo} size="sm" />
+          <span>
+            <strong>{profil.poste.titre}</strong>
+            {' '}{t.chez}{' '}
+            {profil.poste.site ? <a class="job-org" href={profil.poste.site}>{profil.poste.entreprise}</a> : <span class="job-org">{profil.poste.entreprise}</span>}
+          </span>
+        </li>
+        {profil.localisation && <li><Icon name="pin" />{profil.localisation}</li>}
+        {profil.langues.length > 0 && (
+          <li class="langs">
+            {profil.langues.map((l) => (
+              <span class="lang" data-lang>
+                <button class="lang-flag" type="button" aria-label={l.nom} aria-describedby={`niveau-${l.code}`}>
+                  <Drapeau code={l.code} />
+                </button>
+                <span class="lang-tip" role="tooltip">
+                  <strong>{l.nom}</strong>
+                  <span id={`niveau-${l.code}`}>{l.niveau}</span>
+                </span>
+              </span>
+            ))}
+          </li>
+        )}
+      </ul>
+
+      <div class="actions">
+        {profil.email && <a class="btn" href={`mailto:${profil.email}`}><Icon name="mail" class="icon-sm" /> {t.meContacter}</a>}
+        {l.linkedin && <a class="btn btn-soft" href={l.linkedin} rel="me">LinkedIn</a>}
+        {l.github && <a class="btn btn-soft" href={l.github} rel="me">GitHub</a>}
+        {l.cv && <a class="btn btn-soft" href={asset(l.cv)}><Icon name="doc" class="icon-sm" /> CV</a>}
+      </div>
+
+      {profil.aPropos && <p class="about">{profil.aPropos}</p>}
+    </div>
+  </section>
+
+  <main id="contenu" class="sections">
+    {
+      sections.map((s) => {
+        const Section = SECTIONS[s.id];
+        return <Section titre={s.titre} />;
+      })
+    }
+  </main>
+</Base>

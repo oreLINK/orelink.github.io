@@ -2,6 +2,7 @@
 // Durée « 2 ans 8 mois », calculée au build et tenue à jour dans le navigateur pour ce qui est en
 // cours (src/scripts/ui.ts), sans avoir à republier le site chaque mois.
 import { duree } from '../lib/dates';
+import { langueDe } from '../lib/i18n';
 
 interface Props {
   debut: string;
@@ -10,4 +11,4 @@ interface Props {
 const { debut, fin } = Astro.props;
 ---
 
-<span class="nowrap" data-duree-debut={fin === null ? debut : undefined}>{duree(debut, fin)}</span>
+<span class="nowrap" data-duree-debut={fin === null ? debut : undefined}>{duree(debut, fin, langueDe(Astro.url))}</span>

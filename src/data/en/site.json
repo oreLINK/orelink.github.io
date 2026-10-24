@@ -1,0 +1,57 @@
+{
+  "meta": {
+    "titre": "oreLINK · Aurélien Bertrand, Data Engineer",
+    "description": "Portfolio of Aurélien Bertrand (oreLINK), Data Engineer at Betclic Group in Bordeaux: experience, projects, education, certifications and volunteering."
+  },
+
+  "sections": [
+    { "id": "experience", "titre": "Experience" },
+    { "id": "projets", "titre": "Projects" },
+    { "id": "formation", "titre": "Education" },
+    { "id": "certifications", "titre": "Licenses & certifications" },
+    { "id": "benevolat", "titre": "Volunteering" }
+  ],
+
+  "textes": {
+    "meContacter": "Contact me",
+    "aPropos": "About",
+    "activites": "Activities and societies",
+    "voirPlus": "See more",
+    "voirMoins": "See less",
+    "toutAfficher": "Show all",
+    "delivreeEn": "Issued",
+    "expireEn": "Expires",
+    "expireeEn": "Expired",
+    "identifiant": "Credential ID",
+    "afficherCertification": "Show credential",
+    "commentJeLaiFait": "How I built it",
+    "commentJeLaiRealise": "How I built it",
+    "voirLeProjet": "View project",
+    "codeSource": "Source code",
+    "retour": "Back to portfolio",
+    "statut": "Status",
+    "commenceEn": "Started",
+    "role": "Role",
+    "technologies": "Technologies",
+    "sommaire": "Contents",
+    "precedent": "Previous",
+    "suivant": "Next",
+    "statuts": {
+      "en-ligne": "Live",
+      "en-cours": "In progress",
+      "archive": "Archived"
+    },
+    "themeClair": "Switch to light theme",
+    "themeSombre": "Switch to dark theme",
+    "allerAuContenu": "Skip to content",
+    "codeDuSite": "Site source",
+    "introuvableTitre": "Page not found",
+    "introuvableTexte": "This page doesn't exist, or no longer does.",
+    "retourAccueil": "Back to home",
+    "chez": "at",
+    "competences": "Skills",
+    "liensExternes": "External links",
+    "autresProjets": "Other projects",
+    "changerDeLangue": "Change language"
+  }
+}

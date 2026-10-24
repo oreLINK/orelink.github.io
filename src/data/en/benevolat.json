@@ -1,0 +1,62 @@
+[
+  {
+    "id": "mab-membre-actif",
+    "role": "Active Member",
+    "cause": "Arts and Culture",
+    "description": "Association of Miagistes Alumni Bordelais since 2022\n• Created a wide range of visual assets for the association (social media posts, stories, photos, brochures, email templates, PDFs) across multiple channels (Facebook, Instagram, LinkedIn, Linktree)\n• Organized and promoted networking Afterworks in Bordeaux, bringing together 30–60 participants per event"
+  },
+  {
+    "id": "mab-vp-communication",
+    "role": "Vice President Communications",
+    "cause": "Arts and Culture",
+    "description": "Association of Miagistes Alumni Bordelais since 2022\n• Co-founded the association in 2022 to strengthen the Bordeaux MIAGE alumni community\n• Designed the association’s visual identity and developed annual and event-specific brand guidelines\n• Produced 150+ communication materials (social media posts, stories, photos, brochures, email templates, PDFs)\n• Increased online visibility with steady community growth (+250 Instagram followers, +200 LinkedIn followers in the first year)\n• Planned and executed annual communication strategies, with tailored campaigns for each event\n• Organized and promoted 20+ networking Afterworks in Bordeaux, bringing together 30–60 participants per event"
+  },
+  {
+    "id": "amb-membre-actif",
+    "role": "Active Member",
+    "cause": "Arts and Culture",
+    "description": "Association of MIAGE Students at the University of Bordeaux since 1984\n• Assisted in the preparation of various student events\n• Contributed to on-site organization and support during events"
+  },
+  {
+    "id": "amb-vice-president",
+    "role": "Vice President",
+    "cause": "Arts and Culture",
+    "description": "Association of MIAGE Students at the University of Bordeaux since 1984\n• Contributed to the organization of major student events, including Afterworks (~170 participants), Integration Weekend (~100 participants), and Ski Weekend (~110 participants)\n• Volunteered as a staff member for the 12th edition of the MIAGE Bordeaux Gala at the Bassins des Lumières (~400 participants)\n• Assisted in drafting capitalization documents to support future student boards in organizing recurring events (Integration Night, WEI, WES, etc.)"
+  },
+  {
+    "id": "amb-president",
+    "role": "President",
+    "cause": "Arts and Culture",
+    "description": "Association of MIAGE Students at the University of Bordeaux since 1984\n• Contributed to the organization of major student events despite the COVID-19 pandemic, including Afterworks (~150 participants) and online Discord gatherings (~50 participants)\n• Helped maintain strong cohesion across MIAGE cohorts as well as with alumni generations\n• Actively engaged in local and regional student life through the territorial federation ATENA (general assemblies, voting, and support of initiatives)\n• Supported the promotion of the MIAGE program, its traditions, and projects through the national federation MIAGE Connection (general assemblies, voting, and initiatives)"
+  },
+  {
+    "id": "mayday-festival",
+    "role": "Volunteer Staff",
+    "cause": "Arts and Culture",
+    "description": "Music festival created in 2016 in Talence (FR), organized as an association since 2018.\n• Monitored and secured the festival perimeter to ensure attendee safety\n• Assisted festivalgoers by answering questions and providing on-site guidance\n• Supported bar service during peak hours to manage high-volume demand"
+  },
+  {
+    "id": "miage-connection-vp-reseau",
+    "role": "Vice President Network",
+    "cause": "Civil Rights and Social Action",
+    "description": "National Federation of MIAGE Students in France since 2005\n• Maintained connections between member organizations (student unions, junior enterprises, alumni groups) during the Covid-19 crisis\n• Collected and shared activities from member associations through the online MIAGE Weather platform, enabling visibility and exchange of event ideas and updates\n• Facilitated collaboration with the Training Division to support members’ academic preparation\n• Assisted in the renewal of student boards to ensure continuity of activities essential to the MIAGE program"
+  },
+  {
+    "id": "miage-connection-vp-international",
+    "role": "Vice President International",
+    "cause": "Education",
+    "description": "National Federation of MIAGE Students in France since 2005\n• Maintained connections with MIAGE communities and equivalent networks abroad (Luxembourg, Belgium, Canada, United States, etc.)\n• Authored a support guide to help students settle abroad, covering legal procedures, practical advice, housing tips, and recommendations collected from alumni already living overseas"
+  },
+  {
+    "id": "ub-elu-etudiant",
+    "role": "Student Elected Representative",
+    "cause": "Civil Rights and Social Action",
+    "description": "• Represented the student body in central university bodies (such as the Board of Administration and the Academic Council), participating in decision-making on academic, financial, and administrative matters\n• Served on Faculty/Component Councils, contributing to the design and validation of course offerings, evaluation methods, admission criteria, and student life policy\n• Collaborated with Vice-Presidents of Campus to address student welfare, campus life, and associative activities, acting as a liaison between students, administration, and student associations"
+  },
+  {
+    "id": "abeii-tresorier",
+    "role": "Treasurer",
+    "cause": "Social Services",
+    "description": "Bordeaux Association of IT Students at the University of Bordeaux since 2012\n• Planned and coordinated student events for 50–150+ participants, managing budgets of up to €3K\n• Oversaw daily operations of the student common room serving 200+ students\n• Managed inventory, pricing, and snack/drink sales to ensure consistent revenue flow\n• Created and monitored budgets to secure the association’s financial sustainability"
+  }
+]

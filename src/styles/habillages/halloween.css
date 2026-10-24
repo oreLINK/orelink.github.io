@@ -1,0 +1,121 @@
+/* Habillage Halloween (voir THEMES.md). Actif quand <html data-habillage="halloween">.
+   L'accent citrouille vient de src/data/themes.json (posé par Base.astro) ; ici, le fond se
+   réchauffe (halos orange et violet) et le décor apparaît, assez discret pour rester sobre :
+   - le jour (apparence claire) : toile d'araignée et son araignée, feuilles d'automne qui tombent ;
+   - la nuit (apparence sombre) : lune, étoiles, chauves-souris. */
+
+:root[data-habillage="halloween"] {
+  --light: #FFF3E6;
+  --shade-1: #F7DCC6;
+  --shade-2: #E7DDF3;
+  --decor: rgb(40 22 48 / 0.2);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-habillage="halloween"]:not([data-theme="light"]) {
+    --light: #2A1C1A;
+    --shade-1: #2B1A10;
+    --shade-2: #1F1530;
+    --decor: rgb(255 214 170 / 0.16);
+  }
+}
+:root[data-habillage="halloween"][data-theme="dark"] {
+  --light: #2A1C1A;
+  --shade-1: #2B1A10;
+  --shade-2: #1F1530;
+  --decor: rgb(255 214 170 / 0.16);
+}
+
+[data-habillage="halloween"] .decor-halloween { display: block; }
+
+/* ---------- Jour : toile, araignée, feuilles ---------- */
+
+.hw-web {
+  position: absolute; top: 0; left: 0; width: clamp(9rem, 26vw, 16rem); height: auto;
+  fill: none; stroke: var(--decor); stroke-width: 1.1; stroke-linecap: round;
+}
+
+/* L'araignée pend à la toile au bout de son fil. */
+.hw-spider {
+  position: absolute; top: 0; left: clamp(5.5rem, 16vw, 9.75rem);
+  display: flex; flex-direction: column; align-items: center; transform-origin: top center;
+}
+.hw-thread { width: 1px; height: 5rem; background: var(--decor); }
+.hw-spider svg { width: 1.125rem; margin-top: -2px; fill: rgb(40 22 48 / 0.32); }
+.hw-legs { fill: none; stroke: rgb(40 22 48 / 0.32); stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Feuilles : posées à --top, elles tombent du haut de l'écran jusqu'en bas en tournoyant. */
+.hw-leaf { position: absolute; left: var(--x); top: var(--top); fill: currentColor; opacity: 0.32; rotate: 25deg; }
+
+/* ---------- Nuit : lune, étoiles, chauves-souris ---------- */
+
+/* Un croissant : un disque vide dont l'ombre intérieure dessine le côté éclairé ; la lueur suit
+   le croissant seul (drop-shadow), pas le disque. */
+.hw-moon {
+  position: absolute; top: clamp(4.5rem, 11vh, 6.5rem); right: clamp(1.75rem, 11vw, 8rem);
+  width: clamp(2.75rem, 6vw, 4rem); aspect-ratio: 1; border-radius: 50%;
+  box-shadow: inset -0.8rem 0.4rem 0 0 rgb(253 231 180 / 0.55);
+  filter: drop-shadow(0 0 0.75rem rgb(253 200 120 / 0.3));
+}
+
+.hw-star { position: absolute; aspect-ratio: 1; border-radius: 50%; background: rgb(255 240 215 / 0.7); opacity: 0.5; }
+
+.hw-bat { position: absolute; height: auto; fill: var(--decor); }
+.hw-bat.is-1 { top: clamp(9rem, 22vh, 11.5rem); right: clamp(5rem, 19vw, 15rem); rotate: -6deg; }
+.hw-bat.is-2 { top: clamp(11rem, 29vh, 15rem); right: clamp(1.5rem, 6vw, 5rem); rotate: 8deg; }
+.hw-flyer { position: absolute; top: 18vh; left: 100%; }
+.hw-flyer .hw-bat { position: static; display: block; }
+
+/* Sur téléphone, moins d'éléments. */
+@media (max-width: 36rem) {
+  .hw-leaf.is-wide, .hw-star.is-wide, .hw-bat.is-2 { display: none; }
+}
+
+/* ---------- Animations (seulement si l'appareil accepte le mouvement) ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .hw-spider { animation: hw-sway 6s ease-in-out infinite alternate; }
+  .hw-thread { animation: hw-dangle 11s ease-in-out infinite alternate; }
+
+  .hw-leaf { animation: hw-fall var(--dur) linear var(--delay) infinite; }
+
+  .hw-moon { animation: hw-glow 6s ease-in-out infinite alternate; }
+  .hw-star { animation: hw-twinkle var(--dur) ease-in-out infinite alternate; }
+
+  /* Les chauves-souris battent des ailes ; deux planent près de la lune, une traverse le ciel. */
+  .hw-bat { transform-origin: 50% 40%; animation: hw-flap 0.9s ease-in-out infinite alternate; }
+  .hw-bat.is-1, .hw-bat.is-2 { animation: hw-flap 0.9s ease-in-out infinite alternate, hw-hover 8s ease-in-out infinite alternate; }
+  .hw-bat.is-2 { animation-duration: 1.1s, 10s; animation-delay: -0.4s, -4s; }
+  .hw-flyer { animation: hw-cross 26s linear -6s infinite; }
+  .hw-flyer .hw-bat { animation-duration: 0.35s; }
+}
+
+@keyframes hw-sway { from { rotate: -2.5deg; } to { rotate: 2.5deg; } }
+@keyframes hw-dangle { from { height: 3rem; } to { height: 8.5rem; } }
+
+@keyframes hw-fall {
+  from { transform: translate(0, calc(-1 * var(--top) - 10vh)) rotate(0deg); }
+  25% { transform: translate(var(--drift), calc(-1 * var(--top) + 17.5vh)) rotate(calc(var(--spin) * 0.25)); }
+  50% { transform: translate(0, calc(-1 * var(--top) + 45vh)) rotate(calc(var(--spin) * 0.5)); }
+  75% { transform: translate(calc(-1 * var(--drift)), calc(-1 * var(--top) + 72.5vh)) rotate(calc(var(--spin) * 0.75)); }
+  to { transform: translate(0, calc(-1 * var(--top) + 110vh)) rotate(var(--spin)); }
+}
+
+@keyframes hw-glow { to { filter: drop-shadow(0 0 1.5rem rgb(253 200 120 / 0.5)); } }
+@keyframes hw-twinkle { from { opacity: 0.15; } to { opacity: 0.85; } }
+
+@keyframes hw-flap { from { scale: 1 1; } to { scale: 1 0.5; } }
+@keyframes hw-hover {
+  0% { translate: 0 0; }
+  33% { translate: -10px 6px; }
+  66% { translate: -18px -4px; }
+  100% { translate: 6px -8px; }
+}
+/* Traversée de droite à gauche en ondulant, puis une longue pause hors de l'écran. */
+@keyframes hw-cross {
+  0% { transform: translate(0, 0); }
+  10% { transform: translate(-30vw, -3vh); }
+  20% { transform: translate(-60vw, 2vh); }
+  30% { transform: translate(-90vw, -2vh); }
+  40%, 100% { transform: translate(calc(-100vw - 8rem), 1vh); }
+}

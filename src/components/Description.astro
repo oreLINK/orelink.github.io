@@ -2,12 +2,14 @@
 // Description d'une tuile, repliée à 3 lignes (la dernière s'estompe) avec « Voir plus » / « Voir moins ».
 // Une ligne vide sépare deux paragraphes. Sans JavaScript, le texte s'affiche en entier ; le bouton
 // n'apparaît que si le texte dépasse.
-import { t } from '../lib/reglages';
+import { reglages } from '../lib/reglages';
+import { langueDe } from '../lib/i18n';
 
 interface Props {
   text: string;
 }
 const { text } = Astro.props;
+const { t } = reglages(langueDe(Astro.url));
 const paragraphes = text.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
 ---
 

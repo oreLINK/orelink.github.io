@@ -1,0 +1,76 @@
+---
+// Décor de l'habillage Halloween (voir THEMES.md), derrière le contenu et caché hors saison.
+// Version jour (apparence claire) : toile d'araignée et son araignée qui monte et descend, feuilles
+// d'automne qui tombent. Version nuit (apparence sombre) : lune, étoiles qui scintillent et
+// chauves-souris, dont une qui traverse le ciel de temps en temps.
+
+// Feuilles : position de départ (--x, --top), puis chute de --dur secondes, décalée de --delay.
+const feuilles = [
+  { x: 8, top: 30, taille: 30, duree: 19, delai: -4, derive: 60, rotation: 300, couleur: '#C2410C' },
+  { x: 27, top: 62, taille: 24, duree: 23, delai: -15, derive: -45, rotation: -260, couleur: '#B45309' },
+  { x: 48, top: 18, taille: 27, duree: 21, delai: -9, derive: 50, rotation: 340, couleur: '#9A3412' },
+  { x: 66, top: 74, taille: 22, duree: 25, delai: -2, derive: -60, rotation: -320, couleur: '#D97706' },
+  { x: 81, top: 40, taille: 28, duree: 20, delai: -12, derive: 40, rotation: 280, couleur: '#C2410C' },
+  { x: 93, top: 85, taille: 23, duree: 24, delai: -19, derive: -35, rotation: -300, couleur: '#B45309' },
+];
+
+// Étoiles : position (en % de l'écran), taille et rythme de scintillement.
+const etoiles = [
+  { x: 12, y: 9, taille: 2, duree: 3.8 },
+  { x: 31, y: 16, taille: 1.5, duree: 5.2 },
+  { x: 46, y: 6, taille: 2, duree: 4.4 },
+  { x: 58, y: 24, taille: 1.5, duree: 6 },
+  { x: 71, y: 11, taille: 2.5, duree: 3.4 },
+  { x: 88, y: 31, taille: 1.5, duree: 4.8 },
+  { x: 22, y: 34, taille: 1.5, duree: 5.6 },
+];
+---
+
+<div class="decor decor-halloween" aria-hidden="true">
+  <svg width="0" height="0" style="position:absolute" focusable="false">
+    <symbol id="hw-bat" viewBox="0 0 64 26">
+      <path d="M32 11 L29.6 6.2 L28.4 10.6 Q25 9.4 22 10.4 Q12 4.5 1.5 7.5 Q7.5 10 8.5 16.5 Q12.5 13 16.5 17 Q20.5 14 23.5 19 Q27 16.5 29.5 20.5 L32 23 L34.5 20.5 Q37 16.5 40.5 19 Q43.5 14 47.5 17 Q51.5 13 55.5 16.5 Q56.5 10 62.5 7.5 Q52 4.5 42 10.4 Q39 9.4 35.6 10.6 L34.4 6.2 L32 11Z" />
+    </symbol>
+    <symbol id="hw-leaf" viewBox="0 0 24 24">
+      <path d="M12 1.5C6.5 5.5 3.6 10.6 5.6 16.4 7 20.5 10 22 12 22s5-1.5 6.4-5.6C20.4 10.6 17.5 5.5 12 1.5Z" />
+      <path fill="none" stroke="#FFFFFF" stroke-opacity="0.45" stroke-width="1" stroke-linecap="round" d="M12 4.5V23M12 10l-3.4-2.6M12 10l3.4-2.6M12 14.5l-4.4-3M12 14.5l4.4-3M12 18.8l-3.6-2.4M12 18.8l3.6-2.4" />
+    </symbol>
+  </svg>
+
+  <div class="decor-jour">
+    <svg class="hw-web" viewBox="0 0 260 260" focusable="false">
+      <path d="M0 0L260 0 M0 0L251.1 67.3 M0 0L225.2 130 M0 0L183.8 183.8 M0 0L130 225.2 M0 0L67.3 251.1 M0 0L0 260 M46 0Q39.2 5.2 44.4 11.9Q36.5 15.1 39.8 23Q31.4 24.1 32.5 32.5Q24.1 31.4 23 39.8Q15.1 36.5 11.9 44.4Q5.2 39.2 0 46 M92 0Q78.4 10.3 88.9 23.8Q73.1 30.3 79.7 46Q62.8 48.2 65.1 65.1Q48.2 62.8 46 79.7Q30.3 73.1 23.8 88.9Q10.3 78.4 0 92 M140 0Q119.4 15.7 135.2 36.2Q111.2 46.1 121.2 70Q95.5 73.3 99 99Q73.3 95.5 70 121.2Q46.1 111.2 36.2 135.2Q15.7 119.4 0 140 M190 0Q162 21.3 183.5 49.2Q151 62.5 164.5 95Q129.6 99.5 134.4 134.4Q99.5 129.6 95 164.5Q62.5 151 49.2 183.5Q21.3 162 0 190 M240 0Q204.6 26.9 231.8 62.1Q190.7 79 207.8 120Q163.7 125.6 169.7 169.7Q125.6 163.7 120 207.8Q79 190.7 62.1 231.8Q26.9 204.6 0 240" />
+    </svg>
+    <div class="hw-spider">
+      <span class="hw-thread"></span>
+      <svg viewBox="0 0 24 24" focusable="false">
+        <path class="hw-legs" d="M9.5 10 5 6.5 2.5 8M9.2 12 4 11 1.5 13.5M9.5 14 5 16.5 3.5 20M10.5 15.5 8 20 8.5 22.5M14.5 10 19 6.5 21.5 8M14.8 12 20 11 22.5 13.5M14.5 14 19 16.5 20.5 20M13.5 15.5 16 20 15.5 22.5" />
+        <circle cx="12" cy="9" r="2.6" />
+        <ellipse cx="12" cy="14" rx="3.4" ry="4" />
+      </svg>
+    </div>
+    {feuilles.map((f, i) => (
+      <svg
+        class:list={['hw-leaf', { 'is-wide': i >= 4 }]}
+        style={`--x: ${f.x}%; --top: ${f.top}vh; --dur: ${f.duree}s; --delay: ${f.delai}s; --drift: ${f.derive}px; --spin: ${f.rotation}deg; color: ${f.couleur}`}
+        width={f.taille}
+        height={f.taille}
+        focusable="false"
+      >
+        <use href="#hw-leaf" />
+      </svg>
+    ))}
+  </div>
+
+  <div class="decor-nuit">
+    <span class="hw-moon"></span>
+    {etoiles.map((e, i) => (
+      <span class:list={['hw-star', { 'is-wide': i >= 5 }]} style={`left: ${e.x}%; top: ${e.y}%; width: ${e.taille}px; --dur: ${e.duree}s`}></span>
+    ))}
+    <svg class="hw-bat is-1" width="58" viewBox="0 0 64 26" focusable="false"><use href="#hw-bat" /></svg>
+    <svg class="hw-bat is-2" width="40" viewBox="0 0 64 26" focusable="false"><use href="#hw-bat" /></svg>
+    <span class="hw-flyer">
+      <svg class="hw-bat" width="46" viewBox="0 0 64 26" focusable="false"><use href="#hw-bat" /></svg>
+    </span>
+  </div>
+</div>

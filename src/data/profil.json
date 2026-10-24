@@ -14,11 +14,16 @@
     "ton": "none"
   },
   "localisation": "Bordeaux, France",
+  "langues": [
+    { "code": "fr", "nom": "Français", "niveau": "Langue natale" },
+    { "code": "en", "nom": "Anglais", "niveau": "Capacité professionnelle" },
+    { "code": "es", "nom": "Espagnol", "niveau": "Notions de base" }
+  ],
   "email": "orelienbertrand@gmail.com",
   "liens": {
     "linkedin": "https://www.linkedin.com/in/aurelienbertrand/",
     "github": "https://github.com/oreLINK",
     "cv": ""
   },
-  "aPropos": "Data Engineer avec un pied côté Analytics Engineering : de la source brute jusqu'à des tables propres, testées et documentées. En dehors du travail, je construis des petits sites statiques autour de mes passions : la montagne, les transports, les langues."
+  "aPropos": "Chez Betclic, je fais parler la donnée : modélisation, transformations dbt et SQL, produits data et tableaux de bord pour les équipes métiers, avec un coup de main de l'IA générative. À côté, je code beaucoup pour moi : un besoin du quotidien, un blocage qui m'agace ou juste une idée à tester, et ça devient un projet. J'aime tenter des choses, me planter, trouver la solution… et recommencer."
 }

@@ -1,0 +1,8 @@
+{
+  "langues": [
+    { "nom": "French", "niveau": "Native" },
+    { "nom": "English", "niveau": "Professional working proficiency" },
+    { "nom": "Spanish", "niveau": "Elementary proficiency" }
+  ],
+  "aPropos": "At Betclic, I make data talk: modeling, dbt and SQL transformations, data products and dashboards for business teams, with a little help from generative AI. On the side, I code a lot for myself: an everyday need, a blocker that bugs me or just an idea worth trying, and it turns into a project. I like trying things, getting it wrong, finding the fix… and starting again."
+}
