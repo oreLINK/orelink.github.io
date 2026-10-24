@@ -2,7 +2,7 @@
 
 Consignes pour les agents de code (et les humains) qui travaillent sur ce dépôt. Le
 fonctionnement du site pour son propriétaire est dans [README.md](README.md) ; les thèmes
-saisonniers dans [THEMES.md](THEMES.md).
+(saisons, fêtes, événements) dans [THEMES.md](THEMES.md).
 
 ## Le projet
 
@@ -42,10 +42,11 @@ ordinateur **et** à ~390 px de large (pas de défilement horizontal).
 | `src/pages/` | Routes seulement : `/`, `/en/`, `/projets/[slug]/`, `/en/projets/[slug]/`, 404. Elles rendent une vue. |
 | `src/components/sections/` | Une section de l'accueil par fichier. |
 | `src/layouts/Base.astro` | `<head>`, scripts d'avant-rendu (thème, habillage), haut de page, pied de page. |
-| `src/scripts/ui.ts` | Tout le JS navigateur : thème, menu des langues, replis « Voir plus », bulles, liens externes. |
+| `src/scripts/ui.ts` | Tout le JS navigateur : thème, menu des langues, replis « Voir plus », bulles, liens externes, feux d'artifice du Nouvel An. |
 | `src/styles/tokens.css` | Jetons de design (couleurs clair/sombre, verre, rayons). |
 | `src/styles/global.css` | Mise en page et composants. |
-| `src/styles/habillages/`, `src/components/habillages/` | Thèmes saisonniers (Halloween…). |
+| `src/styles/habillages/`, `src/components/habillages/` | Habillages (saisons, fêtes) : un CSS et un composant chacun, `commun.css`, `Etoiles` et `Flocons` partagés. |
+| `src/lib/decor.ts` | Positions pseudo-aléatoires (graine fixe) des éléments de décor. |
 | `public/logos/` | Logos d'organisations, carrés (400 × 400 de préférence). |
 
 ## Conventions
@@ -89,9 +90,12 @@ Deux axes indépendants, détaillés dans [THEMES.md](THEMES.md) :
 
 - **Apparence** clair/sombre : système par défaut, choix au bouton gardé pour la visite
   (`sessionStorage`).
-- **Habillage** saisonnier (`src/data/themes.json`) : choisi dans le navigateur selon la date
-  du visiteur ; chaque habillage a une version jour (clair) et nuit (sombre).
-  Prévisualisation : `?theme=halloween` ou `?theme=aucun`.
+- **Habillage** (`src/data/themes.json`) : choisi dans le navigateur selon la date du
+  visiteur, par priorité **spéciaux > récurrents > saisons** (une saison est toujours active).
+  Chaque habillage a une version jour (clair) et nuit (sombre), à concevoir séparément.
+  Prévisualisation : `?theme=<id>` ou `?theme=aucun`.
+- Tout décor est `aria-hidden`, passe derrière le contenu, s'allège sur téléphone (`is-wide`)
+  et s'immobilise si l'appareil demande moins de mouvement.
 
 ## Git
 

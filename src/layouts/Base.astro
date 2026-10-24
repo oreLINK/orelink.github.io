@@ -4,7 +4,14 @@ import Icons from '../components/Icons.astro';
 import Icon from '../components/Icon.astro';
 import Brand from '../components/Brand.astro';
 import Drapeau from '../components/Drapeau.astro';
+import Printemps from '../components/habillages/Printemps.astro';
+import Ete from '../components/habillages/Ete.astro';
+import Automne from '../components/habillages/Automne.astro';
+import Hiver from '../components/habillages/Hiver.astro';
 import Halloween from '../components/habillages/Halloween.astro';
+import Noel from '../components/habillages/Noel.astro';
+import NouvelAn from '../components/habillages/NouvelAn.astro';
+import FeteMusique from '../components/habillages/FeteMusique.astro';
 import { url, asset } from '../lib/paths';
 import { reglages, themes } from '../lib/reglages';
 import { LANGUES, cheminSansLangue, langueDe, type Langue } from '../lib/i18n';
@@ -22,8 +29,14 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
 // La même page dans chaque langue (sélecteur de langue et liens hreflang).
 const chemin = cheminSansLangue(Astro.url);
 const versions = (Object.keys(LANGUES) as Langue[]).map((code) => ({ code, ...LANGUES[code], href: url(chemin, code) }));
-// Thèmes d'habillage (src/data/themes.json, voir THEMES.md), choisis dans le navigateur d'après la date.
-const habillages = { forcer: themes.forcer, themes: themes.themes.map(({ nom, ...t }) => t) };
+// Thèmes d'habillage (src/data/themes.json, voir THEMES.md), choisis dans le navigateur d'après la date,
+// par ordre de priorité : spéciaux, puis récurrents, puis saisons.
+const sansNom = <T extends { nom: string }>({ nom, ...t }: T) => t;
+const habillages = {
+  forcer: themes.forcer,
+  speciaux: themes.speciaux.map(sansNom),
+  annuels: [...themes.recurrents, ...themes.saisons].map((t) => ({ ...sansNom(t), habillage: t.id })),
+};
 const accents = `--accent-light: ${site.couleurs.accentClair}; --accent-dark: ${site.couleurs.accentSombre};`;
 ---
 
@@ -58,8 +71,9 @@ const accents = `--accent-light: ${site.couleurs.accentClair}; --accent-dark: ${
       } catch {}
     </script>
 
-    {/* Thème d'habillage du moment, posé avant le premier rendu. `?theme=<id>` (ou `?theme=aucun`)
-        dans l'adresse permet de le prévisualiser à toute date. */}
+    {/* Thème d'habillage du moment, posé avant le premier rendu : le premier thème actif en période
+        parmi les spéciaux (dates AAAA-MM-JJ), puis les récurrents et les saisons (MM-JJ, chaque année).
+        `?theme=<id>` (ou `?theme=aucun`) dans l'adresse permet d'en prévisualiser un à toute date. */}
     <script is:inline define:vars={{ habillages }}>
       (() => {
         let choix = null;
@@ -67,23 +81,25 @@ const accents = `--accent-light: ${site.couleurs.accentClair}; --accent-dark: ${
           choix = new URLSearchParams(location.search).get('theme');
         } catch {}
         if (choix === null) choix = habillages.forcer;
+        const tous = [...habillages.speciaux, ...habillages.annuels];
         let theme;
         if (choix) {
-          theme = habillages.themes.find((t) => t.id === choix);
+          theme = tous.find((t) => t.id === choix);
         } else {
-          // Jour de l'année du visiteur, comparé aux dates « MM-JJ » (une période peut passer le 31 décembre).
           const d = new Date();
-          const jour = (d.getMonth() + 1) * 100 + d.getDate();
-          const n = (mmjj) => Number(mmjj.replace('-', ''));
-          theme = habillages.themes.find((t) => {
+          const jour = (d.getMonth() + 1) * 100 + d.getDate(); // MMJJ
+          const date = d.getFullYear() * 10000 + jour; // AAAAMMJJ
+          const n = (texte) => Number(texte.replaceAll('-', ''));
+          const enPeriode = (t, x) => {
             const debut = n(t.debut);
             const fin = n(t.fin);
-            return t.actif && (debut <= fin ? debut <= jour && jour <= fin : jour >= debut || jour <= fin);
-          });
+            return t.actif && (debut <= fin ? debut <= x && x <= fin : x >= debut || x <= fin);
+          };
+          theme = habillages.speciaux.find((t) => enPeriode(t, date)) ?? habillages.annuels.find((t) => enPeriode(t, jour));
         }
         if (!theme) return;
         const html = document.documentElement;
-        html.dataset.habillage = theme.id;
+        html.dataset.habillage = theme.habillage;
         html.style.setProperty('--accent-light', theme.accentClair);
         html.style.setProperty('--accent-dark', theme.accentSombre);
       })();
@@ -91,7 +107,10 @@ const accents = `--accent-light: ${site.couleurs.accentClair}; --accent-dark: ${
   </head>
   <body>
     <a class="skip-link" href="#contenu">{t.allerAuContenu}</a>
-    <div class="backdrop" aria-hidden="true"><span></span><span></span><Halloween /></div>
+    <div class="backdrop" aria-hidden="true">
+      <span></span><span></span>
+      <Printemps /><Ete /><Automne /><Hiver /><Halloween /><Noel /><NouvelAn /><FeteMusique />
+    </div>
     <Icons />
 
     <div class="page">

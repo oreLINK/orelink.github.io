@@ -1,0 +1,30 @@
+---
+// Neige qui tombe (Hiver, Noël) ; la couleur des flocons (--flake) vient de l'habillage. Au-delà
+// de `larges`, ils ne s'affichent que sur grand écran.
+import { hasard, vars } from '../../lib/decor';
+
+interface Props {
+  nombre: number;
+  larges: number;
+  graine: number;
+}
+const { nombre, larges, graine } = Astro.props;
+const h = hasard(graine);
+const flocons = Array.from({ length: nombre }, () => ({
+  x: h.entre(2, 98),
+  top: h.entre(0, 95),
+  s: h.parmi([3, 4, 4, 5, 6]),
+  dur: h.entre(13, 24),
+  delay: h.entre(-24, 0),
+  drift: h.entre(-24, 24, 0),
+}));
+---
+
+{
+  flocons.map((f, i) => (
+    <span
+      class:list={['x-flake x-snow', { 'is-wide': i >= larges }]}
+      style={vars({ x: `${f.x}%`, top: `${f.top}vh`, s: `${f.s}px`, dur: `${f.dur}s`, delay: `${f.delay}s`, drift: `${f.drift}px` })}
+    />
+  ))
+}

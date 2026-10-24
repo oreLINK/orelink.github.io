@@ -1,7 +1,7 @@
 // Comportements de la page : thème clair ou sombre, menu des langues, apparition au défilement,
-// et durées « en cours » tenues à jour.
+// durées « en cours » tenues à jour, et animations des habillages (feux d'artifice du Nouvel An).
 
-import { duree } from '../lib/dates';
+import { anneeQuiCommence, duree } from '../lib/dates';
 import type { Langue } from '../lib/i18n';
 
 const html = document.documentElement;
@@ -226,3 +226,150 @@ const now = new Date();
 document.querySelectorAll<HTMLElement>('[data-duree-debut]').forEach((el) => {
   el.textContent = duree(el.dataset.dureeDebut!, null, html.lang as Langue, now);
 });
+
+// ---------- Nouvel An : ballons aux chiffres de l'année, feux d'artifice ----------
+
+// Les ballons sont posés au build : on les remet à l'année du jour de la visite.
+document.querySelectorAll('[data-annee] text').forEach((texte, i) => {
+  texte.textContent = String(anneeQuiCommence(now))[i] ?? '';
+});
+
+// Une fusée monte en laissant une traînée, puis éclate en gerbe : pivoine (sphère colorée), saule
+// (or, longues retombées), anneau ou crépitement (étincelles qui scintillent). Les étincelles
+// subissent la gravité et le frottement de l'air ; le canvas s'efface un peu à chaque image, ce
+// qui dessine les traînées. Ne tourne que si l'habillage Nouvel An est affiché en apparence
+// sombre, page visible et mouvement accepté ; sinon le canvas reste vide.
+const feux = document.querySelector<HTMLCanvasElement>('[data-feux]');
+if (feux && !still) {
+  const ctx = feux.getContext('2d')!;
+  const COULEURS = ['252 211 77', '249 168 212', '103 232 249', '255 255 255', '196 181 253', '134 239 172', '253 164 175'];
+  const GRAVITE = 0.045;
+  const MAX_ETINCELLES = 900;
+  type Fusee = { x: number; y: number; vx: number; vy: number; cible: number; couleur: string };
+  type Etincelle = { x: number; y: number; px: number; py: number; vx: number; vy: number; vie: number; usure: number; frottement: number; gravite: number; couleur: string; crepite: boolean; epaisseur: number };
+
+  let largeur = 0;
+  let hauteur = 0;
+  let fusees: Fusee[] = [];
+  let etincelles: Etincelle[] = [];
+  let prochaine = 0;
+  let precedent = 0;
+  let boucle = 0;
+  const hasard = (a: number, b: number) => a + Math.random() * (b - a);
+  const choisir = <T>(liste: T[]) => liste[Math.floor(Math.random() * liste.length)];
+  // Le canvas n'est affiché (offsetParent) qu'avec l'habillage Nouvel An en apparence sombre.
+  const actif = () => !document.hidden && feux.offsetParent !== null;
+
+  const dimensionner = () => {
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    largeur = feux.clientWidth;
+    hauteur = feux.clientHeight;
+    feux.width = largeur * dpr;
+    feux.height = hauteur * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  };
+
+  const lancer = () => {
+    const cible = hauteur * hasard(0.1, 0.42);
+    const depart = hauteur + 8;
+    fusees.push({ x: largeur * hasard(0.12, 0.88), y: depart, cible, vx: hasard(-0.4, 0.4), vy: -Math.sqrt(2 * GRAVITE * 1.6 * (depart - cible)), couleur: choisir(COULEURS) });
+  };
+
+  const eclater = (f: Fusee) => {
+    const type = choisir(['pivoine', 'pivoine', 'saule', 'anneau', 'crepitement']);
+    const n = type === 'anneau' ? 46 : type === 'saule' ? 70 : 84;
+    const couleur = type === 'saule' ? '253 214 120' : f.couleur;
+    const seconde = choisir(COULEURS);
+    const vitesse = hasard(2.6, 3.8) * Math.min(1, Math.max(0.7, largeur / 1100));
+    for (let i = 0; i < n && etincelles.length < MAX_ETINCELLES; i++) {
+      const angle = type === 'anneau' ? (i / n) * Math.PI * 2 : Math.random() * Math.PI * 2;
+      const v = type === 'anneau' ? vitesse : vitesse * Math.cbrt(Math.random());
+      etincelles.push({
+        x: f.x, y: f.y, px: f.x, py: f.y, vx: Math.cos(angle) * v, vy: Math.sin(angle) * v, vie: 1,
+        usure: type === 'saule' ? hasard(0.005, 0.008) : hasard(0.011, 0.017),
+        frottement: type === 'saule' ? 0.972 : 0.982,
+        gravite: type === 'saule' ? GRAVITE * 0.8 : GRAVITE,
+        couleur: type === 'pivoine' && i % 3 === 0 ? seconde : couleur,
+        crepite: type === 'crepitement',
+        epaisseur: type === 'saule' ? 1.4 : 1.8,
+      });
+    }
+    // Un bref éclair au point d'explosion.
+    const halo = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, 46);
+    halo.addColorStop(0, `rgb(${couleur} / 0.35)`);
+    halo.addColorStop(1, 'rgb(0 0 0 / 0)');
+    ctx.fillStyle = halo;
+    ctx.fillRect(f.x - 46, f.y - 46, 92, 92);
+  };
+
+  const trait = (x0: number, y0: number, x1: number, y1: number, couleur: string, alpha: number, epaisseur: number) => {
+    ctx.strokeStyle = `rgb(${couleur} / ${alpha})`;
+    ctx.lineWidth = epaisseur;
+    ctx.beginPath();
+    ctx.moveTo(x0, y0);
+    ctx.lineTo(x1, y1);
+    ctx.stroke();
+  };
+
+  const image = (maintenant: number) => {
+    if (!actif()) {
+      boucle = 0;
+      fusees = [];
+      etincelles = [];
+      ctx.clearRect(0, 0, largeur, hauteur);
+      return;
+    }
+    const k = Math.min((maintenant - (precedent || maintenant)) / 16.67, 3); // pas de temps, en images à 60 Hz
+    precedent = maintenant;
+    // Efface un peu l'image précédente : les traînées s'estompent.
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.fillStyle = `rgb(0 0 0 / ${0.16 * k})`;
+    ctx.fillRect(0, 0, largeur, hauteur);
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.lineCap = 'round';
+
+    if (maintenant > prochaine) {
+      lancer();
+      if (Math.random() < 0.25) lancer();
+      prochaine = maintenant + hasard(900, 2300);
+    }
+    fusees = fusees.filter((f) => {
+      const x0 = f.x;
+      const y0 = f.y;
+      f.vy += GRAVITE * 1.6 * k;
+      f.x += f.vx * k;
+      f.y += f.vy * k;
+      trait(x0, y0, f.x, f.y, f.couleur, 0.9, 2);
+      if (f.vy >= -0.6 || f.y <= f.cible) {
+        eclater(f);
+        return false;
+      }
+      return true;
+    });
+    etincelles = etincelles.filter((e) => {
+      e.px = e.x;
+      e.py = e.y;
+      e.vx *= e.frottement ** k;
+      e.vy = e.vy * e.frottement ** k + e.gravite * k;
+      e.x += e.vx * k;
+      e.y += e.vy * k;
+      e.vie -= e.usure * k;
+      if (e.vie <= 0) return false;
+      trait(e.px, e.py, e.x, e.y, e.couleur, e.crepite && Math.random() >= 0.45 ? 0.08 : e.vie, e.epaisseur);
+      return true;
+    });
+    boucle = requestAnimationFrame(image);
+  };
+
+  const relancer = () => {
+    if (boucle || !actif()) return;
+    dimensionner();
+    precedent = 0;
+    boucle = requestAnimationFrame(image);
+  };
+  new MutationObserver(relancer).observe(html, { attributes: true, attributeFilter: ['data-habillage', 'data-theme'] });
+  darkQuery.addEventListener('change', relancer);
+  document.addEventListener('visibilitychange', relancer);
+  addEventListener('resize', () => boucle && dimensionner());
+  relancer();
+}

@@ -1,0 +1,25 @@
+---
+// Décor Hiver (voir THEMES.md), derrière le contenu et caché hors saison.
+// Jour : neige et congères. Nuit : aurore boréale, étoiles, neige et congères.
+import Etoiles from './Etoiles.astro';
+import Flocons from './Flocons.astro';
+---
+
+<div class="decor decor-hiver" aria-hidden="true">
+  <div class="decor-jour">
+    <Flocons nombre={20} larges={10} graine={6} />
+    <svg class="hi-drift" viewBox="0 0 1200 80" preserveAspectRatio="none" focusable="false">
+      <path class="is-back" d="M0 40c120-20 240-10 360-4 120 6 200-18 340-12s220 20 340 10c80-6 130-4 160-2v48H0Z" />
+      <path class="is-front" d="M0 58c150-14 300-4 450-6s250 10 410 4c120-4 240 4 340-2v26H0Z" />
+    </svg>
+  </div>
+  <div class="decor-nuit">
+    <div class="hi-aurora"><span class="is-1"></span><span class="is-2"></span></div>
+    <Etoiles nombre={7} larges={4} hauteur={45} graine={7} />
+    <Flocons nombre={20} larges={10} graine={8} />
+    <svg class="hi-drift" viewBox="0 0 1200 80" preserveAspectRatio="none" focusable="false">
+      <path class="is-back" d="M0 40c120-20 240-10 360-4 120 6 200-18 340-12s220 20 340 10c80-6 130-4 160-2v48H0Z" />
+      <path class="is-front" d="M0 58c150-14 300-4 450-6s250 10 410 4c120-4 240 4 340-2v26H0Z" />
+    </svg>
+  </div>
+</div>

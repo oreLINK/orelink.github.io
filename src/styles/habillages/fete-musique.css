@@ -1,0 +1,48 @@
+/* Habillage Fête de la musique (voir THEMES.md) : notes qui s'envolent et égaliseur le jour ;
+   la nuit, néons et projecteurs qui balaient la scène. */
+
+:root[data-habillage="fete-musique"] { --light: #FFF6FF; --shade-1: #E2D3FA; --shade-2: #F8CFE6; --note: #7C3AED; --bar-1: #8B5CF6; --bar-2: #EC4899; }
+@media (prefers-color-scheme: dark) {
+  :root[data-habillage="fete-musique"]:not([data-theme="light"]) { --light: #24173A; --shade-1: #22153D; --shade-2: #31122A; --note: #D8B4FE; --bar-1: #A78BFA; --bar-2: #F472B6; }
+}
+:root[data-habillage="fete-musique"][data-theme="dark"] { --light: #24173A; --shade-1: #22153D; --shade-2: #31122A; --note: #D8B4FE; --bar-1: #A78BFA; --bar-2: #F472B6; }
+[data-habillage="fete-musique"] .decor-fete-musique { display: block; }
+
+.fm-note {
+  position: absolute; left: var(--x); bottom: -2rem; font: 600 var(--s) / 1 system-ui, sans-serif;
+  color: var(--note); opacity: 0;
+}
+.decor-nuit .fm-note { text-shadow: 0 0 10px currentColor; }
+.fm-eq { position: absolute; inset: auto 0 0; display: flex; align-items: flex-end; gap: 0.35rem; height: 4.5rem; padding-inline: 0.5rem; opacity: 0.35; }
+.fm-eq span { flex: 1; height: var(--h); border-radius: 3px 3px 0 0; background: linear-gradient(var(--bar-2), var(--bar-1)); transform-origin: bottom; }
+.decor-nuit .fm-eq { opacity: 0.5; filter: drop-shadow(0 0 6px var(--bar-1)); }
+/* Projecteurs (nuit) : deux faisceaux qui balaient la scène depuis les coins du bas. */
+.fm-spot { position: absolute; bottom: -2rem; width: 30vw; height: 115vh; transform-origin: 50% 100%; opacity: 0.16;
+  background: linear-gradient(to top, var(--bar-1), transparent 85%); clip-path: polygon(46% 100%, 54% 100%, 100% 0, 0 0); }
+.fm-spot.is-1 { left: -6vw; rotate: 18deg; }
+.fm-spot.is-2 { right: -6vw; rotate: -18deg; background: linear-gradient(to top, var(--bar-2), transparent 85%); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .fm-note { animation: fm-rise var(--dur) linear var(--delay) infinite; }
+  .fm-eq span { animation: fm-bar var(--dur) ease-in-out var(--delay) infinite alternate; }
+  .fm-spot.is-1 { animation: fm-sweep-1 9s ease-in-out infinite alternate; }
+  .fm-spot.is-2 { animation: fm-sweep-2 11s ease-in-out infinite alternate; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fm-note { bottom: auto; top: var(--top); opacity: 0.4; }
+}
+@keyframes fm-rise {
+  0% { opacity: 0; transform: translate(0, 0) rotate(-8deg); }
+  10% { opacity: 0.5; }
+  50% { transform: translate(var(--drift), -55vh) rotate(8deg); }
+  85% { opacity: 0.35; }
+  100% { opacity: 0; transform: translate(0, -105vh) rotate(-6deg); }
+}
+@keyframes fm-bar { from { scale: 1 0.25; } to { scale: 1 1; } }
+@keyframes fm-sweep-1 { from { rotate: 28deg; } to { rotate: 4deg; } }
+@keyframes fm-sweep-2 { from { rotate: -6deg; } to { rotate: -30deg; } }
+
+/* Sur téléphone */
+@media (max-width: 36rem) {
+  .fm-spot { width: 45vw; }
+}

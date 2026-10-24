@@ -1,0 +1,41 @@
+---
+// Décor Automne (voir THEMES.md), derrière le contenu et caché hors saison.
+// Jour : feuilles qui tombent en tournoyant. Nuit : lune rousse, brume qui dérive, quelques
+// feuilles sombres.
+import { hasard, vars } from '../../lib/decor';
+
+const h = hasard(5);
+const feuilles = (nombre: number, larges: number, couleurs: string[]) =>
+  Array.from({ length: nombre }, (_, i) => ({
+    style: `${vars({
+      x: `${h.entre(3, 95)}%`,
+      top: `${h.entre(5, 90)}vh`,
+      dur: `${h.entre(17, 26)}s`,
+      delay: `${h.entre(-26, 0)}s`,
+      drift: `${h.entre(-60, 60, 0)}px`,
+      spin: `${h.parmi([-1, 1]) * h.entre(240, 340, 0)}deg`,
+    })}; color: ${couleurs[i % couleurs.length]}`,
+    taille: h.entre(18, 30, 0),
+    large: i >= larges,
+  }));
+const jour = feuilles(7, 4, ['#B45309', '#9F1239', '#9A3412', '#CA8A04']);
+const nuit = feuilles(4, 3, ['#C2410C', '#BE123C']);
+---
+
+<div class="decor decor-automne" aria-hidden="true">
+  <svg width="0" height="0" style="position:absolute" focusable="false">
+    <symbol id="au-leaf" viewBox="0 0 24 24">
+      <path d="M12 1.5C6.5 5.5 3.6 10.6 5.6 16.4 7 20.5 10 22 12 22s5-1.5 6.4-5.6C20.4 10.6 17.5 5.5 12 1.5Z" />
+      <path fill="none" stroke="#FFFFFF" stroke-opacity="0.45" stroke-width="1" stroke-linecap="round" d="M12 4.5V23M12 10l-3.4-2.6M12 10l3.4-2.6M12 14.5l-4.4-3M12 14.5l4.4-3M12 18.8l-3.6-2.4M12 18.8l3.6-2.4" />
+    </symbol>
+  </svg>
+  <div class="decor-jour">
+    {jour.map((f) => <svg class:list={['au-leaf x-fall', { 'is-wide': f.large }]} style={f.style} width={f.taille} height={f.taille} focusable="false"><use href="#au-leaf" /></svg>)}
+  </div>
+  <div class="decor-nuit">
+    <span class="au-moon"></span>
+    <span class="au-mist is-1"></span>
+    <span class="au-mist is-2"></span>
+    {nuit.map((f) => <svg class:list={['au-leaf x-fall', { 'is-wide': f.large }]} style={f.style} width={f.taille} height={f.taille} focusable="false"><use href="#au-leaf" /></svg>)}
+  </div>
+</div>

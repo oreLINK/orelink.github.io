@@ -1,0 +1,53 @@
+---
+// Décor Nouvel An (voir THEMES.md), derrière le contenu et caché hors période.
+// Jour : confettis qui tombent et ballons dorés aux chiffres de la nouvelle année (posés au build,
+// puis tenus à jour par src/scripts/ui.ts). Nuit : étoiles et feux d'artifice (canvas, ui.ts).
+import Etoiles from './Etoiles.astro';
+import { hasard, vars } from '../../lib/decor';
+import { anneeQuiCommence } from '../../lib/dates';
+
+const h = hasard(12);
+const couleurs = ['#EAB308', '#CBD5E1', '#F472B6', '#60A5FA', '#34D399'];
+const confettis = Array.from({ length: 18 }, (_, i) => ({
+  rond: i % 4 === 3,
+  large: i >= 10,
+  style: vars({
+    x: `${h.entre(2, 98)}%`,
+    top: `${h.entre(0, 95)}vh`,
+    dur: `${h.entre(14, 22)}s`,
+    delay: `${h.entre(-22, 0)}s`,
+    drift: `${h.entre(-50, 50, 0)}px`,
+    spin: `${h.parmi([-1, 1]) * h.entre(160, 320, 0)}deg`,
+    c: couleurs[i % couleurs.length],
+    flip: `${h.entre(1.2, 2.6)}s`,
+  }),
+}));
+const chiffres = [...String(anneeQuiCommence())].map((c) => ({ c, style: vars({ dur: `${h.entre(2.6, 3.6)}s`, delay: `${h.entre(-3, 0)}s` }) }));
+---
+
+<div class="decor decor-nouvel-an" aria-hidden="true">
+  <div class="decor-jour">
+    {confettis.map((c) => <span class:list={['na-confetti x-fall', { 'is-round': c.rond, 'is-wide': c.large }]} style={c.style}><i></i></span>)}
+    <div class="na-balloons" data-annee>
+      {
+        chiffres.map((ch, i) => (
+          <svg class="na-digit" viewBox="0 0 60 130" style={ch.style} focusable="false">
+            <linearGradient id={`na-or-${i}`} x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#8A6116" />
+              <stop offset="0.35" stop-color="#E9C46A" />
+              <stop offset="0.5" stop-color="#FFF3C4" />
+              <stop offset="0.65" stop-color="#D4A017" />
+              <stop offset="1" stop-color="#8A6116" />
+            </linearGradient>
+            <path class="ficelle" d="M30 88q-5 18 1 42" />
+            <text x="30" y="80" text-anchor="middle" fill={`url(#na-or-${i})`}>{ch.c}</text>
+          </svg>
+        ))
+      }
+    </div>
+  </div>
+  <div class="decor-nuit">
+    <Etoiles nombre={9} larges={5} hauteur={55} graine={13} />
+    <canvas class="na-fireworks" data-feux></canvas>
+  </div>
+</div>

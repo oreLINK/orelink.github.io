@@ -1,0 +1,33 @@
+/* Habillage Nouvel An (voir THEMES.md) : ballons dorés de la nouvelle année et confettis le
+   jour ; feux d'artifice la nuit (canvas animé par src/scripts/ui.ts). */
+
+:root[data-habillage="nouvel-an"] { --light: #FFFAE6; --shade-1: #F3E0A6; --shade-2: #DEDAF5; }
+@media (prefers-color-scheme: dark) {
+  :root[data-habillage="nouvel-an"]:not([data-theme="light"]) { --light: #211D33; --shade-1: #2C2410; --shade-2: #1D1836; }
+}
+:root[data-habillage="nouvel-an"][data-theme="dark"] { --light: #211D33; --shade-1: #2C2410; --shade-2: #1D1836; }
+[data-habillage="nouvel-an"] .decor-nouvel-an { display: block; }
+
+.na-confetti { position: absolute; left: var(--x); top: var(--top); width: 0.45rem; height: 0.8rem; border-radius: 1px; background: var(--c); opacity: 0.75; }
+.na-confetti.is-round { width: 0.5rem; height: 0.5rem; border-radius: 50%; }
+.na-confetti i { display: block; width: 100%; height: 100%; background: inherit; border-radius: inherit; }
+/* Ballons en aluminium doré, un chiffre chacun (l'année est posée par le script). */
+.na-balloons { position: absolute; top: clamp(5.5rem, 15vh, 8rem); right: clamp(1rem, 7vw, 7rem); display: flex; gap: 0.15rem; }
+.na-digit { width: clamp(2.6rem, 5vw, 3.75rem); height: auto; overflow: visible; filter: drop-shadow(0 6px 10px rgb(120 80 10 / 0.25)); }
+.na-digit text { font: 800 84px / 1 var(--font-sans); paint-order: stroke; stroke: #9A6B12; stroke-width: 2.5; stroke-linejoin: round; }
+.na-digit .ficelle { fill: none; stroke: rgb(120 100 60 / 0.55); stroke-width: 1; }
+/* Feux d'artifice : dessinés dans un canvas par le script, seulement en apparence sombre. */
+.na-fireworks { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .na-confetti i { animation: na-flip var(--flip) linear infinite; }
+  .na-digit { animation: na-float var(--dur) ease-in-out var(--delay) infinite alternate; }
+}
+@keyframes na-flip { from { transform: rotateX(0deg) rotateY(0deg); } to { transform: rotateX(360deg) rotateY(180deg); } }
+@keyframes na-float { from { translate: 0 -5px; rotate: -3deg; } to { translate: 0 6px; rotate: 3deg; } }
+
+/* Sur téléphone */
+@media (max-width: 36rem) {
+  .na-balloons { top: 0.9rem; right: auto; left: 1rem; }
+  .na-digit { width: 1.6rem; }
+}

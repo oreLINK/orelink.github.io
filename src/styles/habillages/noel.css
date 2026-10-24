@@ -1,0 +1,8 @@
+/* Habillage Noël (voir THEMES.md) : fond rouge et vert, neige qui tombe ; ciel étoilé la nuit. */
+
+:root[data-habillage="noel"] { --light: #FFF7EE; --shade-1: #F1CDCA; --shade-2: #CFE6D3; --flake: rgb(148 163 184 / 0.55); }
+@media (prefers-color-scheme: dark) {
+  :root[data-habillage="noel"]:not([data-theme="light"]) { --light: #2D1818; --shade-1: #321515; --shade-2: #12291C; --flake: rgb(241 245 249 / 0.6); }
+}
+:root[data-habillage="noel"][data-theme="dark"] { --light: #2D1818; --shade-1: #321515; --shade-2: #12291C; --flake: rgb(241 245 249 / 0.6); }
+[data-habillage="noel"] .decor-noel { display: block; }

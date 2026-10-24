@@ -1,0 +1,35 @@
+---
+// Décor Printemps (voir THEMES.md), derrière le contenu et caché hors saison.
+// Jour : pétales de cerisier qui volent. Nuit : lucioles qui clignotent et quelques étoiles.
+import Etoiles from './Etoiles.astro';
+import { hasard, vars } from '../../lib/decor';
+
+const h = hasard(1);
+const petales = Array.from({ length: 8 }, () => ({
+  x: h.entre(2, 85),
+  top: h.entre(5, 90),
+  s: h.entre(8, 13, 0),
+  dur: h.entre(19, 27),
+  delay: h.entre(-27, 0),
+  drift: h.entre(40, 90, 0),
+  spin: h.parmi([-1, 1]) * h.entre(200, 320, 0),
+}));
+const lucioles = Array.from({ length: 12 }, () => ({ x: h.entre(4, 96), y: h.entre(45, 92), dur: h.entre(10, 16), delay: h.entre(-10, 0) }));
+---
+
+<div class="decor decor-printemps" aria-hidden="true">
+  <div class="decor-jour">
+    {
+      petales.map((p, i) => (
+        <span
+          class:list={['sp-petal', { 'is-wide': i >= 5 }]}
+          style={vars({ x: `${p.x}%`, top: `${p.top}vh`, s: `${p.s}px`, dur: `${p.dur}s`, delay: `${p.delay}s`, drift: `${p.drift}px`, spin: `${p.spin}deg` })}
+        />
+      ))
+    }
+  </div>
+  <div class="decor-nuit">
+    {lucioles.map((l, i) => <span class:list={['sp-fly', { 'is-wide': i >= 6 }]} style={vars({ x: `${l.x}%`, y: `${l.y}%`, dur: `${l.dur}s`, delay: `${l.delay}s` })} />)}
+    <Etoiles nombre={5} larges={3} hauteur={30} graine={2} />
+  </div>
+</div>

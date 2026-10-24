@@ -71,3 +71,7 @@ export function ordre(d: string | null | undefined): number {
 export function plusRecentsDabord<T>(items: T[], cle: (item: T) => string | null | undefined): T[] {
   return [...items].sort((x, y) => ordre(cle(y)) - ordre(cle(x)));
 }
+
+/** L'année que fête le Nouvel An : de juillet à décembre, la suivante ; de janvier à juin, l'année en cours. */
+export const anneeQuiCommence = (maintenant = new Date()) =>
+  maintenant.getMonth() >= 6 ? maintenant.getFullYear() + 1 : maintenant.getFullYear();
