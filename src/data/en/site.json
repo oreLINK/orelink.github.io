@@ -8,7 +8,7 @@
     { "id": "experience", "titre": "Experience" },
     { "id": "projets", "titre": "Projects" },
     { "id": "formation", "titre": "Education" },
-    { "id": "certifications", "titre": "Licenses & certifications" },
+    { "id": "certifications", "titre": "Certifications" },
     { "id": "benevolat", "titre": "Volunteering" }
   ],
 

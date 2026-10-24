@@ -1,12 +1,73 @@
 [
   {
-    "id": "dbt",
-    "nom": "dbt Analytics Engineering Certification",
+    "id": "dbt-fundamentals",
+    "nom": "dbt Fundamentals (dbt Studio)",
     "organisme": "dbt Labs",
-    "obtention": "2023-05",
-    "expiration": "2025-05",
-    "identifiant": "EXEMPLE-0000",
-    "url": "https://www.getdbt.com/certifications",
-    "competences": ["dbt", "SQL"]
+    "logo": "logos/dbtlabs.png",
+    "obtention": "2026-04",
+    "competences": []
+  },
+  {
+    "id": "airflow-3-dag-authoring",
+    "nom": "Apache Airflow 3 - DAG Authoring",
+    "organisme": "Astronomer",
+    "logo": "logos/astronomer.png",
+    "obtention": "2025-09",
+    "competences": ["Apache Airflow", "DAGs"],
+    "url": "https://www.credly.com/badges/73d3aee7-a496-4f1d-98d6-5b51ec4c433a/public_url"
+  },
+  {
+    "id": "airflow-3-fundamentals",
+    "nom": "Apache Airflow 3 - Fundamentals",
+    "organisme": "Astronomer",
+    "logo": "logos/astronomer.png",
+    "obtention": "2025-07",
+    "competences": ["Apache Airflow", "DAGs"],
+    "url": "https://www.credly.com/badges/66f413a4-8000-4b70-b67c-a3f29e3a3cea/public_url"
+  },
+  {
+    "id": "airflow-2-fundamentals",
+    "nom": "Apache Airflow 2 - Fundamentals",
+    "organisme": "Astronomer",
+    "logo": "logos/astronomer.png",
+    "obtention": "2025-06",
+    "competences": ["Apache Airflow", "DAGs"],
+    "url": "https://www.credly.com/badges/e9814259-93b3-40b6-a3f9-c85eb6555ac9/public_url"
+  },
+  {
+    "id": "snowflake-data-warehousing-workshop",
+    "nom": "Data Warehousing Workshop",
+    "organisme": "Snowflake",
+    "logo": "logos/snowflake.png",
+    "obtention": "2025-01",
+    "competences": ["Snowflake Databases", "Snowflake Warehouses"],
+    "url": "https://achieve.snowflake.com/1893f744-49ed-4595-9b7c-055a07c3b641#acc.xtYvbXnO"
+  },
+  {
+    "id": "databricks-lakehouse-fundamentals",
+    "nom": "Databricks Lakehouse Fundamentals",
+    "organisme": "Databricks",
+    "logo": "logos/databricks.png",
+    "obtention": "2025-01",
+    "competences": ["Azure Databricks", "Data intelligence"],
+    "url": "https://credentials.databricks.com/10638375-1cf5-4712-9a3f-2d64f4473825#acc.QjPMTUc7"
+  },
+  {
+    "id": "power-bi-data-analyst-associate",
+    "nom": "Power BI Data Analyst Associate",
+    "organisme": "Microsoft",
+    "logo": "logos/microsoft.png",
+    "obtention": "2025-01",
+    "expiration": "2026-01",
+    "competences": ["Microsoft Power BI", "Data Integration"]
+  },
+  {
+    "id": "toeic-b2",
+    "nom": "TOEIC niveau B2",
+    "organisme": "ETS EMEA",
+    "logo": "logos/toeic.png",
+    "obtention": "2021-12",
+    "expiration": "2023-12",
+    "competences": []
   }
 ]

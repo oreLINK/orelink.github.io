@@ -1,9 +1,10 @@
 ---
-// Licences et certifications : une tuile par certification.
+// Certifications : une petite carte presque carrée par certification, en grille. Toute
+// la carte mène à la certification en ligne (si `url` est renseignée). Les certifications expirées
+// passent après les autres, en retrait (sans verre, logo en noir et blanc) mais toujours lisibles.
 import SectionHead from '../SectionHead.astro';
 import Repli from '../Repli.astro';
 import OrgMark from '../OrgMark.astro';
-import Tags from '../Tags.astro';
 import Icon from '../Icon.astro';
 import { dateLisible, ordre, plusRecentsDabord } from '../../lib/dates';
 import { reglages } from '../../lib/reglages';
@@ -16,8 +17,10 @@ interface Props {
 const { titre } = Astro.props;
 const langue = langueDe(Astro.url);
 const { t } = reglages(langue);
-const certifications = plusRecentsDabord(await liste('certifications', langue), (c) => c.obtention);
 const aujourdhui = new Date().toISOString().slice(0, 7);
+const estExpiree = (c: { expiration?: string }) => !!c.expiration && ordre(c.expiration) < ordre(aujourdhui);
+const toutes = plusRecentsDabord(await liste('certifications', langue), (c) => c.obtention);
+const certifications = [...toutes.filter((c) => !estExpiree(c)), ...toutes.filter(estExpiree)];
 ---
 
 {
@@ -25,30 +28,26 @@ const aujourdhui = new Date().toISOString().slice(0, 7);
     <section class="section" id="certifications" aria-labelledby="titre-certifications">
       <SectionHead id="certifications" titre={titre} nombre={certifications.length} />
       <Repli nombre={certifications.length}>
-        <ol class="tiles">
-          {certifications.map((c) => (
-            <li class="tile glass entry reveal">
-              <OrgMark name={c.organisme} logo={c.logo} />
-              <div class="entry-body">
-                <div class="entry-top">
-                  <h3 class="entry-title">{c.nom}</h3>
-                  <span class="entry-when">{dateLisible(c.obtention, langue)}</span>
+        <ol class="tiles certs">
+          {certifications.map((c) => {
+            const expiree = estExpiree(c);
+            return (
+              <li class:list={['tile glass cert reveal', { 'is-expired': expiree }]}>
+                <div class="cert-top">
+                  <OrgMark name={c.organisme} logo={c.logo} />
+                  {c.url && <Icon name="external" class="icon-sm cert-ext" />}
                 </div>
-                <p class="entry-org">{c.organisme}</p>
-                <p class="entry-meta">
-                  {t.delivreeEn} {dateLisible(c.obtention, langue)}
-                  {c.expiration && <> · {ordre(c.expiration) < ordre(aujourdhui) ? t.expireeEn : t.expireEn} {dateLisible(c.expiration, langue)}</>}
+                <h3 class="cert-title">
+                  {c.url ? <a href={c.url} title={c.identifiant && `${t.identifiant} : ${c.identifiant}`}>{c.nom}</a> : c.nom}
+                </h3>
+                <p class="cert-org">{c.organisme}</p>
+                <p class="cert-when">
+                  {dateLisible(c.obtention, langue)}
+                  {c.expiration && <span class="cert-exp">{`${expiree ? t.expireeEn : t.expireEn} ${dateLisible(c.expiration, langue)}`}</span>}
                 </p>
-                {c.identifiant && <p class="entry-meta">{t.identifiant} : {c.identifiant}</p>}
-                <Tags items={c.competences} />
-                {c.url && (
-                  <div class="entry-links">
-                    <a class="btn btn-soft" href={c.url}>{t.afficherCertification} <Icon name="external" class="icon-sm" /></a>
-                  </div>
-                )}
-              </div>
-            </li>
-          ))}
+              </li>
+            );
+          })}
         </ol>
       </Repli>
     </section>

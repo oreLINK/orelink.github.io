@@ -347,7 +347,9 @@ html:not(.js) .lang:is(:hover, :focus-within) .lang-tip,
   font-size: 0.9375rem; font-weight: 700; letter-spacing: -0.02em; color: var(--muted);
   background: var(--glass-strong); box-shadow: inset 0 0 0 1px var(--rule);
 }
-.org-mark img { width: 100%; height: 100%; object-fit: contain; background: var(--surface); }
+/* Fond blanc dans les deux thèmes : les logos sont dessinés pour un fond clair, et un logo transparent
+   (ex. TOEIC, bleu foncé) disparaîtrait sur le fond sombre. */
+.org-mark img { width: 100%; height: 100%; object-fit: contain; background: #FFFFFF; }
 
 .entry-body { display: flex; flex-direction: column; gap: 0.125rem; min-width: 0; }
 .entry-top { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; column-gap: 1rem; }
@@ -389,6 +391,34 @@ html:not(.js) .lang:is(:hover, :focus-within) .lang-tip,
   content: ""; position: absolute; left: calc(0.3125rem - 1px); top: 1.35rem; bottom: -1.05rem; width: 2px;
   border-radius: 1px; background: var(--rule);
 }
+
+/* ---------- Certifications : petites cartes en grille ---------- */
+
+.tiles.certs { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 10rem), 1fr)); gap: 0.75rem; }
+.cert {
+  display: flex; flex-direction: column; aspect-ratio: 1; padding: 1rem;
+  transition: opacity 0.7s var(--ease), transform 0.3s var(--ease), box-shadow 0.35s var(--ease);
+}
+.cert:has(a):hover { transform: translateY(-2px); box-shadow: var(--glass-shadow-hover), inset 0 1px 0 var(--glass-glint), inset 0 0 0 1px var(--glass-hairline); }
+.cert:has(a:focus-visible) { outline: 2px solid var(--accent); outline-offset: 3px; }
+.cert-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: auto; padding-bottom: 0.75rem; }
+.cert .org-mark { width: 2.5rem; height: 2.5rem; border-radius: 11px; }
+.cert-ext { color: var(--faint); }
+.cert-title {
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden;
+  font-size: 0.9375rem; font-weight: 700; line-height: 1.3; letter-spacing: -0.01em;
+}
+.cert-title a { text-decoration: none; }
+.cert-title a:focus-visible { outline: none; }
+.cert-title a::after { content: ""; position: absolute; inset: 0; border-radius: inherit; } /* toute la carte est cliquable */
+.cert-org { margin-top: 0.25rem; font-size: 0.8125rem; font-weight: 600; color: var(--muted); }
+.cert-when { display: flex; flex-direction: column; margin-top: 0.125rem; font-size: 0.8125rem; color: var(--faint); font-variant-numeric: tabular-nums; }
+.cert-exp { font-size: 0.75rem; }
+/* Expirée : en retrait, sans verre ni ombre, logo en noir et blanc ; les textes restent contrastés. */
+.cert.is-expired { background: none; box-shadow: inset 0 0 0 1px var(--rule); -webkit-backdrop-filter: none; backdrop-filter: none; }
+.cert.is-expired::before { display: none; }
+.cert.is-expired .org-mark { filter: grayscale(1); opacity: 0.6; }
+.cert.is-expired .cert-title { font-weight: 600; color: var(--muted); }
 
 /* ---------- Projets ---------- */
 

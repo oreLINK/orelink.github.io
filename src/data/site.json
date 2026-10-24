@@ -19,7 +19,7 @@
     { "id": "experience", "titre": "Expérience", "afficher": true },
     { "id": "projets", "titre": "Projets", "afficher": false },
     { "id": "formation", "titre": "Formation", "afficher": true },
-    { "id": "certifications", "titre": "Licences et certifications", "afficher": false },
+    { "id": "certifications", "titre": "Certifications", "afficher": true },
     { "id": "benevolat", "titre": "Bénévolat", "afficher": true }
   ],
 
