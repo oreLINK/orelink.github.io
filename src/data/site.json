@@ -15,15 +15,32 @@
     "accentSombre": "#9DB1FF"
   },
 
+  "affichage": {
+    "local": {
+      "profil": { "experience": true, "formation": true, "certifications": true, "benevolat": true },
+      "projets": { "aLaUne": true, "page": true, "fiches": "auto" },
+      "billets": true,
+      "madeBy": true
+    },
+    "deploye": {
+      "profil": { "experience": true, "formation": true, "certifications": true, "benevolat": true },
+      "projets": { "aLaUne": false, "page": false, "fiches": "auto" },
+      "billets": false,
+      "madeBy": true
+    }
+  },
+
   "sections": [
-    { "id": "experience", "titre": "Expérience", "afficher": true },
-    { "id": "projets", "titre": "Projets", "afficher": false },
-    { "id": "formation", "titre": "Formation", "afficher": true },
-    { "id": "certifications", "titre": "Certifications", "afficher": true },
-    { "id": "benevolat", "titre": "Bénévolat", "afficher": true }
+    { "id": "experience", "titre": "Expérience" },
+    { "id": "projets", "titre": "Projets à la une" },
+    { "id": "formation", "titre": "Formation" },
+    { "id": "certifications", "titre": "Certifications" },
+    { "id": "benevolat", "titre": "Bénévolat" }
   ],
 
   "hauteurSectionRepliee": 500,
+
+  "projetsALaUne": 3,
 
   "textes": {
     "meContacter": "Me contacter",
@@ -37,18 +54,14 @@
     "expireeEn": "Expirée en",
     "identifiant": "Identifiant",
     "afficherCertification": "Afficher la certification",
-    "commentJeLaiFait": "Comment je l'ai fait",
-    "commentJeLaiRealise": "Comment je l'ai réalisé",
+    "voirLaFiche": "Voir la fiche",
+    "ficheProjet": "Fiche projet",
     "voirLeProjet": "Voir le projet",
     "codeSource": "Code source",
-    "retour": "Retour au portfolio",
     "statut": "Statut",
     "commenceEn": "Commencé en",
     "role": "Rôle",
     "technologies": "Technologies",
-    "sommaire": "Sommaire",
-    "precedent": "Précédent",
-    "suivant": "Suivant",
     "statuts": {
       "en-ligne": "En ligne",
       "en-cours": "En cours",
@@ -64,8 +77,52 @@
     "chez": "chez",
     "competences": "Compétences",
     "liensExternes": "Liens externes",
-    "autresProjets": "Autres projets",
-    "changerDeLangue": "Changer de langue"
+    "retourAuxProjets": "Retour aux Projets",
+    "retourAuxBillets": "Retour aux Billets",
+    "changerDeLangue": "Changer de langue",
+    "navigation": "Navigation principale",
+    "navProfil": "Profil",
+    "navProjets": "Projets",
+    "navBillets": "Billets",
+    "filAriane": "Fil d'Ariane",
+    "projetsTitre": "Projets",
+    "projetsIntro": "Ce que je construis à côté : un besoin du quotidien, un blocage qui m'agace ou une idée à tester. Chaque projet a sa fiche, et parfois des billets qui racontent les coulisses.",
+    "groupesProjets": {
+      "en-ligne": "En ligne",
+      "en-cours": "En cours",
+      "archive": "Archivés"
+    },
+    "tousLesProjets": "Tous les projets",
+    "billetsTitre": "Billets",
+    "billetsIntro": "Des billets tech, surtout sur la data : ce que j'apprends en construisant mes projets, et ce que les chiffres disent (ou pas) de l'actualité.",
+    "billet": "billet",
+    "billetsPluriel": "billets",
+    "derniersBillets": "Derniers billets",
+    "tousLesBillets": "Tous les billets",
+    "billetsSurCeProjet": "Billets sur ce projet",
+    "projetLie": "Projet lié",
+    "minDeLecture": "min de lecture",
+    "misAJourLe": "Mis à jour le",
+    "sAbonner": "S'abonner (RSS)",
+    "fluxRss": "Flux RSS des billets",
+    "lireAussiEn": "Read in English",
+    "enFrancais": "En français",
+    "nonTraduit": "Ce billet n'existe qu'en français.",
+    "madeByTitre": "Made by",
+    "madeByIntro": "Le badge à poser sur mes autres sites : choisir un thème, puis copier le code HTML, ou l'image SVG là où le HTML n'est pas accepté.",
+    "apercu": "Aperçu",
+    "surSiteClair": "Sur un site clair",
+    "surSiteSombre": "Sur un site sombre",
+    "badgeThemes": { "auto": "Auto", "clair": "Clair", "sombre": "Sombre", "accent": "Accent" },
+    "avecCafe": "avec café",
+    "sansCafe": "sans café",
+    "leCode": "Le code",
+    "badgeTheme": "Thème du badge",
+    "badgeCafe": "Bouton Buy Me a Coffee",
+    "copierCode": "Copier le code",
+    "copierSvg": "Copier le SVG",
+    "copie": "Copié",
+    "madeByNote": "Auto suit le thème de l'appareil du visiteur : noir sur un appareil en clair, blanc en sombre. L'image SVG intègre le logo du café : elle s'affiche partout, même là où le HTML est refusé."
   },
 
   "piedDePage": {

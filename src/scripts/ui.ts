@@ -1,5 +1,6 @@
 // Comportements de la page : thème clair ou sombre, menu des langues, apparition au défilement,
-// durées « en cours » tenues à jour, et animations des habillages (feux d'artifice du Nouvel An).
+// durées « en cours » tenues à jour, badge de la page Made by, et animations des habillages (feux
+// d'artifice du Nouvel An).
 
 import { anneeQuiCommence, duree } from '../lib/dates';
 import type { Langue } from '../lib/i18n';
@@ -210,6 +211,57 @@ document.addEventListener('click', (e) => {
   if (!(e.target as Element).closest('[data-lang]')) langs.forEach((l) => showTip(l, false));
 });
 document.addEventListener('keydown', (e) => e.key === 'Escape' && langs.forEach((l) => showTip(l, false)));
+
+// ---------- Page Made by : choix du badge et copie ----------
+// Le code de chaque variante est dans la page (JSON, voir src/vues/MadeBy.astro) : on affiche celui du
+// thème et du café choisis, et on le copie tel quel (HTML) ou en image SVG, logo du café réinséré.
+
+const madeBy = document.querySelector<HTMLElement>('[data-made-by]');
+const donneesBadge = document.querySelector<HTMLElement>('[data-variantes]');
+if (madeBy && donneesBadge) {
+  type Donnees = { repere: string; logoBmc: string; variantes: Record<string, { html: string; svg: string }> };
+  const { repere, logoBmc, variantes }: Donnees = JSON.parse(donneesBadge.textContent ?? '{}');
+  const choix = { theme: 'auto', cafe: true };
+  const id = () => `${choix.theme}-${choix.cafe ? 'cafe' : 'seul'}`;
+  const code = madeBy.querySelector<HTMLElement>('[data-code]')!;
+  const presser = (selecteur: string, actif: (b: HTMLElement) => boolean) =>
+    madeBy.querySelectorAll<HTMLElement>(selecteur).forEach((b) => b.setAttribute('aria-pressed', String(actif(b))));
+  const afficher = () => {
+    code.textContent = variantes[id()].html;
+    presser('[data-theme-badge]', (b) => b.dataset.themeBadge === choix.theme);
+    presser('[data-cafe]', (b) => (b.dataset.cafe === '1') === choix.cafe);
+    madeBy.querySelectorAll<HTMLElement>('[data-variante]').forEach((li) => li.classList.toggle('is-selected', li.dataset.variante === id()));
+  };
+  madeBy.querySelectorAll<HTMLElement>('[data-theme-badge]').forEach((b) =>
+    b.addEventListener('click', () => {
+      choix.theme = b.dataset.themeBadge ?? 'auto';
+      afficher();
+    }),
+  );
+  madeBy.querySelectorAll<HTMLElement>('[data-cafe]').forEach((b) =>
+    b.addEventListener('click', () => {
+      choix.cafe = b.dataset.cafe === '1';
+      afficher();
+    }),
+  );
+  // « Copié » remplace un instant le libellé du bouton.
+  madeBy.querySelectorAll<HTMLButtonElement>('[data-copier]').forEach((bouton) => {
+    const libelle = bouton.querySelector('span')!;
+    const initial = libelle.textContent;
+    let minuterie = 0;
+    bouton.addEventListener('click', async () => {
+      const v = variantes[id()];
+      try {
+        await navigator.clipboard.writeText(bouton.dataset.copier === 'svg' ? v.svg.replace(repere, logoBmc) : v.html);
+      } catch {
+        return; // presse-papiers refusé : le code reste sélectionnable à la main
+      }
+      libelle.textContent = bouton.dataset.labelCopie ?? initial;
+      clearTimeout(minuterie);
+      minuterie = window.setTimeout(() => (libelle.textContent = initial), 1600);
+    });
+  });
+}
 
 // ---------- Liens externes : dans un nouvel onglet ----------
 // Les liens internes du site sont relatifs (« /projets/… ») : une adresse complète (https://…) mène

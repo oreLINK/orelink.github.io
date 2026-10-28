@@ -1,6 +1,8 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { ordre } from './dates';
-import type { reglages } from './reglages';
+import { url } from './paths';
+import { reglages } from './reglages';
+import type { Langue } from './i18n';
 
 type Projet = CollectionEntry<'projets'>;
 type Textes = ReturnType<typeof reglages>['t'];
@@ -22,11 +24,20 @@ export function trierProjets(projets: Projet[]): Projet[] {
   );
 }
 
-/** Une page par projet, avec ses voisins pour « Précédent » / « Suivant » (getStaticPaths). */
-export async function pagesProjets() {
-  const projets = trierProjets(await getCollection('projets'));
-  return projets.map((projet, i) => ({
-    params: { slug: projet.id },
-    props: { projet, precedent: projets[i - 1], suivant: projets[i + 1] },
-  }));
+/** La page Projets et une fiche par projet, chacune si elle est affichée (getStaticPaths). */
+export async function pagesProjets(langue: Langue) {
+  const { affichage } = reglages(langue);
+  const projets = affichage.fichesProjets ? await getCollection('projets') : [];
+  return [
+    ...(affichage.pageProjets ? [{ params: { chemin: undefined }, props: {} }] : []),
+    ...projets.map((projet) => ({ params: { chemin: projet.id }, props: { projet } })),
+  ];
+}
+
+/** Où mène un projet : sa fiche, sinon la page Projets, sinon nulle part (réglages d'affichage). */
+export function lienProjet(id: string, langue: Langue): string | undefined {
+  const { affichage } = reglages(langue);
+  if (affichage.fichesProjets) return url(`projets/${id}/`, langue);
+  if (affichage.pageProjets) return url('projets/', langue);
+  return undefined;
 }

@@ -1,0 +1,81 @@
+---
+// Page d'un billet (/articles/<nom>/) : l'en-tête, puis le texte tel quel, sans tuile ni sommaire.
+// Sur la page anglaise d'un billet non traduit : le texte français, avec un bandeau qui le dit. Un
+// lien mène à la version dans l'autre langue quand elle existe.
+import { getEntry, render } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Drapeau from '../components/Drapeau.astro';
+import { billets, type Billet } from '../lib/billets';
+import { jourLisible } from '../lib/dates';
+import { url } from '../lib/paths';
+import { lienProjet } from '../lib/projets';
+import { reglages } from '../lib/reglages';
+import { LANGUES, langueDe } from '../lib/i18n';
+
+interface Props {
+  billet: Billet;
+}
+const { billet: b } = Astro.props;
+const langue = langueDe(Astro.url);
+const { profil, t } = reglages(langue);
+const { Content } = await render(b.entree);
+const projet = b.projet ? await getEntry('projets', b.projet) : undefined;
+const pastille = projet?.data.couleur && `--c: ${projet.data.couleur}`;
+const versProjet = projet && lienProjet(projet.id, langue); // fiche, page Projets, ou rien
+// En anglais, le français existe toujours ; en français, l'anglais seulement s'il est traduit.
+const autre = langue === 'fr' ? 'en' : 'fr';
+const autreExiste = langue === 'en' || (await billets('en')).some((x) => x.id === b.id && x.traduit);
+const texte = b.traduit ? undefined : 'fr'; // langue du texte, quand ce n'est pas celle de la page
+---
+
+<Base title={`${b.titre} · ${profil.prenom} ${profil.nom}`} description={b.resume} rubrique="billets">
+  <div class="page-top">
+    <nav class="crumbs" aria-label={t.filAriane}>
+      <a href={url('articles/', langue)}>{t.billetsTitre}</a>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page" lang={texte}>{b.titre}</span>
+    </nav>
+    <header class="post-head reveal">
+      <p class="post-meta">
+        <time datetime={b.date}>{jourLisible(b.date, langue, true)}</time>
+        <span>{b.minutes} {t.minDeLecture}</span>
+        {b.miseAJour && <span>{t.misAJourLe} <time datetime={b.miseAJour}>{jourLisible(b.miseAJour, langue, true)}</time></span>}
+      </p>
+      <h1 lang={texte}>{b.titre}</h1>
+      <p class="lead" lang={texte}>{b.resume}</p>
+      {
+        ((projet && versProjet) || autreExiste) && (
+          <div class="inline-actions">
+            {projet && versProjet && (
+              <a class="inline-btn" href={versProjet}>
+                <span class="app-icon is-xs" style={pastille} aria-hidden="true">{projet.data.titre[0]}</span>
+                {t.projetLie} : {projet.data.titre}
+              </a>
+            )}
+            {autreExiste && (
+              <a class="inline-btn" href={url(`articles/${b.id}/`, autre)} hreflang={autre} lang={autre}>
+                <Drapeau code={LANGUES[autre].drapeau} />
+                {t.lireAussiEn}
+              </a>
+            )}
+          </div>
+        )
+      }
+    </header>
+  </div>
+
+  <main id="contenu" class="stack">
+    {!b.traduit && <p class="notice reveal">{t.nonTraduit}</p>}
+
+    <article class="prose is-plain reveal" lang={texte}>
+      <Content />
+    </article>
+
+    <p class="pager">
+      <a class="tile glass is-back" href={url('articles/', langue)}>
+        <Icon name="arrow-left" class="icon-sm" /> {t.retourAuxBillets}
+      </a>
+    </p>
+  </main>
+</Base>

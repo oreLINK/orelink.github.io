@@ -1,14 +1,19 @@
 ---
-// Titre de section, posé sur le fond (hors tuile), avec le nombre d'éléments.
+// Titre de section, posé sur le fond (hors tuile), avec le nombre d'éléments et, au besoin, un lien
+// vers la page qui les montre tous.
+import Icon from './Icon.astro';
+
 interface Props {
   id: string;
   titre: string;
-  nombre: number;
+  nombre?: number;
+  lien?: { href: string; label: string };
 }
-const { id, titre, nombre } = Astro.props;
+const { id, titre, nombre, lien } = Astro.props;
 ---
 
 <header class="section-head">
   <h2 id={`titre-${id}`}>{titre}</h2>
-  <span class="section-count">{nombre}</span>
+  {nombre !== undefined && <span class="section-count">{nombre}</span>}
+  {lien && <a class="section-more" href={lien.href}>{lien.label} <Icon name="arrow-right" class="icon-sm" /></a>}
 </header>

@@ -45,6 +45,13 @@
   --font-sans: "Plus Jakarta Sans Variable", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Scènes de démonstration (page Made by) : un site clair et un site sombre, identiques dans les
+     deux apparences, puisqu'elles montrent le badge chez les autres. */
+  --scene-claire: #F4F5F7;
+  --scene-claire-ink: #4E535E;
+  --scene-sombre: #0E1014;
+  --scene-sombre-ink: #A8ADB8;
 }
 
 @media (prefers-color-scheme: dark) {

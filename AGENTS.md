@@ -6,8 +6,11 @@ fonctionnement du site pour son propriétaire est dans [README.md](README.md) ; 
 
 ## Le projet
 
-Portfolio personnel statique (Astro 5, TypeScript strict), une seule page qui défile, en
-français (`/`, par défaut) et en anglais (`/en/`). Aucun framework client, aucune
+Portfolio personnel statique (Astro 5, TypeScript strict), en français (`/`, par défaut) et
+en anglais (`/en/`), en trois rubriques : **Profil** (l'accueil, façon CV, avec les projets à la
+une), **Projets** (tous les projets, une fiche par projet) et **Billets** (billets tech, liés ou
+non à un projet). Ce qui s'affiche se règle dans `site.json → affichage`, à part pour
+`npm run dev` (`local`) et pour le site publié (`deploye`) ; lire `reglages(langue).affichage`. Aucun framework client, aucune
 dépendance d'exécution : du HTML/CSS généré au build, plus un seul script navigateur
 (`src/scripts/ui.ts`). Déployé sur GitHub Pages.
 
@@ -31,18 +34,22 @@ ordinateur **et** à ~390 px de large (pas de défilement horizontal).
 |---|---|
 | `src/data/*.json` | Tout le contenu et les réglages (profil, expériences, formations, certifications, bénévolat, textes, thèmes). Source de vérité, en français. |
 | `src/data/en/*.json` | Traduction anglaise : **uniquement les champs à traduire** (voir « Langues »). |
-| `src/content/projets/*.md` | Un projet par fichier (en français seulement). |
-| `src/content.config.ts` | Schémas des listes de `src/data/` et des projets. |
+| `src/content/projets/*.md` | Un projet par fichier (en français seulement) : sa fiche. |
+| `src/content/articles/<nom>/` | Un billet par dossier : `fr.md` (en-tête complet), `en.md` (traduction, facultatif), images. |
+| `src/content.config.ts` | Schémas des listes de `src/data/`, des projets et des billets. |
 | `src/lib/reglages.ts` | Schémas de `site.json`, `profil.json`, `themes.json` ; `reglages(langue)` → `{ site, profil, t }`. |
 | `src/lib/i18n.ts` | Langues, `langueDe(Astro.url)`, pose des traductions sur le français. |
 | `src/lib/contenu.ts` | `liste(nom, langue)` : une liste de `src/data/` traduite. |
-| `src/lib/dates.ts` | Dates « AAAA-MM », périodes et durées, en fr et en en. |
+| `src/lib/dates.ts` | Dates « AAAA-MM » et « AAAA-MM-JJ », périodes et durées, en fr et en en. |
+| `src/lib/badge.ts` | Badge « Made by ore_link » : son CSS, son HTML et sa version SVG, par thème, avec ou sans café. |
+| `src/lib/tuiles.ts` | Plugin rehype : sur les fiches projet, une tuile de verre par intertitre `##` (les cinq questions, voir README). |
+| `src/lib/billets.ts` | `billets(langue)` : billets publiés et traduits ; pages et flux RSS. Vide si la rubrique est coupée. |
 | `src/lib/paths.ts` | `url(chemin, langue)` pour les liens internes, `asset(chemin)` pour `public/`. |
-| `src/vues/` | Pages communes aux deux langues (accueil, projet). |
-| `src/pages/` | Routes seulement : `/`, `/en/`, `/projets/[slug]/`, `/en/projets/[slug]/`, 404. Elles rendent une vue. |
+| `src/vues/` | Pages communes aux deux langues (accueil, projets, fiche, billets, billet, made by). |
+| `src/pages/` | Routes seulement : `/`, `/projets/[...chemin]/` (page Projets et fiches), `/articles/[...chemin]/` (liste et billets), `/articles/rss.xml`, `/madeby/` (`[outil].astro`, non répertoriée), leurs versions `/en/…`, 404. Elles rendent une vue. |
 | `src/components/sections/` | Une section de l'accueil par fichier. |
-| `src/layouts/Base.astro` | `<head>`, scripts d'avant-rendu (thème, habillage), haut de page, pied de page. |
-| `src/scripts/ui.ts` | Tout le JS navigateur : thème, menu des langues, replis « Voir plus », bulles, liens externes, feux d'artifice du Nouvel An. |
+| `src/layouts/Base.astro` | `<head>`, scripts d'avant-rendu (thème, habillage), haut de page (rubriques), pied de page. |
+| `src/scripts/ui.ts` | Tout le JS navigateur : thème, menu des langues, replis « Voir plus », bulles, filtre des billets, liens externes, feux d'artifice du Nouvel An. |
 | `src/styles/tokens.css` | Jetons de design (couleurs clair/sombre, verre, rayons). |
 | `src/styles/global.css` | Mise en page et composants. |
 | `src/styles/habillages/`, `src/components/habillages/` | Habillages (saisons, fêtes) : un CSS et un composant chacun, `commun.css`, `Etoiles` et `Flocons` partagés. |
@@ -83,6 +90,10 @@ ordinateur **et** à ~390 px de large (pas de défilement horizontal).
   position, les listes de textes (compétences) sont remplacées en entier. Un champ absent
   reste en français ; un champ ou un `id` inconnu **fait échouer le build** (c'est voulu).
 - Les pages de projets ne sont pas traduites (seule l'interface autour l'est).
+- Les billets le sont : `en.md` à côté de `fr.md`, avec seulement `titre`, `resume`, `sujets`
+  (facultatif) et le texte. Sans `en.md`, la page anglaise montre le français avec un bandeau.
+  Un champ inconnu dans `en.md`, un `en.md` sans `fr.md` ou un `projet` inconnu fait échouer le
+  build. Dates des billets en « AAAA-MM-JJ » ; `brouillon: true` ne sort qu'avec `npm run dev`.
 
 ## Thèmes
 

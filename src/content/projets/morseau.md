@@ -11,11 +11,13 @@ ordre: 5
 couleur: "#1F4E8C"
 ---
 
-## L'idée
+## Qu'est-ce que ça fait ?
 
-Un site statique inspiré de Duolingo pour apprendre le morse. Chaque caractère se lit dans les éclats de la lampe d'un timonier. Le site est prévu en quatre sections : un répertoire, puis deviner un caractère, un mot, un message. La première est en ligne.
+Un site statique inspiré de Duolingo pour apprendre le morse. Chaque caractère se lit dans les éclats de la lampe d'un timonier.
 
-## Le principe : séparer la logique morse de son affichage
+## Comment je l'ai construit, et pourquoi ?
+
+### Séparer la logique morse de son affichage
 
 Le même moteur servira aux quatre sections, donc il ne dépend ni de Svelte ni du DOM :
 
@@ -23,13 +25,11 @@ Le même moteur servira aux quatre sections, donc il ne dépend ni de Svelte ni 
 - `morse-engine.ts` : transforme un texte en **ligne de temps d'évènements de lampe** (allumée, éteinte) ;
 - `transmission.ts` : joue cette ligne de temps et expose l'état de la lampe à l'interface.
 
-## Deux façons d'étendre le site
-
-### Ajouter une animation
+### Étendre le site : ajouter une animation
 
 Une animation est un composant qui reçoit deux propriétés, `lit` (la lampe est-elle allumée ?) et `playing`. On l'enregistre dans un registre, et elle entre dans le tirage au hasard sans autre changement.
 
-### Ajouter une langue
+### Étendre le site : ajouter une langue
 
 Le morse « français » recouvre deux choses distinctes : les textes de l'interface **et** les caractères enseignés, car les lettres accentuées ont leurs propres codes. Les deux sont donc séparés :
 
@@ -38,6 +38,10 @@ Le morse « français » recouvre deux choses distinctes : les textes de l'inter
 
 La base internationale (A à Z, chiffres, ponctuation, signaux de service) n'est jamais dupliquée.
 
-## Déploiement
+## Comment ça tourne sans moi ?
 
 Une GitHub Action construit et publie le site sur GitHub Pages à chaque push sur `main`.
+
+## Où j'en suis ?
+
+Le site est prévu en quatre sections : un répertoire, puis deviner un caractère, un mot, un message. La première est en ligne.

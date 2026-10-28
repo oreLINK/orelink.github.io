@@ -1,0 +1,16 @@
+---
+// Billets en français : la liste à /articles/, un billet à /articles/<nom>/. Aucune page si la
+// rubrique est coupée (site.json → billets). Les pages elles-mêmes sont dans src/vues/.
+import ListeBillets from '../../vues/Billets.astro';
+import PageBillet from '../../vues/Billet.astro';
+import { pagesBillets, type Billet } from '../../lib/billets';
+
+export const getStaticPaths = () => pagesBillets('fr');
+
+interface Props {
+  billet?: Billet;
+}
+const { billet } = Astro.props;
+---
+
+{billet ? <PageBillet billet={billet} /> : <ListeBillets />}
