@@ -1,0 +1,62 @@
+---
+// Page Projets (/projets/) : tous les projets, groupés par statut, puis les derniers billets.
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import SectionHead from '../components/SectionHead.astro';
+import ProjetCard from '../components/ProjetCard.astro';
+import BilletCard from '../components/BilletCard.astro';
+import { trierProjets } from '../lib/projets';
+import { billets } from '../lib/billets';
+import { url } from '../lib/paths';
+import { reglages } from '../lib/reglages';
+import { langueDe } from '../lib/i18n';
+
+const DERNIERS_BILLETS = 3;
+
+const langue = langueDe(Astro.url);
+const { profil, t } = reglages(langue);
+const projets = trierProjets(await getCollection('projets'));
+const groupes = (['en-ligne', 'en-cours', 'archive'] as const)
+  .map((statut) => ({ statut, titre: t.groupesProjets[statut], projets: projets.filter((p) => p.data.statut === statut) }))
+  .filter((g) => g.projets.length > 0);
+const derniers = (await billets(langue)).slice(0, DERNIERS_BILLETS);
+---
+
+<Base title={`${t.projetsTitre} · ${profil.prenom} ${profil.nom}`} description={t.projetsIntro} rubrique="projets">
+  <header class="page-head reveal">
+    <h1>{t.projetsTitre}</h1>
+    <p class="lead">{t.projetsIntro}</p>
+  </header>
+
+  <main id="contenu" class="sections">
+    {
+      groupes.map((g) => (
+        <section class="section" aria-labelledby={`titre-${g.statut}`}>
+          <SectionHead id={g.statut} titre={g.titre} nombre={g.projets.length} />
+          <ul class="tiles is-grid">
+            {g.projets.map((p) => (
+              <li class="reveal">
+                <ProjetCard projet={p} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+
+    {
+      derniers.length > 0 && (
+        <section class="section" aria-labelledby="titre-derniers-billets">
+          <SectionHead id="derniers-billets" titre={t.derniersBillets} lien={{ href: url('articles/', langue), label: t.tousLesBillets }} />
+          <ul class="tiles">
+            {derniers.map((b) => (
+              <li class="reveal">
+                <BilletCard billet={b} compact />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+  </main>
+</Base>

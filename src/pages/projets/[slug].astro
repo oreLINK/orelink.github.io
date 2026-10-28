@@ -1,9 +1,0 @@
----
-// Page d'un projet en français, à /projets/<slug>/. La page elle-même est dans src/vues/Projet.astro.
-import Projet from '../../vues/Projet.astro';
-import { pagesProjets } from '../../lib/projets';
-
-export const getStaticPaths = pagesProjets;
----
-
-<Projet {...Astro.props} />

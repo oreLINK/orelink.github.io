@@ -1,0 +1,44 @@
+---
+// Liste des billets (/articles/) : du plus récent au plus ancien, groupés par année.
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import BilletCard from '../components/BilletCard.astro';
+import { billets } from '../lib/billets';
+import { url } from '../lib/paths';
+import { reglages } from '../lib/reglages';
+import { langueDe } from '../lib/i18n';
+
+const langue = langueDe(Astro.url);
+const { profil, t } = reglages(langue);
+const liste = await billets(langue);
+const annees = [...new Set(liste.map((b) => b.date.slice(0, 4)))];
+---
+
+<Base title={`${t.billetsTitre} · ${profil.prenom} ${profil.nom}`} description={t.billetsIntro} rubrique="billets">
+  <header class="page-head reveal">
+    <h1>{t.billetsTitre}</h1>
+    <p class="lead">{t.billetsIntro}</p>
+    <div class="actions">
+      <a class="btn btn-soft" href={url('articles/rss.xml', langue)}><Icon name="rss" class="icon-sm" /> {t.sAbonner}</a>
+    </div>
+  </header>
+
+  <main id="contenu" class="stack">
+    {
+      annees.map((annee) => (
+        <section class="stack" aria-labelledby={`annee-${annee}`}>
+          <h2 class="year" id={`annee-${annee}`}>{annee}</h2>
+          <ul class="tiles">
+            {liste
+              .filter((b) => b.date.startsWith(annee))
+              .map((b) => (
+                <li class="reveal">
+                  <BilletCard billet={b} />
+                </li>
+              ))}
+          </ul>
+        </section>
+      ))
+    }
+  </main>
+</Base>

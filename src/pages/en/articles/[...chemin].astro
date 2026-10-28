@@ -1,0 +1,15 @@
+---
+// Billets en anglais : /en/articles/ et /en/articles/<nom>/.
+import ListeBillets from '../../../vues/Billets.astro';
+import PageBillet from '../../../vues/Billet.astro';
+import { pagesBillets, type Billet } from '../../../lib/billets';
+
+export const getStaticPaths = () => pagesBillets('en');
+
+interface Props {
+  billet?: Billet;
+}
+const { billet } = Astro.props;
+---
+
+{billet ? <PageBillet billet={billet} /> : <ListeBillets />}

@@ -1,0 +1,93 @@
+---
+// Page non répertoriée /madeby/ : le badge « Made by ore_link » à poser sur mes autres
+// sites. Un aperçu de toutes les variantes, puis le code de celle qu'on choisit, à copier en HTML ou
+// en image SVG (choix et copie : ui.ts). Le badge lui-même vient de src/lib/badge.ts.
+import { readFileSync } from 'node:fs';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import SectionHead from '../components/SectionHead.astro';
+import { THEMES_BADGE, CSS_BADGE, LOGO_BMC, badgeHtml, badgeSvg, codeHtml, idVariante, logoBmcIntegre, type Variante } from '../lib/badge';
+import { asset, url } from '../lib/paths';
+import { reglages } from '../lib/reglages';
+import { langueDe } from '../lib/i18n';
+
+const langue = langueDe(Astro.url);
+const { profil, t } = reglages(langue);
+
+// Le code copié pointe vers le site en ligne ; l'aperçu prend le logo du site lui-même, pour
+// s'afficher aussi avec `npm run dev`.
+const enLigne = (chemin: string) => new URL(chemin, Astro.site).href;
+const liens = {
+  portfolio: enLigne(url('', 'fr')),
+  bmc: profil.liens.buymeacoffee || 'https://buymeacoffee.com/TON-PSEUDO',
+  logoBmc: enLigne(asset('logos/buymeacoffee.svg')),
+};
+const liensApercu = { ...liens, logoBmc: asset('logos/buymeacoffee.svg') };
+
+const variantes: Variante[] = THEMES_BADGE.flatMap((theme) => [true, false].map((cafe) => ({ theme, cafe })));
+const libelle = (v: Variante) => `${t.badgeThemes[v.theme]} · ${v.cafe ? t.avecCafe : t.sansCafe}`;
+const defaut = variantes[0]; // auto, avec café
+
+// Ce que la page copie, pour chaque variante (lu par ui.ts).
+const donnees = {
+  repere: LOGO_BMC, // où le SVG attend le logo du café
+  logoBmc: logoBmcIntegre(readFileSync('public/logos/buymeacoffee.svg', 'utf8')),
+  variantes: Object.fromEntries(variantes.map((v) => [idVariante(v), { html: codeHtml(v, liens), svg: badgeSvg(v) }])),
+};
+const json = JSON.stringify(donnees).replace(/</g, '\\u003c');
+---
+
+<Base title={`${t.madeByTitre} · ${profil.prenom} ${profil.nom}`} description={t.madeByIntro} noindex>
+  <style is:inline set:html={CSS_BADGE}></style>
+
+  <header class="page-head reveal">
+    <h1>{t.madeByTitre}</h1>
+    <p class="lead">{t.madeByIntro}</p>
+  </header>
+
+  <main id="contenu" class="sections" data-made-by>
+    <section class="section" aria-labelledby="titre-apercu">
+      <SectionHead id="apercu" titre={t.apercu} />
+      {
+        [
+          { fond: 'clair', label: t.surSiteClair },
+          { fond: 'sombre', label: t.surSiteSombre },
+        ].map((scene) => (
+          <div class:list={['badge-stage', `is-${scene.fond}`]}>
+            <p class="badge-stage-label">{scene.label}</p>
+            <ul class="badge-grid">
+              {variantes.map((v) => (
+                <li data-variante={idVariante(v)} class:list={{ 'is-selected': v === defaut }}>
+                  <span class="badge-name">{libelle(v)}</span>
+                  <Fragment set:html={badgeHtml(v, liensApercu)} />
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </section>
+
+    <section class="section" aria-labelledby="titre-code">
+      <SectionHead id="code" titre={t.leCode} />
+      <div class="badge-options">
+        <div class="chips" role="group" aria-label={t.badgeTheme}>
+          {THEMES_BADGE.map((theme) => (
+            <button class="chip" type="button" data-theme-badge={theme} aria-pressed={String(theme === defaut.theme)}>{t.badgeThemes[theme]}</button>
+          ))}
+        </div>
+        <div class="chips" role="group" aria-label={t.badgeCafe}>
+          <button class="chip" type="button" data-cafe="1" aria-pressed="true">{t.avecCafe}</button>
+          <button class="chip" type="button" data-cafe="0" aria-pressed="false">{t.sansCafe}</button>
+        </div>
+      </div>
+      <div class="actions copy-actions">
+        <button class="btn" type="button" data-copier="html" data-label-copie={t.copie}><Icon name="copy" class="icon-sm" /> <span aria-live="polite">{t.copierCode}</span></button>
+        <button class="btn btn-soft" type="button" data-copier="svg" data-label-copie={t.copie}><Icon name="copy" class="icon-sm" /> <span aria-live="polite">{t.copierSvg}</span></button>
+      </div>
+      <pre class="code-block" tabindex="0"><code data-code>{codeHtml(defaut, liens)}</code></pre>
+      <p class="badge-note">{t.madeByNote}</p>
+      <script is:inline type="application/json" data-variantes set:html={json} />
+    </section>
+  </main>
+</Base>

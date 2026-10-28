@@ -1,4 +1,4 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection, reference, z } from 'astro:content';
 import { file, glob } from 'astro/loaders';
 
 // Toutes les données sont validées au build : une date mal écrite ou un champ manquant fait
@@ -103,4 +103,39 @@ const projets = defineCollection({
   }),
 });
 
-export const collections = { experiences, formations, certifications, benevolat, projets };
+// ── Billets : un dossier par billet, src/content/articles/<nom>/ ────────────────────────────
+// fr.md porte l'en-tête complet et le texte ; en.md (facultatif) seulement le titre, le résumé
+// (et les sujets) traduits, plus le texte. Les images se rangent dans le dossier, à côté du texte.
+// Publiés à /articles/<nom>/ et /en/articles/<nom>/.
+// YAML lit 2026-10-21 (sans guillemets) comme une date : on la remet en texte « AAAA-MM-JJ ».
+const jour = z.preprocess(
+  (v) => (v instanceof Date ? v.toISOString().slice(0, 10) : v),
+  z.string().regex(/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/, 'Format attendu : AAAA-MM-JJ (ex. 2026-10-21)'),
+);
+const dossier = ({ entry }: { entry: string }) => entry.split('/')[0];
+
+const billets = defineCollection({
+  loader: glob({ pattern: '*/fr.md', base: './src/content/articles', generateId: dossier }),
+  schema: z.object({
+    titre: z.string(),
+    resume: z.string(),
+    date: jour, // publication
+    miseAJour: jour.optional(),
+    projet: reference('projets').optional(), // nom du fichier du projet (ex. bluebird)
+    sujets: z.array(z.string()).default([]),
+    brouillon: z.boolean().default(false), // visible avec `npm run dev`, absent du site publié
+  }),
+});
+
+const billetsEn = defineCollection({
+  loader: glob({ pattern: '*/en.md', base: './src/content/articles', generateId: dossier }),
+  schema: z
+    .object({
+      titre: z.string(),
+      resume: z.string(),
+      sujets: z.array(z.string()).optional(), // remplace la liste française en entier
+    })
+    .strict(), // un champ inconnu fait échouer le build, comme dans src/data/en/
+});
+
+export const collections = { experiences, formations, certifications, benevolat, projets, billets, billetsEn };

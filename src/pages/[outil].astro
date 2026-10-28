@@ -1,0 +1,10 @@
+---
+// Page non répertoriée /madeby/ : aucun lien n'y mène, il faut connaître l'adresse.
+// Affichée selon site.json → affichage → madeBy. La page elle-même est dans src/vues/MadeBy.astro.
+import MadeBy from '../vues/MadeBy.astro';
+import { reglages } from '../lib/reglages';
+
+export const getStaticPaths = () => (reglages('fr').affichage.madeBy ? [{ params: { outil: 'madeby' } }] : []);
+---
+
+<MadeBy />

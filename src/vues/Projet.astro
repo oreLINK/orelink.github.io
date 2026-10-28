@@ -1,12 +1,15 @@
 ---
-// Page de doc d'un projet : « comment je l'ai réalisé ». Le contenu est le corps du fichier
-// src/content/projets/<slug>.md ; son en-tête remplit l'introduction et la fiche du projet.
+// Fiche d'un projet : ses grandes lignes, puis les billets qui en parlent. Le contenu est le corps du
+// fichier src/content/projets/<slug>.md ; son en-tête remplit l'introduction et la fiche du projet.
 // Le contenu des projets n'est écrit qu'en français ; l'interface autour suit la langue de la page.
 import { render, type CollectionEntry } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import Tags from '../components/Tags.astro';
+import SectionHead from '../components/SectionHead.astro';
+import BilletCard from '../components/BilletCard.astro';
 import { statuts } from '../lib/projets';
+import { billetsDuProjet } from '../lib/billets';
 import { dateLisible } from '../lib/dates';
 import { url } from '../lib/paths';
 import { reglages } from '../lib/reglages';
@@ -15,35 +18,44 @@ import { langueDe } from '../lib/i18n';
 type Projet = CollectionEntry<'projets'>;
 interface Props {
   projet: Projet;
-  precedent?: Projet;
-  suivant?: Projet;
 }
-const { projet, precedent, suivant } = Astro.props;
+const { projet } = Astro.props;
 const langue = langueDe(Astro.url);
-const { profil, t } = reglages(langue);
+const { profil, t, affichage } = reglages(langue);
 const p = projet.data;
 const statut = statuts(t)[p.statut];
-const { Content, headings } = await render(projet);
-const sommaire = headings.filter((h) => h.depth === 2);
+const { Content } = await render(projet); // une tuile par question (src/lib/tuiles.ts)
+const lies = await billetsDuProjet(projet.id, langue);
 ---
 
-<Base title={`${p.titre} · ${t.commentJeLaiRealise} · ${profil.prenom} ${profil.nom}`} description={p.resume} back={{ href: url('#projets', langue), label: t.retour }}>
-  <header class="project-intro reveal">
-    <span class="app-icon is-lg" style={p.couleur && `--c: ${p.couleur}`} aria-hidden="true">{p.titre[0]}</span>
-    <div>
-      <p class="eyebrow">{t.commentJeLaiRealise}</p>
-      <h1>{p.titre}</h1>
-      <p class="lead">{p.resume}</p>
-    </div>
+<Base title={`${p.titre} · ${t.ficheProjet} · ${profil.prenom} ${profil.nom}`} description={p.resume} rubrique="projets">
+  <div class="page-top">
     {
-      (p.lien || p.depot) && (
-        <div class="actions">
-          {p.lien && <a class="btn" href={p.lien}>{t.voirLeProjet} <Icon name="external" class="icon-sm" /></a>}
-          {p.depot && <a class="btn btn-soft" href={p.depot}><Icon name="code" class="icon-sm" /> {t.codeSource}</a>}
-        </div>
+      affichage.pageProjets && (
+        <nav class="crumbs" aria-label={t.filAriane}>
+          <a href={url('projets/', langue)}>{t.projetsTitre}</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">{p.titre}</span>
+        </nav>
       )
     }
-  </header>
+    <header class="project-intro reveal">
+      <span class="app-icon is-lg" style={p.couleur && `--c: ${p.couleur}`} aria-hidden="true">{p.titre[0]}</span>
+      <div>
+        <p class="eyebrow">{t.ficheProjet}</p>
+        <h1>{p.titre}</h1>
+        <p class="lead">{p.resume}</p>
+      </div>
+      {
+        (p.lien || p.depot) && (
+          <div class="actions">
+            {p.lien && <a class="btn" href={p.lien}>{t.voirLeProjet} <Icon name="external" class="icon-sm" /></a>}
+            {p.depot && <a class="btn btn-soft" href={p.depot}><Icon name="code" class="icon-sm" /> {t.codeSource}</a>}
+          </div>
+        )
+      }
+    </header>
+  </div>
 
   <main id="contenu" class="stack">
     <dl class="tile glass facts-tile reveal">
@@ -73,38 +85,32 @@ const sommaire = headings.filter((h) => h.depth === 2);
       }
     </dl>
 
-    {
-      sommaire.length > 1 && (
-        <nav class="toc reveal" aria-label={t.sommaire}>
-          <ol>
-            {sommaire.map((h) => (
-              <li><a href={`#${h.slug}`}>{h.text}</a></li>
-            ))}
-          </ol>
-        </nav>
-      )
-    }
-
-    <article class="prose glass reveal">
+    <article class="stack fiche">
       <Content />
     </article>
 
     {
-      (precedent || suivant) && (
-        <nav class="pager" aria-label={t.autresProjets}>
-          {precedent && (
-            <a class="tile glass" href={url(`projets/${precedent.id}/`, langue)} rel="prev">
-              <small><Icon name="arrow-left" class="icon-sm" /> {t.precedent}</small>
-              <strong>{precedent.data.titre}</strong>
-            </a>
-          )}
-          {suivant && (
-            <a class="tile glass is-next" href={url(`projets/${suivant.id}/`, langue)} rel="next">
-              <small>{t.suivant} <Icon name="arrow-right" class="icon-sm" /></small>
-              <strong>{suivant.data.titre}</strong>
-            </a>
-          )}
-        </nav>
+      lies.length > 0 && (
+        <section class="section related-posts" aria-labelledby="titre-billets-lies">
+          <SectionHead id="billets-lies" titre={t.billetsSurCeProjet} nombre={lies.length} />
+          <ul class="tiles">
+            {lies.map((b) => (
+              <li class="reveal">
+                <BilletCard billet={b} avecProjet={false} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+
+    {
+      affichage.pageProjets && (
+        <p class="pager">
+          <a class="tile glass is-back" href={url('projets/', langue)}>
+            <Icon name="arrow-left" class="icon-sm" /> {t.retourAuxProjets}
+          </a>
+        </p>
       )
     }
   </main>

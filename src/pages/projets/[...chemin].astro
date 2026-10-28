@@ -1,0 +1,17 @@
+---
+// Projets en français : la page Projets à /projets/, une fiche à /projets/<slug>/, chacune selon les
+// réglages d'affichage (site.json → affichage). Les pages elles-mêmes sont dans src/vues/.
+import type { CollectionEntry } from 'astro:content';
+import PageProjets from '../../vues/Projets.astro';
+import Fiche from '../../vues/Projet.astro';
+import { pagesProjets } from '../../lib/projets';
+
+export const getStaticPaths = () => pagesProjets('fr');
+
+interface Props {
+  projet?: CollectionEntry<'projets'>;
+}
+const { projet } = Astro.props;
+---
+
+{projet ? <Fiche projet={projet} /> : <PageProjets />}

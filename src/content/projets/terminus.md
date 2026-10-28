@@ -11,41 +11,32 @@ ordre: 1
 couleur: "#E8962E"
 ---
 
-## Le besoin
+## Avant
 
-Le soir, en ville, une seule question compte : *à quelle heure faut-il partir pour attraper le dernier tram ?* Les applications de transport répondent à « comment aller de A à B maintenant », pas à « jusqu'à quand puis-je rester ». Terminus calcule l'itinéraire **à rebours**, depuis la destination, et affiche un compte à rebours. Il est pensé pour le téléphone, à une main, dehors, la nuit.
+### Quelle était la situation au départ ?
 
-## Architecture
+Le soir, en ville, une seule question compte : *à quelle heure faut-il partir pour attraper le dernier tram ?* Les applications de transport répondent à « comment aller de A à B maintenant », pas à « jusqu'à quand puis-je rester ».
 
-- **Aucun framework, aucun build** : HTML, CSS et JavaScript en modules ES natifs, hébergés sur GitHub Pages.
-- **Les API publiques sont appelées depuis le navigateur** : SIRI-Lite de Bordeaux Métropole pour le temps réel, la Géoplateforme IGN pour le géocodage, la marche à pied et le fond de carte.
-- **Les données du réseau sont générées à l'avance** depuis le GTFS de TBM (arrêts, graphes, tracés, horaires du soir), un fichier par mode, chargé à la demande.
-- **Le calcul est une fonction pure**, testée avec `node:test`, sans navigateur.
+Il fallait donc un outil qui réponde à cette question-là, sur le réseau de Bordeaux Métropole, et qui se consulte sur le téléphone, d'une main, dehors, la nuit.
 
-## Les choix qui ont compté
+## Pendant
 
-### Itinéraire à rebours, jusqu'à deux correspondances
+### Qu'est-ce que j'ai construit ?
 
-Le moteur part de l'arrivée et remonte le temps. Les correspondances à pied entre stations proches sont **précalculées à la génération** : aucun appel réseau à l'exécution pour elles.
+Terminus part de la destination et remonte le temps : il trouve le dernier trajet possible et affiche un compte à rebours jusqu'au moment de partir.
 
-### Le temps réel, seulement là où il sert
+- **Le dernier départ possible**, jusqu'à deux correspondances, et par où passer.
+- **Les horaires en temps réel**, sur le trajet affiché.
+- **Hors ligne** dès la deuxième visite.
 
-Le flux GTFS-RT de tout le réseau pèse 2,7 Mo : trop lourd toutes les 30 secondes sur un téléphone. Terminus n'interroge que les quais du trajet affiché, à la montée et à la descente de chaque tronçon, soit environ 100 Ko par calcul.
+Le choix qui a tout guidé : **aucun serveur**. Les données du réseau (TBM) sont préparées à l'avance, et le téléphone ne demande en direct que ce qui sert au trajet affiché : environ 100 Ko par calcul, au lieu de 2,7 Mo pour tout le réseau.
 
-### Ce que j'ai essayé, puis écarté
+## Après
 
-J'ai prototypé un calcul en ordre « Connection Scan ». Mêmes résultats sur 1 500 trajets, mais 10 à 60 % **plus lent** en JavaScript avec mon modèle d'objets. Je l'ai documenté et laissé de côté.
+### Qu'est-ce que ça a changé ?
 
-### Hors ligne dès la deuxième visite
+**Il tourne tout seul.** Chaque lundi, les données du réseau sont régénérées, testées puis mises en ligne automatiquement. Une mise à jour qui casserait un calcul n'est jamais publiée.
 
-Un service worker garde les pages, les styles et les données générées sur le téléphone. GitHub Pages ne les met en cache que 10 minutes.
+**Ce que j'en retiens.** Un site statique peut aller très loin, avec calcul d'itinéraire, temps réel et cartes, sans serveur. La vraie difficulté n'est pas le code mais **la donnée** : la fiabilité des horaires, les cas limites après minuit et la vérification des résultats.
 
-## Industrialisation
-
-- Les données sont **régénérées chaque lundi** par une GitHub Action : branche dédiée, pull request, fusion automatique si les tests passent, mise en ligne.
-- La branche `main` n'accepte que des pull requests dont les tests passent.
-- Un design system documenté (jetons, verre, mouvement, accessibilité), avec des thèmes de saison imposés par leurs dates. Ce portfolio en reprend le design.
-
-## Ce que j'en retiens
-
-Un site statique peut aller très loin : calcul d'itinéraire, temps réel et cartes, sans serveur. La difficulté n'est pas le code mais **la donnée** : la fiabilité des horaires, les cas limites après minuit et la vérification des résultats.
+**Et au-delà de Terminus**, le design system créé pour lui (jetons, verre, mouvement, accessibilité) sert aujourd'hui à ce portfolio.

@@ -1,31 +1,39 @@
 ---
-// Projets : une tuile par projet, en grille sur grand écran.
+// Projets à la une : les premières tuiles selon `ordre` (projetsALaUne dans site.json), et un lien
+// vers la page Projets qui les montre tous, si elle est affichée.
 import { getCollection } from 'astro:content';
 import SectionHead from '../SectionHead.astro';
-import Repli from '../Repli.astro';
 import ProjetCard from '../ProjetCard.astro';
 import { trierProjets } from '../../lib/projets';
+import { url } from '../../lib/paths';
+import { reglages } from '../../lib/reglages';
+import { langueDe } from '../../lib/i18n';
 
 interface Props {
   titre: string;
 }
 const { titre } = Astro.props;
-const projets = trierProjets(await getCollection('projets'));
+const langue = langueDe(Astro.url);
+const { site, t, affichage } = reglages(langue);
+const tous = trierProjets(await getCollection('projets'));
+const projets = tous.slice(0, site.projetsALaUne);
 ---
 
 {
   projets.length > 0 && (
     <section class="section" id="projets" aria-labelledby="titre-projets">
-      <SectionHead id="projets" titre={titre} nombre={projets.length} />
-      <Repli nombre={projets.length}>
-        <ul class="tiles is-grid">
-          {projets.map((p) => (
-            <li class="reveal">
-              <ProjetCard projet={p} />
-            </li>
-          ))}
-        </ul>
-      </Repli>
+      <SectionHead
+        id="projets"
+        titre={titre}
+        lien={affichage.pageProjets ? { href: url('projets/', langue), label: `${t.tousLesProjets} (${tous.length})` } : undefined}
+      />
+      <ul class="tiles is-grid">
+        {projets.map((p) => (
+          <li class="reveal">
+            <ProjetCard projet={p} />
+          </li>
+        ))}
+      </ul>
     </section>
   )
 }

@@ -14,17 +14,32 @@ import NouvelAn from '../components/habillages/NouvelAn.astro';
 import FeteMusique from '../components/habillages/FeteMusique.astro';
 import { url, asset } from '../lib/paths';
 import { reglages, themes } from '../lib/reglages';
+import { billets } from '../lib/billets';
 import { LANGUES, cheminSansLangue, langueDe, type Langue } from '../lib/i18n';
 
 interface Props {
   title?: string;
   description?: string;
-  /** Lien de retour affiché en haut à gauche (pages de projet). */
-  back?: { href: string; label: string };
+  /** Rubrique de la page, marquée dans la navigation du haut. */
+  rubrique?: 'profil' | 'projets' | 'billets';
+  /** Page non répertoriée : les moteurs de recherche ne l'indexent pas. */
+  noindex?: boolean;
 }
 const langue = langueDe(Astro.url);
-const { site, profil, t } = reglages(langue);
-const { title = site.meta.titre, description = site.meta.description, back } = Astro.props;
+const { site, profil, t, affichage } = reglages(langue);
+const { title = site.meta.titre, description = site.meta.description, rubrique, noindex = false } = Astro.props;
+// Navigation entre les rubriques affichées (site.json → affichage) ; « Billets » seulement s'il y en a
+// de publiés. Avec une seule rubrique, pas de navigation.
+const avecBillets = (await billets(langue)).length > 0;
+const rubriques = [
+  { id: 'profil', label: t.navProfil, href: url('', langue) },
+  ...(affichage.pageProjets ? [{ id: 'projets', label: t.navProjets, href: url('projets/', langue) }] : []),
+  ...(avecBillets ? [{ id: 'billets', label: t.navBillets, href: url('articles/', langue) }] : []),
+];
+const flux = url('articles/rss.xml', langue);
+// Sur le profil, le grand logo tient lieu de logo du haut : d'une page à l'autre, l'un se change en
+// l'autre (view-transition-name « logo », global.css).
+const logoEnHaut = !(rubrique === 'profil' && profil.pseudo);
 const canonical = new URL(Astro.url.pathname, Astro.site);
 // La même page dans chaque langue (sélecteur de langue et liens hreflang).
 const chemin = cheminSansLangue(Astro.url);
@@ -47,6 +62,7 @@ const accents = `--accent-light: ${site.couleurs.accentClair}; --accent-dark: ${
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex" />}
     <link rel="canonical" href={canonical} />
     {versions.map((v) => <link rel="alternate" hreflang={v.code} href={new URL(v.href, Astro.site)} />)}
     <meta property="og:type" content="website" />
@@ -59,11 +75,15 @@ const accents = `--accent-light: ${site.couleurs.accentClair}; --accent-dark: ${
     <link rel="icon" href={url('icons/favicon.svg')} type="image/svg+xml" />
     <link rel="icon" href={url('icons/favicon-32.png')} sizes="32x32" type="image/png" />
     <link rel="apple-touch-icon" href={url('icons/apple-touch-icon.png')} />
+    {avecBillets && <link rel="alternate" type="application/rss+xml" title={`${t.billetsTitre} · ${profil.prenom} ${profil.nom}`} href={flux} />}
 
     {/* Avant le premier rendu : thème choisi pendant la visite, pour éviter un flash de la mauvaise
-        couleur. Sans choix, le thème est celui du système (voir ui.ts). */}
+        couleur. Sans choix, le thème est celui du système (voir ui.ts). Arrivée par une transition
+        de page : le profil s'affiche sans attendre l'apparition au défilement, pour que le logo
+        soit visible au bout de son déplacement. */}
     <script is:inline>
       document.documentElement.classList.add('js');
+      addEventListener('pagereveal', (e) => e.viewTransition && document.documentElement.classList.add('vt-arrivee'));
       try {
         localStorage.removeItem('orelink.theme'); // ancien choix gardé d'une visite à l'autre
         const theme = sessionStorage.getItem('orelink.theme');
@@ -115,14 +135,12 @@ const accents = `--accent-light: ${site.couleurs.accentClair}; --accent-dark: ${
 
     <div class="page">
       <header class="topbar">
+        {logoEnHaut && <a class="brand-link" href={url('', langue)} aria-label={`${site.logo.avant}${site.logo.separateur}${site.logo.apres}, ${t.retourAccueil}`}><Brand /></a>}
         {
-          back && (
-            <div class="topbar-start">
-              <a class="brand-link" href={url('', langue)} aria-label={`${site.logo.avant}${site.logo.separateur}${site.logo.apres}, ${t.retourAccueil}`}><Brand /></a>
-              <a class="back" href={back.href}>
-                <Icon name="arrow-left" class="icon-sm" /> {back.label}
-              </a>
-            </div>
+          rubriques.length > 1 && (
+            <nav class="mainnav glass" aria-label={t.navigation}>
+              {rubriques.map((r) => <a href={r.href} aria-current={r.id === rubrique ? 'page' : undefined}>{r.label}</a>)}
+            </nav>
           )
         }
         <div class="topbar-end">
@@ -156,6 +174,7 @@ const accents = `--accent-light: ${site.couleurs.accentClair}; --accent-dark: ${
         <nav class="footer-links" aria-label={t.liensExternes}>
           {profil.liens.linkedin && <a class="icon-btn glass" href={profil.liens.linkedin} rel="me" aria-label="LinkedIn" title="LinkedIn"><Icon name="linkedin" /></a>}
           {profil.liens.github && <a class="icon-btn glass" href={profil.liens.github} rel="me" aria-label="GitHub" title="GitHub"><Icon name="github" /></a>}
+          {avecBillets && <a class="icon-btn glass" href={flux} aria-label={t.fluxRss} title={t.fluxRss}><Icon name="rss" /></a>}
           {site.piedDePage.lienCodeDuSite && <a class="icon-btn glass" href={site.piedDePage.lienCodeDuSite} aria-label={t.codeDuSite} title={t.codeDuSite}><Icon name="code" /></a>}
         </nav>
       </footer>

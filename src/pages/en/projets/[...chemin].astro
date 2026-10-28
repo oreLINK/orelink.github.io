@@ -1,0 +1,16 @@
+---
+// Projets en anglais : /en/projets/ et /en/projets/<slug>/.
+import type { CollectionEntry } from 'astro:content';
+import PageProjets from '../../../vues/Projets.astro';
+import Fiche from '../../../vues/Projet.astro';
+import { pagesProjets } from '../../../lib/projets';
+
+export const getStaticPaths = () => pagesProjets('en');
+
+interface Props {
+  projet?: CollectionEntry<'projets'>;
+}
+const { projet } = Astro.props;
+---
+
+{projet ? <Fiche projet={projet} /> : <PageProjets />}

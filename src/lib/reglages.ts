@@ -10,18 +10,31 @@ import { traduire, traductionDe, type Langue } from './i18n';
 const couleur = z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Couleur attendue : #RRGGBB');
 const texte = z.string().min(1);
 
+// Ce qui s'affiche, réglé à part pour `npm run dev` (local) et pour le site publié (deploye).
+const affichageSchema = z.object({
+  profil: z.object({ experience: z.boolean(), formation: z.boolean(), certifications: z.boolean(), benevolat: z.boolean() }),
+  projets: z.object({
+    aLaUne: z.boolean(), // section « Projets à la une » du profil
+    page: z.boolean(), // page Projets (/projets/), et les liens qui y mènent
+    fiches: z.union([z.boolean(), z.literal('auto')]), // fiches /projets/<slug>/ et les liens vers elles ; auto : comme `page`
+  }),
+  billets: z.boolean(), // rubrique, pages et flux RSS (le contenu reste vérifié au build)
+  madeBy: z.boolean(), // page non répertoriée /madeby/ (le badge pour mes autres sites)
+});
+
 const siteSchema = z.object({
   meta: z.object({ titre: texte, description: texte }),
   logo: z.object({ avant: texte, separateur: texte, apres: texte }), // ore_link : le séparateur est en couleur d'accent
   couleurs: z.object({ accentClair: couleur, accentSombre: couleur }),
+  affichage: z.object({ local: affichageSchema, deploye: affichageSchema }),
   sections: z.array(
     z.object({
       id: z.enum(['experience', 'projets', 'formation', 'certifications', 'benevolat']),
       titre: texte,
-      afficher: z.boolean().default(true),
     }),
   ),
   hauteurSectionRepliee: z.number().int().positive(), // en pixels : au-delà, la section se replie avec « Tout afficher »
+  projetsALaUne: z.number().int().positive(), // tuiles de la section Projets de l'accueil (les premières selon `ordre`)
   textes: z.object({
     meContacter: texte,
     aPropos: texte,
@@ -34,18 +47,14 @@ const siteSchema = z.object({
     expireeEn: texte,
     identifiant: texte,
     afficherCertification: texte,
-    commentJeLaiFait: texte,
-    commentJeLaiRealise: texte,
+    voirLaFiche: texte,
+    ficheProjet: texte,
     voirLeProjet: texte,
     codeSource: texte,
-    retour: texte,
     statut: texte,
     commenceEn: texte,
     role: texte,
     technologies: texte,
-    sommaire: texte,
-    precedent: texte,
-    suivant: texte,
     statuts: z.object({ 'en-ligne': texte, 'en-cours': texte, archive: texte }),
     themeClair: texte,
     themeSombre: texte,
@@ -57,8 +66,48 @@ const siteSchema = z.object({
     chez: texte, // « Data Engineer chez Betclic Group »
     competences: texte,
     liensExternes: texte,
-    autresProjets: texte,
+    retourAuxProjets: texte, // bas de la fiche d'un projet
+    retourAuxBillets: texte, // bas d'un billet
     changerDeLangue: texte,
+    navigation: texte,
+    navProfil: texte,
+    navProjets: texte,
+    navBillets: texte,
+    filAriane: texte,
+    projetsTitre: texte,
+    projetsIntro: texte,
+    groupesProjets: z.object({ 'en-ligne': texte, 'en-cours': texte, archive: texte }), // titres des groupes de la page Projets
+    tousLesProjets: texte,
+    billetsTitre: texte,
+    billetsIntro: texte,
+    billet: texte, // « 1 billet », « 3 billets »
+    billetsPluriel: texte,
+    derniersBillets: texte,
+    tousLesBillets: texte,
+    billetsSurCeProjet: texte,
+    projetLie: texte,
+    minDeLecture: texte, // « 7 min de lecture »
+    misAJourLe: texte,
+    sAbonner: texte,
+    fluxRss: texte,
+    lireAussiEn: texte, // lien vers le même billet dans l'autre langue, écrit dans cette autre langue
+    enFrancais: texte, // billet non traduit, dans la liste anglaise
+    nonTraduit: texte, // bandeau d'un billet non traduit, sur sa page anglaise
+    madeByTitre: texte, // titre de la page /madeby/
+    madeByIntro: texte,
+    apercu: texte,
+    surSiteClair: texte,
+    surSiteSombre: texte,
+    badgeThemes: z.object({ auto: texte, clair: texte, sombre: texte, accent: texte }),
+    avecCafe: texte,
+    sansCafe: texte,
+    leCode: texte,
+    badgeTheme: texte,
+    badgeCafe: texte,
+    copierCode: texte,
+    copierSvg: texte,
+    copie: texte, // remplace un instant le libellé d'un bouton « Copier »
+    madeByNote: texte,
   }),
   piedDePage: z.object({ lienCodeDuSite: z.string().url().or(z.literal('')) }),
 });
@@ -81,7 +130,7 @@ const profilSchema = z.object({
   // Un drapeau par langue, le niveau en bulle ; `code` : un drapeau dessiné dans Drapeau.astro.
   langues: z.array(z.object({ code: z.enum(['fr', 'en', 'es']), nom: texte, niveau: texte })).default([]),
   email: z.string().email().or(z.literal('')),
-  liens: z.object({ linkedin: lienOuVide, github: lienOuVide, cv: z.string() }),
+  liens: z.object({ linkedin: lienOuVide, github: lienOuVide, cv: z.string(), buymeacoffee: lienOuVide }), // buymeacoffee : pour le badge Made by
   aPropos: z.string(),
 });
 
@@ -121,16 +170,29 @@ export const themes = verifier(themesSchema, themesJson, 'src/data/themes.json')
   }
 }
 
+/** Les réglages d'affichage du moment (local avec `npm run dev`, deploye sinon), à plat. */
+function affichageDu(site: z.infer<typeof siteSchema>) {
+  const a = import.meta.env.DEV ? site.affichage.local : site.affichage.deploye;
+  return {
+    ...a.profil,
+    projetsALaUne: a.projets.aLaUne,
+    pageProjets: a.projets.page,
+    fichesProjets: a.projets.fiches === 'auto' ? a.projets.page : a.projets.fiches,
+    billets: a.billets,
+    madeBy: a.madeBy,
+  };
+}
+
 function charger(langue: Langue) {
   const ou = (fichier: string) => (langue === 'fr' ? `src/data/${fichier}.json` : `src/data/${fichier}.json + src/data/${langue}/${fichier}.json`);
   const site = verifier(siteSchema, traduire(siteJson, traductionDe('site', langue), ou('site')), ou('site'));
   const profil = verifier(profilSchema, traduire(profilJson, traductionDe('profil', langue), ou('profil')), ou('profil'));
-  return { site, profil, t: site.textes };
+  return { site, profil, t: site.textes, affichage: affichageDu(site) };
 }
 
 const cache = new Map<Langue, ReturnType<typeof charger>>();
 
-/** Réglages et textes du site dans une langue : `const { site, profil, t } = reglages(langue)`. */
+/** Réglages et textes du site dans une langue : `const { site, profil, t, affichage } = reglages(langue)`. */
 export function reglages(langue: Langue) {
   if (!cache.has(langue)) cache.set(langue, charger(langue));
   return cache.get(langue)!;

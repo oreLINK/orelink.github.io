@@ -72,6 +72,19 @@ export function plusRecentsDabord<T>(items: T[], cle: (item: T) => string | null
   return [...items].sort((x, y) => ordre(cle(y)) - ordre(cle(x)));
 }
 
+// Dates au jour près (« AAAA-MM-JJ »), pour les billets.
+const MOIS_LONGS = {
+  fr: ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'],
+  en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+} satisfies Record<Langue, string[]>;
+
+/** "2026-10-21" → "21 oct. 2026" (« Oct 21, 2026 ») ; en long : "21 octobre 2026" (« October 21, 2026 »). */
+export function jourLisible(d: string, langue: Langue = 'fr', long = false): string {
+  const [annee, mois, jour] = d.split('-').map(Number);
+  const nom = (long ? MOIS_LONGS[langue] : FORMATS[langue].nomsMois)[mois - 1];
+  return langue === 'en' ? `${nom} ${jour}, ${annee}` : `${jour === 1 ? '1er' : jour} ${nom} ${annee}`;
+}
+
 /** L'année que fête le Nouvel An : de juillet à décembre, la suivante ; de janvier à juin, l'année en cours. */
 export const anneeQuiCommence = (maintenant = new Date()) =>
   maintenant.getMonth() >= 6 ? maintenant.getFullYear() + 1 : maintenant.getFullYear();

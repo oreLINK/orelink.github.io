@@ -1,5 +1,6 @@
 ---
-// La page d'accueil : le profil posé sur le fond, puis les sections dans l'ordre de site.json.
+// La page d'accueil : le profil posé sur le fond, puis les sections dans l'ordre de site.json, celles
+// que les réglages d'affichage montrent (site.json → affichage).
 // Une seule page pour toutes les langues : la langue vient de l'adresse (/ ou /en/).
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
@@ -15,16 +16,23 @@ import { asset } from '../lib/paths';
 import { reglages } from '../lib/reglages';
 import { langueDe } from '../lib/i18n';
 
-const { site, profil, t } = reglages(langueDe(Astro.url));
+const { site, profil, t, affichage } = reglages(langueDe(Astro.url));
 
 const SECTIONS = { experience: Experience, projets: Projets, formation: Formation, certifications: Certifications, benevolat: Benevolat };
-const sections = site.sections.filter((s) => s.afficher);
+const VISIBLE = {
+  experience: affichage.experience,
+  projets: affichage.projetsALaUne,
+  formation: affichage.formation,
+  certifications: affichage.certifications,
+  benevolat: affichage.benevolat,
+};
+const sections = site.sections.filter((s) => VISIBLE[s.id]);
 
 const l = profil.liens;
 const initiales = `${profil.prenom[0]}${profil.nom[0]}`.toUpperCase();
 ---
 
-<Base>
+<Base rubrique="profil">
   <!-- ── Profil ─────────────────────────────────────────────────────────────────────────────── -->
   <section class="intro reveal" aria-labelledby="nom">
     <div class:list={['photo', { glass: !profil.photo }]}>

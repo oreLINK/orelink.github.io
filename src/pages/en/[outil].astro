@@ -1,0 +1,9 @@
+---
+// Page non répertoriée en anglais, à /en/madeby/.
+import MadeBy from '../../vues/MadeBy.astro';
+import { reglages } from '../../lib/reglages';
+
+export const getStaticPaths = () => (reglages('en').affichage.madeBy ? [{ params: { outil: 'madeby' } }] : []);
+---
+
+<MadeBy />
